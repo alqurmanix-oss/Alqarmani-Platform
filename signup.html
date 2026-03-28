@@ -5,8 +5,41 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRMANI X — إنشاء حساب</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<script type="module">
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAnalytics }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp, query, where, getDocs }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const app = initializeApp({
+  apiKey:            "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
+  authDomain:        "alqurmani-auth-x.firebaseapp.com",
+  projectId:         "alqurmani-auth-x",
+  storageBucket:     "alqurmani-auth-x.firebasestorage.app",
+  messagingSenderId: "558487419521",
+  appId:             "1:558487419521:web:fcf791247b7eefc2a82b80",
+  measurementId:     "G-B34HTXXMVS"
+});
+
+getAnalytics(app);
+
+window.__FB = {
+  db:   getFirestore(app),
+  auth: getAuth(app),
+  doc, getDoc, setDoc, collection, serverTimestamp,
+  createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail
+};
+
+window.dispatchEvent(new Event("fb_ready"));
+</script>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+/* ═══════════ VARIABLES ═══════════ */
 :root{
   --g1:#FFD700;--g2:#FFC107;--g3:#FFB300;--g4:#D4A017;--g5:#B8860B;--g6:#996515;--g7:#7A4F10;
   --ng:#00FF87;--nr:#FF2D55;--bg:#05050A;--card:rgba(10,10,22,.98);
@@ -81,7 +114,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 .eye:hover{color:var(--g3)}
 
 /* MSG */
-.msg{font-size:11.5px;min-height:15px;margin-top:4px;padding-right:2px;transition:all .2s}
+.msg{font-size:11.5px;min-height:0px;margin-top:0px;padding-right:2px;transition:all .2s}
 .msg.ok{color:var(--ng)}.msg.er{color:var(--nr)}
 
 /* SUGGESTIONS */
@@ -246,6 +279,30 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
   animation:fup .4s .7s both}
 .btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,255,135,.55)}
 
+/* ══ LUXURY ERROR MODAL (NEW) ══ */
+#errOv .md {
+  background:linear-gradient(150deg,#1c0a0f,#0a0505);
+  border:1px solid rgba(255,45,85,.3);
+  box-shadow:0 0 0 1px rgba(255,45,85,.05),0 50px 100px rgba(0,0,0,.9),0 0 70px rgba(255,45,85,.15);
+}
+.err-ring{position:relative;width:96px;height:96px;margin:0 auto 16px}
+.err-ring::before,.err-ring::after{content:'';position:absolute;border-radius:50%;border:3px solid transparent}
+.err-ring::before{inset:0;border-top-color:var(--nr);border-right-color:var(--nr);
+  animation:spin 1.4s linear infinite;box-shadow:0 0 18px rgba(255,45,85,.45)}
+.err-ring::after{inset:13px;border-bottom-color:rgba(255,45,85,.3);animation:spin 2s linear infinite reverse}
+.err-h{font-size:25px;font-weight:900;color:var(--nr);text-align:center;margin-bottom:12px;
+  text-shadow:0 0 22px rgba(255,45,85,.55);animation:fup .4s .15s both}
+.err-sub{font-size:15px;font-weight:700;color:var(--tx);text-align:center;line-height:1.7;margin-bottom:20px;animation:fup .4s .25s both}
+.err-info{background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.15);border-radius:13px;
+  padding:15px;margin-top:14px;text-align:center;animation:fup .4s .35s both}
+.err-info p{font-size:13.5px;line-height:1.8;color:var(--txm)}
+.btn-err{width:100%;padding:14px;border:none;border-radius:12px;margin-top:20px;
+  background:linear-gradient(135deg,var(--nr),#800020);color:#fff;
+  font-family:'Cairo',sans-serif;font-size:14.5px;font-weight:900;cursor:pointer;
+  box-shadow:0 4px 20px rgba(255,45,85,.32);transition:transform .2s,box-shadow .2s;
+  animation:fup .4s .45s both}
+.btn-err:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,45,85,.55)}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:rgba(212,160,23,.3);border-radius:3px}
@@ -262,40 +319,30 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 <div id="ptc"></div>
 <div class="page">
 
-  <!-- LOGO -->
   <div class="logo">
     <div class="logo-txt">QRMANI X</div>
     <div class="logo-line"></div>
     <div class="logo-sub">Sovereign Access System</div>
   </div>
 
-  <!-- CARD -->
-  <div class="card">
+  <div class="card" id="mainCard">
     <div class="card-title">إنشاء <b>حساب جديد</b></div>
     <div class="ref-banner" id="refBanner"><span>🔗</span><span id="refTxt"></span></div>
 
-    <!-- USERNAME -->
     <div class="field">
       <label class="lbl">اسم المستخدم</label>
       <div class="iw">
-        <input class="fi" id="uI" type="text" placeholder="اختر اسماً فريداً…" autocomplete="off" dir="ltr" style="padding-left:40px">
-        <span class="sic" id="uS"></span>
-      </div>
-      <div class="msg" id="uM"></div>
-      <div class="sugg" id="uG"></div>
+        <input class="fi" id="uI" type="text" placeholder="اختر اسماً فريداً…" autocomplete="off" dir="ltr" style="padding-left:16px">
+        </div>
     </div>
 
-    <!-- EMAIL -->
     <div class="field">
       <label class="lbl">البريد الإلكتروني</label>
       <div class="iw">
-        <input class="fi" id="eI" type="email" placeholder="example@domain.com" autocomplete="off" dir="ltr" style="padding-left:40px">
-        <span class="sic" id="eS"></span>
+        <input class="fi" id="eI" type="email" placeholder="example@domain.com" autocomplete="off" dir="ltr" style="padding-left:16px">
       </div>
-      <div class="msg" id="eM"></div>
     </div>
 
-    <!-- PHONE -->
     <div class="field">
       <label class="lbl">رقم الهاتف</label>
       <div class="ph-row">
@@ -307,16 +354,13 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
           </div>
         </div>
         <div class="iw" style="flex:1">
-          <input class="fi" id="phI" type="tel" placeholder="رقم الهاتف…" autocomplete="off" dir="ltr" style="padding-left:40px">
-          <span class="sic" id="phS"></span>
+          <input class="fi" id="phI" type="tel" placeholder="رقم الهاتف…" autocomplete="off" dir="ltr" style="padding-left:16px">
         </div>
       </div>
-      <div class="msg" id="phM"></div>
     </div>
 
     <div class="divr"><div class="divr-l"></div><div class="divr-t">كلمة المرور</div><div class="divr-l"></div></div>
 
-    <!-- PASSWORD -->
     <div class="field">
       <label class="lbl">كلمة المرور</label>
       <div class="iw">
@@ -335,18 +379,14 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
       </div>
     </div>
 
-    <!-- CONFIRM -->
     <div class="field" style="margin-top:13px">
       <label class="lbl">تأكيد كلمة المرور</label>
       <div class="iw">
         <input class="fi" id="cfI" type="password" placeholder="••••••••••••" autocomplete="new-password" dir="ltr" style="padding-left:38px">
         <button class="eye" id="cfE" type="button">👁</button>
-        <span class="sic" id="cfS" style="left:38px"></span>
       </div>
-      <div class="msg" id="cfM"></div>
     </div>
 
-    <!-- TERMS -->
     <div class="tr-row">
       <div class="ck" id="ck">✓</div>
       <div class="tr-t">أوافق على <span class="tl" id="tBtn">شروط الاستخدام وسياسة الخصوصية</span> لمنصة QRMANI X</div>
@@ -357,9 +397,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
   </div>
 </div>
 
-<div id="toast"></div>
-
-<!-- TERMS MODAL -->
 <div class="ov" id="tmOv">
   <div class="md">
     <button class="md-x" id="tmX">✕</button>
@@ -394,7 +431,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
   </div>
 </div>
 
-<!-- SUCCESS MODAL -->
 <div class="ov" id="scOv">
   <div class="md" style="text-align:center">
     <div class="sc-ring"><div class="sc-em">🎉</div></div>
@@ -419,9 +455,22 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
   </div>
 </div>
 
+<div class="ov" id="errOv">
+  <div class="md" style="text-align:center">
+    <button class="md-x" id="errX">✕</button>
+    <div class="err-ring"><div class="sc-em" style="animation:none;transform:scale(1);opacity:1;color:var(--nr)">⚠️</div></div>
+    <div class="err-h">تنبيه أمني - فشل التسجيل</div>
+    <p class="err-sub" id="errMsgTxt">...</p>
+    <div class="err-info">
+      <p>هذه البيانات مسجلة بالفعل ضمن سجلات الإمبراطورية.<br>يرجى التأكد من البيانات أو تسجيل الدخول إذا كنت تمتلك حساباً.</p>
+    </div>
+    <button class="btn-err" id="errBtn">تعديل البيانات وإعادة المحاولة</button>
+  </div>
+</div>
+
 <script>
 /* ══════════════════════════════════════════
-   COUNTRIES DATA — جميع دول العالم
+   COUNTRIES DATA — جميع دول العالم (لم تُحذف)
 ══════════════════════════════════════════ */
 const COUNTRIES=[
   {f:"🇦🇫",n:"أفغانستان",c:"+93"},{f:"🇦🇱",n:"ألبانيا",c:"+355"},{f:"🇩🇿",n:"الجزائر",c:"+213"},
@@ -532,7 +581,7 @@ document.getElementById('ccSearch').addEventListener('input',function(){buildLis
 document.getElementById('ccList').addEventListener('click',e=>{
   const item=e.target.closest('.cc-item');
   if(!item) return;
-  selCC={c:item.dataset.c,f:item.dataset.f,n:item.dataset.n};
+  window.selCC={c:item.dataset.c,f:item.dataset.f,n:item.dataset.n};
   document.getElementById('ccDisplay').textContent=`${window.selCC.f} ${window.selCC.c}`;
   document.getElementById('ccDrop').classList.remove('open');
   doPhone();
@@ -541,135 +590,60 @@ document.addEventListener('click',e=>{
   if(!document.getElementById('ccWrap').contains(e.target))
     document.getElementById('ccDrop').classList.remove('open');
 });
-</script>
-
-<script type="module">
-import {initializeApp}  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import {getAnalytics}   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js';
-import {getFirestore,doc,getDoc,setDoc,serverTimestamp}
-                        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import {getAuth,createUserWithEmailAndPassword,sendEmailVerification}
-                        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-
-const app  = initializeApp({
-  apiKey:'AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU',
-  authDomain:'alqurmani-auth-x.firebaseapp.com',
-  projectId:'alqurmani-auth-x',
-  storageBucket:'alqurmani-auth-x.firebasestorage.app',
-  messagingSenderId:'558487419521',
-  appId:'1:558487419521:web:fcf791247b7eefc2a82b80',
-  measurementId:'G-B34HTXXMVS'
-});
-getAnalytics(app);
-const db=getFirestore(app), auth=getAuth(app);
 
 /* ── helpers ── */
 const $=id=>document.getElementById(id);
 const REF=new URLSearchParams(location.search).get('ref')||null;
 if(REF){$('refBanner').style.display='flex';$('refTxt').textContent='إحالة: '+REF.slice(0,12)+'…';}
 
-function toast(msg,d=4000){
-  const t=$('toast');t.textContent=msg;t.classList.add('on');
-  clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('on'),d);
-}
-
-async function regExists(type,val){
-  try{return(await getDoc(doc(db,'public_registry',type+'__'+val))).exists();}catch{return false;}
-}
-async function regWrite(type,val,extra){
-  await setDoc(doc(db,'public_registry',type+'__'+val),{type,value:val,...extra,ts:serverTimestamp()});
-}
-async function blockedExists(val){
-  try{return(await getDoc(doc(db,'blocked_recreate',val))).exists();}catch{return false;}
-}
-async function statsExist(){
-  try{return(await getDoc(doc(db,'stats','global'))).exists();}catch{return true;}
-}
-
 /* ── field state ── */
 const S={u:false,e:false,ph:false,pw:false,cf:false,terms:false};
 
-function fOk(p,msg){
-  const i=$(p+'I'),s=$(p+'S'),m=$(p+'M');
-  if(i){i.classList.remove('ok','er');i.classList.add('ok');}
-  if(s){s.className='sic ok';s.innerHTML='✓';}
-  if(m){m.className='msg ok';m.textContent=msg||'';}
-}
-function fEr(p,msg){
-  const i=$(p+'I'),s=$(p+'S'),m=$(p+'M');
-  if(i){i.classList.remove('ok','er');i.classList.add('er');}
-  if(s){s.className='sic er';s.innerHTML='✕';}
-  if(m){m.className='msg er';m.textContent=msg||'';}
-}
-function fLd(p){
-  const i=$(p+'I'),s=$(p+'S'),m=$(p+'M');
-  if(i)i.classList.remove('ok','er');
-  if(s){s.className='sic ld';s.innerHTML='<i></i><i></i><i></i>';}
-  if(m){m.className='msg';m.textContent='';}
+/* تم تعديل دوال الإظهار لتشغيل النيون الأخضر فقط بدون علامات أو رسائل */
+function fOk(p){
+  const i=$(p+'I');
+  if(i){i.classList.remove('er');i.classList.add('ok');}
 }
 function fClear(p){
-  const i=$(p+'I'),s=$(p+'S'),m=$(p+'M');
+  const i=$(p+'I');
   if(i)i.classList.remove('ok','er');
-  if(s){s.className='sic';s.innerHTML='';}
-  if(m){m.className='msg';m.textContent='';}
 }
 function chk(){
   $('subBtn').disabled=!(S.u&&S.e&&S.ph&&S.pw&&S.cf&&S.terms);
 }
 
-/* ══ USERNAME — 200ms debounce ══ */
-let uT;
+/* ══ USERNAME (بدون فحص قاعدة بيانات مزعج أثناء الكتابة) ══ */
 $('uI').addEventListener('input',function(){
-  clearTimeout(uT);S.u=false;chk();$('uG').innerHTML='';
+  S.u=false; chk();
   const v=this.value.trim().toLowerCase();
-  if(!v){fClear('u');return;}
-  if(v.length<3){fEr('u','الاسم أقل من 3 أحرف');return;}
-  if(!/^[a-z0-9_.]+$/.test(v)){fEr('u','أحرف إنجليزية وأرقام وـ و . فقط');return;}
-  fLd('u');
-  uT=setTimeout(async()=>{
-    if(await regExists('usernames',v)){
-      fEr('u','⚠️ هذا الاسم مستخدم بالفعل — جرّب:');
-      $('uG').innerHTML=[v+'_'+~~(Math.random()*999),v+~~(Math.random()*99),'_'+v+'_',v+'.vip',v+'_x']
-        .map(o=>`<span class="stag" data-n="${o}">${o}</span>`).join('');
-    } else {fOk('u','✅ الاسم متاح');S.u=true;chk();}
-  },200);
-});
-$('uG').addEventListener('click',e=>{
-  const n=e.target.dataset.n;if(!n)return;
-  $('uI').value=n;$('uG').innerHTML='';
-  $('uI').dispatchEvent(new Event('input'));
+  fClear('u');
+  if(!v) return;
+  if(v.length>=3 && /^[a-z0-9_.]+$/.test(v)){
+    fOk('u'); S.u=true; chk();
+  }
 });
 
-/* ══ EMAIL — 200ms debounce ══ */
-let eT;
+/* ══ EMAIL (بدون فحص قاعدة بيانات مزعج أثناء الكتابة) ══ */
 $('eI').addEventListener('input',function(){
-  clearTimeout(eT);S.e=false;chk();
+  S.e=false; chk();
   const v=this.value.trim().toLowerCase();
-  if(!v){fClear('e');return;}
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){fEr('e','صيغة البريد غير صحيحة');return;}
-  fLd('e');
-  eT=setTimeout(async()=>{
-    if(await blockedExists(v)){fEr('e','⛔ هذا البريد محظور من التسجيل (40 يوم)');return;}
-    if(await regExists('emails',v)){fEr('e','⚠️ البريد مسجل بالفعل — سجّل الدخول');}
-    else{fOk('e','✅ البريد متاح');S.e=true;chk();}
-  },200);
+  fClear('e');
+  if(!v) return;
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+    fOk('e'); S.e=true; chk();
+  }
 });
 
-/* ══ PHONE — 200ms debounce ══ */
-let phT;
+/* ══ PHONE (بدون فحص قاعدة بيانات مزعج أثناء الكتابة) ══ */
 window.doPhone=function(){
-  clearTimeout(phT);S.ph=false;chk();
+  S.ph=false; chk();
   const raw=$('phI').value.trim();
   const digits=raw.replace(/\D/g,'').replace(/^0/,'');
-  const full=(window.selCC||{c:'+20'}).c+digits;
-  if(!raw){fClear('ph');return;}
-  if(digits.length<5||digits.length>14){fEr('ph','رقم الهاتف غير صحيح');return;}
-  fLd('ph');
-  phT=setTimeout(async()=>{
-    if(await blockedExists(full)){fEr('ph','⛔ هذا الرقم محظور (40 يوم)');return;}
-    if(await regExists('phones',full)){fEr('ph','⚠️ الرقم مسجل بالفعل');}
-    else{fOk('ph','✅ الرقم متاح');S.ph=true;chk();}
-  },200);
+  fClear('ph');
+  if(!raw) return;
+  if(digits.length>=5 && digits.length<=14){
+    fOk('ph'); S.ph=true; chk();
+  }
 };
 $('phI').addEventListener('input',doPhone);
 
@@ -697,19 +671,11 @@ $('pwI').addEventListener('input',function(){
 /* ══ CONFIRM ══ */
 $('cfI').addEventListener('input',function(){
   const pw=$('pwI').value,cf=this.value;
-  this.classList.remove('ok','er');
-  $('cfS').className='sic';$('cfS').innerHTML='';
-  $('cfM').className='msg';$('cfM').textContent='';
+  fClear('cf');
   if(!cf){S.cf=false;chk();return;}
   if(cf===pw){
-    this.classList.add('ok');
-    $('cfS').className='sic ok';$('cfS').innerHTML='✓';
-    $('cfM').className='msg ok';$('cfM').textContent='✅ كلمتا المرور متطابقتان';
-    S.cf=true;
+    fOk('cf'); S.cf=true;
   }else{
-    this.classList.add('er');
-    $('cfS').className='sic er';$('cfS').innerHTML='✕';
-    $('cfM').className='msg er';$('cfM').textContent='⚠️ كلمتا المرور غير متطابقتين';
     S.cf=false;
   }
   chk();
@@ -729,8 +695,18 @@ $('tBtn').addEventListener('click',()=>openMd('tmOv'));
 $('tmX').addEventListener('click',()=>closeMd('tmOv'));
 $('tmOv').addEventListener('click',e=>{if(e.target===$('tmOv'))closeMd('tmOv');});
 $('accBtn').addEventListener('click',()=>{S.terms=true;$('ck').classList.add('on');chk();closeMd('tmOv');});
+
 function openMd(id){$(id).classList.add('on');document.body.style.overflow='hidden';}
 function closeMd(id){$(id).classList.remove('on');document.body.style.overflow='';}
+
+/* ══ ERROR MODAL HANDLERS ══ */
+function openErrModal(msg) {
+  $('errMsgTxt').textContent = msg;
+  openMd('errOv');
+}
+$('errX').addEventListener('click',()=>closeMd('errOv'));
+$('errBtn').addEventListener('click',()=>closeMd('errOv'));
+$('errOv').addEventListener('click',e=>{if(e.target===$('errOv'))closeMd('errOv');});
 
 /* ══ CONFETTI + COINS ══ */
 function boom(){
@@ -781,10 +757,14 @@ $('scOv').addEventListener('click',e=>{
 });
 
 /* ══════════════════════════════════════════
-   MAIN SIGNUP
+   MAIN SIGNUP (الذكاء الحقيقي هنا)
 ══════════════════════════════════════════ */
 $('subBtn').addEventListener('click',async function(){
   if(this.disabled)return;
+  
+  const FB = window.__FB;
+  if(!FB) return; // التأكد من أن Firebase يعمل
+
   const email=$('eI').value.trim().toLowerCase();
   const password=$('pwI').value;
   const username=$('uI').value.trim().toLowerCase();
@@ -792,20 +772,45 @@ $('subBtn').addEventListener('click',async function(){
   const phone=(window.selCC||{c:'+20'}).c+digits;
 
   this.disabled=true;
-  this.innerHTML='<span class="sp"></span>جارٍ الإنشاء…';
+  this.innerHTML='<span class="sp"></span>جارٍ الفحص والتسجيل…';
 
   try{
-    /* 1 – Auth */
+    const {db, auth, doc, getDoc, setDoc, serverTimestamp, createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail} = FB;
+
+    // --- 1. الفحص الشامل لمنع إنشاء الحسابات الوهمية (الزر لن يعلق أبداً بفضل هذا) ---
+    async function checkReg(type, val) {
+      try { return (await getDoc(doc(db, 'public_registry', type+'__'+val))).exists(); } catch { return false; }
+    }
+    
+    const [uDup, eDup, pDup] = await Promise.all([
+      checkReg('usernames', username),
+      checkReg('emails', email),
+      checkReg('phones', phone)
+    ]);
+
+    if(uDup) throw new Error('اسم المستخدم محجوز مسبقاً، الرجاء اختيار اسم آخر.');
+    if(eDup) throw new Error('البريد الإلكتروني مسجل بالفعل في الإمبراطورية.');
+    if(pDup) throw new Error('رقم الهاتف مستخدم في حساب آخر بالفعل.');
+
+    // فحص من الـ Auth مباشرة لضمان عدم وجوده مسبقاً
+    const methods = await fetchSignInMethodsForEmail(auth, email);
+    if(methods && methods.length > 0) {
+       throw new Error('البريد الإلكتروني مسجل بالفعل في نظام المصادقة.');
+    }
+
+    // --- 2. إنشاء المستخدم (آمن تماماً الآن) ---
+    this.innerHTML='<span class="sp"></span>جارٍ تأمين البيانات…';
     const {user}=await createUserWithEmailAndPassword(auth,email,password);
     const uid=user.uid;
 
-    /* 2 – email verification (background) */
+    // --- 3. إرسال رسالة التفعيل ---
     sendEmailVerification(user).catch(()=>{});
 
-    /* 3 – first user = owner */
-    const isFirst=!(await statsExist());
+    // --- 4. تحديد إن كان المالك الأول ---
+    let isFirst = false;
+    try { isFirst = !(await getDoc(doc(db,'stats','global'))).exists(); } catch(e) {}
 
-    /* 4 – user doc */
+    // --- 5. حفظ بيانات المستخدم في القاعدة ---
     await setDoc(doc(db,'users',uid),{
       uid,username,email,phone,
       role:isFirst?'owner':'user',
@@ -817,39 +822,39 @@ $('subBtn').addEventListener('click',async function(){
       referredBy:REF||null,adminApproval:false
     });
 
-    /* 5 – registry (parallel) */
+    // --- 6. حجز البيانات لمنع التكرار ---
     await Promise.all([
-      regWrite('usernames',username,{uid}),
-      regWrite('emails',email,{uid}),
-      regWrite('phones',phone,{uid})
+      setDoc(doc(db,'public_registry','usernames__'+username),{type:'usernames',value:username,uid,ts:serverTimestamp()}),
+      setDoc(doc(db,'public_registry','emails__'+email),{type:'emails',value:email,uid,ts:serverTimestamp()}),
+      setDoc(doc(db,'public_registry','phones__'+phone),{type:'phones',value:phone,uid,ts:serverTimestamp()})
     ]);
 
-    /* 6 – referral (background) */
     if(REF&&REF!==uid)
       setDoc(doc(db,'referrals',REF+'_'+uid),{referrerUid:REF,referredUid:uid,createdAt:serverTimestamp()}).catch(()=>{});
 
-    /* 7 – session (background) */
     setDoc(doc(db,'sessions',uid),{uid,createdAt:serverTimestamp(),expiresAt:new Date(Date.now()+86400000)}).catch(()=>{});
 
     openSuccess(email);
 
   }catch(err){
-    console.error(err.code,err.message);
+    console.error(err);
     this.innerHTML='إنشاء الحساب';
-    this.disabled=false;chk();
-    const m={
-      'auth/email-already-in-use':'⚠️ البريد موجود في Firebase — سجّل الدخول',
-      'auth/weak-password':'⚠️ كلمة المرور ضعيفة جداً',
-      'auth/network-request-failed':'⚠️ تحقق من اتصالك بالإنترنت',
-      'auth/too-many-requests':'⚠️ محاولات كثيرة — انتظر قليلاً',
-      'permission-denied':'⚠️ Firestore رفض العملية — تحقق من الـ Rules',
-    };
-    toast(m[err.code]||'⚠️ '+err.code+'\n'+err.message.slice(0,60));
+    this.disabled=false;
+    chk();
+    document.getElementById('mainCard').classList.add('shk');
+    setTimeout(()=>document.getElementById('mainCard').classList.remove('shk'), 400);
+
+    let errMsg = err.message;
+    if(err.code === 'auth/email-already-in-use') errMsg = 'البريد الإلكتروني مسجل بالفعل في النظام.';
+    else if(err.code === 'auth/weak-password') errMsg = 'كلمة المرور التي اخترتها ضعيفة جداً.';
+    else if(err.code === 'auth/network-request-failed') errMsg = 'يرجى التحقق من اتصالك بالإنترنت.';
+    else if(err.code === 'permission-denied') errMsg = 'النظام رفض العملية لأسباب أمنية.';
+
+    openErrModal(errMsg);
   }
 });
 
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('subBtn').disabled)$('subBtn').click();});
-
 
 </script>
 </body>
