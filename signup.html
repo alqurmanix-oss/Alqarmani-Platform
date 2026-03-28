@@ -1,284 +1,259 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALQURMANI X | إنشاء الحساب الرسمي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold-gradient: linear-gradient(90deg, #8a6d1f 0%, #d4af37 25%, #f1d38a 50%, #d4af37 75%, #8a6d1f 100%);
-            --neon-green: #39FF14;
-            --neon-red: #FF3131;
-            --bg-deep: #030303;
-            --glass-card: rgba(10, 10, 10, 0.95);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنشاء حساب | ALQURMANI X</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { 
-            margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
-            background: radial-gradient(circle at center, #111 0%, #000 100%); 
-            font-family: 'Cairo', sans-serif; color: #fff; padding: 50px 20px;
-        }
+<style>
+/* التنسيق الإمبراطوري الفاخر - بدون أي اختصار */
+:root {
+  --gold-1: #bf953f; --gold-2: #fcf6ba; --gold-3: #b38728; --gold-4: #fbf5b7; --gold-5: #aa771c;
+  --neon-green: #39FF14; --neon-red: #FF3131; --bg-black: #050505;
+}
 
-        .main-card {
-            width: 100%; max-width: 650px; padding: 60px; border-radius: 45px;
-            background: var(--glass-card); border: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 60px 120px rgba(0,0,0,1); position: relative; overflow: hidden;
-        }
+body {
+  margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;
+  background: radial-gradient(circle at center, #111 0%, #000 100%);
+  font-family: 'Cairo', sans-serif; color: #fff; padding: 20px; overflow-x: hidden;
+}
 
-        .brand-line {
-            font-size: 40px; font-weight: 900; text-align: center; margin-bottom: 50px;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 3px; display: block; filter: drop-shadow(0 0 15px rgba(212,175,55,0.2));
-        }
+.brand-title {
+  font-family: 'Cinzel', serif; font-size: 45px; font-weight: 900; text-align: center; margin-bottom: 40px;
+  background: linear-gradient(to right, var(--gold-1), var(--gold-2), var(--gold-3), var(--gold-4), var(--gold-5));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px rgba(212,175,55,0.3));
+}
 
-        .form-group { position: relative; margin-bottom: 35px; }
-        label { display: block; margin-bottom: 12px; font-size: 14px; color: #d4af37; font-weight: 700; text-align: right; letter-spacing: 1px; }
-        
-        input {
-            width: 100%; padding: 20px 25px; border-radius: 18px; border: 1px solid #1a1a1a;
-            background: rgba(255,255,255,0.01); color: #fff; font-size: 17px; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;
-        }
-        input:focus { border-color: #d4af37; background: rgba(212,175,55,0.03); box-shadow: 0 0 30px rgba(212,175,55,0.05); }
+.card {
+  width: 100%; max-width: 650px; background: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 40px; padding: 50px;
+  box-shadow: 0 40px 100px rgba(0,0,0,1); position: relative;
+}
 
-        /* أيقونات النيون الفورية */
-        .indicator { position: absolute; left: 20px; top: 52px; font-size: 22px; display: none; }
-        .valid-neon { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); }
-        .invalid-neon { color: var(--neon-red); text-shadow: 0 0 15px var(--neon-red); }
+.input-group { position: relative; margin-bottom: 30px; text-align: right; }
+label { display: block; margin-bottom: 10px; color: var(--gold-2); font-weight: 700; font-size: 14px; }
 
-        .error-msg { font-size: 12px; color: var(--neon-red); margin-top: 8px; text-align: right; display: none; font-weight: 600; }
-        
-        /* قوة كلمة المرور */
-        .strength-wrapper { height: 4px; background: #111; margin-top: 12px; border-radius: 10px; overflow: hidden; }
-        .strength-fill { height: 100%; width: 0%; transition: 0.6s ease; }
-        .rules-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; text-align: right; }
-        .rule { font-size: 11px; color: #333; transition: 0.3s; }
-        .rule.checked { color: var(--neon-green); font-weight: bold; }
+input, select {
+  width: 100%; padding: 18px 25px; border-radius: 15px; border: 1px solid #1a1a1a;
+  background: rgba(255,255,255,0.02); color: #fff; font-size: 16px; transition: 0.4s; text-align: center;
+}
+input:focus { border-color: var(--gold-3); background: rgba(212,175,55,0.05); box-shadow: 0 0 20px rgba(212,175,55,0.1); }
 
-        /* شروط الاستخدام الفخمة */
-        .agreement-box { background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px; border: 1px solid #151515; margin: 40px 0; }
-        .agreement-text { font-size: 13px; color: #777; line-height: 1.6; vertical-align: middle; cursor: pointer; }
-        #openProtocol { color: #d4af37; font-weight: bold; border-bottom: 1px solid; }
+/* أيقونات الحالة نيون */
+.status-icon { position: absolute; left: 15px; top: 45px; font-size: 20px; display: none; }
+.status-ok { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
+.status-err { color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
 
-        .submit-trigger {
-            width: 100%; padding: 22px; border: none; border-radius: 20px; font-weight: 900;
-            font-size: 20px; cursor: pointer; background: linear-gradient(135deg, #d4af37, #8a6d1f);
-            color: #000; transition: 0.5s; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .submit-trigger:disabled { filter: grayscale(1); opacity: 0.2; }
+.error-text { color: var(--neon-red); font-size: 11px; margin-top: 5px; display: none; font-weight: 600; }
 
-        /* نافذة البروتوكول (Modal) */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); 
-            display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(20px);
-        }
-        .protocol-content {
-            background: #080808; padding: 60px; border-radius: 40px; border: 1px solid #d4af37;
-            max-width: 700px; width: 95%; max-height: 85vh; overflow-y: auto; text-align: right;
-        }
-    </style>
+/* شريط القوة */
+.strength-meter { height: 4px; background: #111; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+.strength-bar { height: 100%; width: 0; transition: 0.5s; }
+.rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+.rule-item { font-size: 11px; color: #444; transition: 0.3s; }
+.rule-item.active { color: var(--neon-green); font-weight: bold; }
+
+.submit-btn {
+  width: 100%; padding: 22px; border: none; border-radius: 18px; font-size: 20px; font-weight: 900;
+  background: linear-gradient(45deg, var(--gold-3), var(--gold-5)); color: #000;
+  cursor: pointer; transition: 0.5s; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+.submit-btn:disabled { filter: grayscale(1); opacity: 0.2; cursor: not-allowed; }
+
+/* نافذة الشروط */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98);
+  display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(15px);
+}
+.modal-card {
+  background: #080808; padding: 50px; border-radius: 35px; border: 1px solid var(--gold-3);
+  max-width: 700px; width: 95%; max-height: 80vh; overflow-y: auto; text-align: right;
+}
+
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+.shake { animation: shake 0.4s ease-in-out; }
+</style>
 </head>
 <body>
 
-<div class="main-card">
-    <span class="brand-line">ALQURMANI X</span>
-    
-    <form id="signupRegistry">
-        <div class="form-group">
-            <label>اسم المستخدم (UID)</label>
-            <input type="text" id="reg_user" placeholder="أدخل اسم المستخدم المفضل" required>
-            <span id="user_icon" class="indicator"></span>
-            <div id="user_err" class="error-msg"></div>
-        </div>
+<div class="card">
+  <div class="brand-title">ALQURMANI X</div>
 
-        <div class="form-group">
-            <label>البريد الإلكتروني المعتمد</label>
-            <input type="email" id="reg_email" placeholder="example@mail.com" required>
-            <span id="email_icon" class="indicator"></span>
-            <div id="email_err" class="error-msg"></div>
-        </div>
-
-        <div class="form-group">
-            <label>رقم الهاتف الدولي</label>
-            <input type="tel" id="reg_phone" placeholder="+2010XXXXXXXX" required>
-            <span id="phone_icon" class="indicator"></span>
-            <div id="phone_err" class="error-msg"></div>
-        </div>
-
-        <div class="form-group">
-            <label>كلمة المرور الأمنية</label>
-            <input type="password" id="reg_pass" required>
-            <div class="strength-wrapper"><div id="pass_bar" class="strength-fill"></div></div>
-            <div class="rules-box">
-                <span id="q_len" class="rule">● 8 رموز</span>
-                <span id="q_num" class="rule">● أرقام</span>
-                <span id="q_up" class="rule">● حرف كبير</span>
-                <span id="q_sp" class="rule">● رمز خاص</span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>تأكيد كلمة المرور</label>
-            <input type="password" id="reg_pass_confirm" required>
-            <span id="confirm_icon" class="indicator"></span>
-        </div>
-
-        <div class="agreement-box">
-            <input type="checkbox" id="protocol_check">
-            <label for="protocol_check" class="agreement-text">أوافق على كافة <span id="openProtocol">بنود ميثاق الاستخدام وسياسة حماية البيانات</span></label>
-        </div>
-
-        <button type="submit" id="reg_submit" class="submit-trigger" disabled>إتمام عملية التسجيل</button>
-    </form>
-
-    <div style="text-align:center; margin-top:35px; font-size:14px; color:#444;">
-        مسجل بالفعل؟ <a href="login.html" style="color:#d4af37; text-decoration:none; font-weight:700;">تسجيل دخول</a>
+  <form id="mainForm">
+    <div class="input-group">
+      <label>اسم المستخدم (UID)</label>
+      <input type="text" id="userInput" placeholder="مثلاً: alqurmani_77" required>
+      <span id="userIcon" class="status-icon"></span>
+      <div id="userErr" class="error-text"></div>
+      <div id="userSug" style="margin-top:10px; display:flex; gap:5px; flex-wrap:wrap;"></div>
     </div>
+
+    <div class="input-group">
+      <label>البريد الإلكتروني المعتمد</label>
+      <input type="email" id="emailInput" placeholder="official@alqurmani.com" required>
+      <span id="emailIcon" class="status-icon"></span>
+      <div id="emailErr" class="error-text"></div>
+    </div>
+
+    <div class="input-group">
+      <label>رقم الهاتف الدولي</label>
+      <input type="tel" id="phoneInput" placeholder="+201000000000" required>
+      <span id="phoneIcon" class="status-icon"></span>
+      <div id="phoneErr" class="error-text"></div>
+    </div>
+
+    <div class="input-group">
+      <label>كلمة المرور الإمبراطورية</label>
+      <input type="password" id="passInput" required>
+      <div class="strength-meter"><div id="passBar" class="strength-bar"></div></div>
+      <div class="rules-grid">
+        <div id="r_len" class="rule-item">● 8 أحرف</div>
+        <div id="r_num" class="rule-item">● أرقام</div>
+        <div id="r_up" class="rule-item">● حرف كبير</div>
+        <div id="r_sp" class="rule-item">● رمز خاص</div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>تأكيد كلمة المرور</label>
+      <input type="password" id="confirmInput" required>
+      <span id="confirmIcon" class="status-icon"></span>
+    </div>
+
+    <div style="margin: 30px 0; text-align: right;">
+      <input type="checkbox" id="termsCheck">
+      <label for="termsCheck" style="display:inline; color:#888;">أوافق على <span id="showTerms" style="color:var(--gold-2); text-decoration:underline; cursor:pointer;">ميثاق الاستخدام وسياسة الخصوصية</span></label>
+    </div>
+
+    <button type="submit" id="submitBtn" class="submit-btn" disabled>إنشاء الهوية الرقمية</button>
+  </form>
 </div>
 
-<div class="modal-overlay" id="protocolModal">
-    <div class="protocol-content">
-        <h2 style="color:#d4af37; margin-bottom:30px; text-align:center; font-weight:900;">ميثاق استخدام ALQURMANI X</h2>
-        <div style="color:#bbb; line-height:2; font-size:14px;">
-            <p><strong>1. الهوية الرقمية:</strong> الحساب المسجل هو مسئولية صاحبه بالكامل. يُمنع منعاً باتاً تداول بيانات الدخول أو استخدام هويات زائفة.</p>
-            <p><strong>2. تعدد الحسابات:</strong> يسمح النظام بحد أقصى 5 حسابات لكل عنوان IP. أي تجاوز لهذا الحد يعرض كافة الحسابات للحظر الفوري والدائم.</p>
-            <p><strong>3. تجميد الحساب:</strong> يحق للإدارة تجميد الحساب احترازياً في حالات (محاولات الاختراق، الأنشطة غير الاعتيادية، أو مخالفة شروط المنصة).</p>
-            <p><strong>4. حذف الحساب:</strong> عند تقديم طلب الحذف، يدخل الحساب فترة انتظار مدتها 30 يوماً. خلال هذه الفترة يمكن استعادة الحساب، وبعدها يتم حذف كافة البيانات والعملات والنقاط بشكل نهائي.</p>
-            <p><strong>5. نظام الإحالات:</strong> تمنح النقاط بناءً على إحالات حقيقية ومفعلة. التلاعب بنظام الإحالات عبر بوتات أو حسابات وهمية يؤدي لإغلاق الحساب ومصادرة المحفظة.</p>
-            <p><strong>6. خصوصية البيانات:</strong> تلتزم المنصة بتشفير كافة البيانات الحساسة ولا يتم الإفصاح عنها لأي جهة إلا بموجب أحكام قضائية رسمية.</p>
-        </div>
-        <button id="closeProtocol" class="submit-trigger" style="margin-top:40px; background:#111; color:#fff; border:1px solid #333;">أوافق وألتزم بالبنود</button>
+<div class="modal-overlay" id="termsModal">
+  <div class="modal-card">
+    <h2 style="color:var(--gold-2); text-align:center; margin-bottom:30px;">ميثاق الاستخدام - ALQURMANI X</h2>
+    <div style="line-height:2; color:#ccc; font-size:15px;">
+      <p><strong>1. الهوية الموحدة:</strong> حسابك هو مفتاحك لكافة أعمال القرماني إكس بما فيها المحفظة الإلكترونية.</p>
+      <p><strong>2. سياسة الحظر:</strong> أي تلاعب أو تسجيل أكثر من 5 حسابات من نفس المصدر يعرضك للحظر النهائي.</p>
+      <p><strong>3. المحفظة (Qurmani Coin):</strong> يتم ربط محفظتك فورياً بحسابك، والعملات المسجلة فيها غير قابلة للتحويل في حال تجميد الحساب.</p>
+      <p><strong>4. الخصوصية:</strong> بياناتك مشفرة ولا يتم الاطلاع عليها إلا من خلال خوارزميات الأمان الذكية.</p>
     </div>
+    <button id="closeTerms" class="submit-btn" style="margin-top:30px; background:#111; color:#fff;">أقر وألتزم بالبنود</button>
+  </div>
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDocs, collection, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
-        authDomain: "alqurmani-auth-x.firebaseapp.com",
-        projectId: "alqurmani-auth-x",
-        storageBucket: "alqurmani-auth-x.firebasestorage.app",
-        messagingSenderId: "558487419521",
-        appId: "1:558487419521:web:fcf791247b7eefc2a82b80"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
+  authDomain: "alqurmani-auth-x.firebaseapp.com",
+  projectId: "alqurmani-auth-x",
+  storageBucket: "alqurmani-auth-x.firebasestorage.app",
+  messagingSenderId: "558487419521",
+  appId: "1:558487419521:web:fcf791247b7eefc2a82b80"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-    const refID = new URLSearchParams(window.location.search).get('ref') || "direct";
+const refID = new URLSearchParams(window.location.search).get('ref') || "direct";
 
-    // محرك الفحص المزدوج (Auth + Firestore)
-    async function checkAvailability(type, value, iconId, errId) {
-        if(!value) return false;
-        const icon = document.getElementById(iconId);
-        const err = document.getElementById(errId);
-        icon.style.display = 'block';
-        icon.innerHTML = '...';
+// --- نظام التحقق الصارم (الذي يمنع الخداع) ---
+async function checkGlobal(type, value, iconId, errId) {
+  const icon = document.getElementById(iconId);
+  const err = document.getElementById(errId);
+  icon.style.display = 'block';
+  icon.className = 'status-icon status-ok'; icon.innerHTML = '...';
 
-        try {
-            let isAvailable = true;
-            let msg = "";
-
-            if(type === 'email') {
-                const methods = await fetchSignInMethodsForEmail(auth, value);
-                if(methods.length > 0) { isAvailable = false; msg = "البريد مسجل مسبقاً في النظام"; }
-            }
-
-            if(isAvailable) {
-                const q = query(collection(db, "users"), where(type === 'user' ? "username" : type, "==", value));
-                const snap = await getDocs(q);
-                if(!snap.empty) { isAvailable = false; msg = "هذا البيان محجوز بالفعل"; }
-            }
-
-            if(isAvailable) {
-                icon.className = 'indicator valid-neon'; icon.innerHTML = '✔';
-                if(err) err.style.display = 'none';
-                return true;
-            } else {
-                icon.className = 'indicator invalid-neon'; icon.innerHTML = '✖';
-                if(err) { err.innerText = msg; err.style.display = 'block'; }
-                return false;
-            }
-        } catch (e) { console.error(e); return false; }
+  try {
+    let exists = false;
+    // 1. فحص الـ Auth (للإيميل)
+    if (type === 'email') {
+      const methods = await fetchSignInMethodsForEmail(auth, value);
+      if (methods.length > 0) exists = true;
+    }
+    // 2. فحص الـ Firestore (للكل)
+    if (!exists) {
+      const q = query(collection(db, "users"), where(type === 'user' ? "username" : type, "==", value));
+      const snap = await getDocs(q);
+      if (!snap.empty) exists = true;
     }
 
-    document.getElementById('reg_user').onblur = (e) => checkAvailability('user', e.target.value, 'user_icon', 'user_err');
-    document.getElementById('reg_email').onblur = (e) => checkAvailability('email', e.target.value, 'email_icon', 'email_err');
-    document.getElementById('reg_phone').onblur = (e) => checkAvailability('phone', e.target.value, 'phone_icon', 'phone_err');
+    if (exists) {
+      icon.className = 'status-icon status-err'; icon.innerHTML = '✖';
+      if (err) { err.innerText = "هذا البيان محجوز بالفعل"; err.style.display = 'block'; }
+      return false;
+    } else {
+      icon.className = 'status-icon status-ok'; icon.innerHTML = '✔';
+      if (err) err.style.display = 'none';
+      return true;
+    }
+  } catch (e) { return false; }
+}
 
-    // منطق القوة والتطابق
-    document.getElementById('reg_pass').oninput = (e) => {
-        const p = e.target.value;
-        const checks = {
-            len: p.length >= 8, num: /[0-9]/.test(p),
-            up: /[A-Z]/.test(p), sp: /[!@#$%^&*]/.test(p)
-        };
-        document.getElementById('q_len').className = 'rule' + (checks.len ? ' checked':'');
-        document.getElementById('q_num').className = 'rule' + (checks.num ? ' checked':'');
-        document.getElementById('q_up').className = 'rule' + (checks.up ? ' checked':'');
-        document.getElementById('q_sp').className = 'rule' + (checks.sp ? ' checked':'');
-        
-        let score = Object.values(checks).filter(Boolean).length;
-        document.getElementById('pass_bar').style.width = (score*25) + '%';
-        document.getElementById('pass_bar').style.background = ['#ff3131','#ff9100','#ffd700','#39ff14'][score-1];
-    };
+// الأحداث
+document.getElementById('userInput').onblur = e => checkGlobal('user', e.target.value, 'userIcon', 'userErr');
+document.getElementById('emailInput').onblur = e => checkGlobal('email', e.target.value, 'emailIcon', 'emailErr');
+document.getElementById('phoneInput').onblur = e => checkGlobal('phone', e.target.value, 'phoneIcon', 'phoneErr');
 
-    document.getElementById('reg_pass_confirm').oninput = (e) => {
-        const match = e.target.value === document.getElementById('reg_pass').value;
-        const icon = document.getElementById('confirm_icon');
-        icon.style.display = 'block';
-        icon.className = 'indicator ' + (match ? 'valid-neon' : 'invalid-neon');
-        icon.innerHTML = match ? '✔' : '✖';
-    };
+document.getElementById('passInput').oninput = e => {
+  const p = e.target.value;
+  const c = { len: p.length >= 8, num: /[0-9]/.test(p), up: /[A-Z]/.test(p), sp: /[!@#$%^&*]/.test(p) };
+  document.getElementById('r_len').className = 'rule-item' + (c.len?' active':'');
+  document.getElementById('r_num').className = 'rule-item' + (c.num?' active':'');
+  document.getElementById('r_up').className = 'rule-item' + (c.up?' active':'');
+  document.getElementById('r_sp').className = 'rule-item' + (c.sp?' active':'');
+  let s = Object.values(c).filter(Boolean).length;
+  document.getElementById('passBar').style.width = (s*25)+'%';
+  document.getElementById('passBar').style.background = ['#ff3131','#ff9100','#ffd700','#39ff14'][s-1];
+};
 
-    document.getElementById('protocol_check').onchange = (e) => {
-        document.getElementById('reg_submit').disabled = !e.target.checked;
-    };
+document.getElementById('confirmInput').oninput = e => {
+  const match = e.target.value === document.getElementById('passInput').value;
+  const icon = document.getElementById('confirmIcon');
+  icon.style.display = 'block';
+  icon.className = 'status-icon ' + (match ? 'status-ok' : 'status-err');
+  icon.innerHTML = match ? '✔' : '✖';
+};
 
-    document.getElementById('openProtocol').onclick = () => document.getElementById('protocolModal').style.display = 'flex';
-    document.getElementById('closeProtocol').onclick = () => document.getElementById('protocolModal').style.display = 'none';
+document.getElementById('termsCheck').onchange = e => document.getElementById('submitBtn').disabled = !e.target.checked;
+document.getElementById('showTerms').onclick = () => document.getElementById('termsModal').style.display = 'flex';
+document.getElementById('closeTerms').onclick = () => document.getElementById('termsModal').style.display = 'none';
 
-    // الإرسال النهائي الموثق
-    document.getElementById('signupRegistry').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('reg_submit');
-        btn.innerText = "جاري الربط وتأمين البيانات..."; btn.disabled = true;
+document.getElementById('mainForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.innerText = "جاري تشفير البيانات..."; btn.disabled = true;
 
-        try {
-            const email = document.getElementById('reg_email').value;
-            const pass = document.getElementById('reg_pass').value;
-            
-            const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-            const user = userCred.user;
-
-            await sendEmailVerification(user);
-
-            await setDoc(doc(db, "users", user.uid), {
-                uid: user.uid,
-                username: document.getElementById('reg_user').value,
-                email: email,
-                phone: document.getElementById('reg_phone').value,
-                role: "user",
-                status: "active",
-                points: 0,
-                referralFrom: refID,
-                joinedAt: new Date().toISOString()
-            });
-
-            alert("تم إنشاء هويتك الرسمية بنجاح. يرجى مراجعة بريدك الإلكتروني لتفعيل الحساب.");
-            await signOut(auth);
-            window.location.href = "login.html";
-
-        } catch (err) {
-            alert("خطأ إداري: " + err.message);
-            btn.disabled = false; btn.innerText = "إتمام عملية التسجيل";
-        }
-    };
+  try {
+    const email = document.getElementById('emailInput').value;
+    const pass = document.getElementById('passInput').value;
+    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+    await sendEmailVerification(userCred.user);
+    await setDoc(doc(db, "users", userCred.user.uid), {
+      uid: userCred.user.uid,
+      username: document.getElementById('userInput').value,
+      email: email,
+      phone: document.getElementById('phoneInput').value,
+      referralFrom: refID,
+      role: "user", status: "active", points: 0, createdAt: new Date().toISOString()
+    });
+    alert("نجاح! تفقد بريدك لتفعيل الحساب.");
+    await signOut(auth);
+    window.location.href = "login.html";
+  } catch (err) {
+    alert("خطأ: " + err.message);
+    btn.disabled = false; btn.innerText = "إنشاء الهوية الرقمية";
+  }
+};
 </script>
 </body>
 </html>
