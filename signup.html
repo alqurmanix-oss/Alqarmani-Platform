@@ -1,637 +1,7 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>إنشاء حساب | QRMANI X</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
-
-<!-- ══════════════════════════════════════════════════════════
-     FIREBASE ESM MODULE  ─  single source of truth
-     الـ module معزول لكنه يضع كل حاجة على window.__FB
-     قبل ما يرفع event  fb_ready
-══════════════════════════════════════════════════════════ -->
-<script type="module">
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAnalytics }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const app = initializeApp({
-  apiKey:            "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
-  authDomain:        "alqurmani-auth-x.firebaseapp.com",
-  projectId:         "alqurmani-auth-x",
-  storageBucket:     "alqurmani-auth-x.firebasestorage.app",
-  messagingSenderId: "558487419521",
-  appId:             "1:558487419521:web:fcf791247b7eefc2a82b80",
-  measurementId:     "G-B34HTXXMVS"
-});
-
-getAnalytics(app);
-
-window.__FB = {
-  db:   getFirestore(app),
-  auth: getAuth(app),
-  /* Firestore helpers */
-  doc, getDoc, setDoc, collection, serverTimestamp,
-  /* Auth helpers */
-  createUserWithEmailAndPassword, sendEmailVerification
-};
-
-window.dispatchEvent(new Event("fb_ready"));
-</script>
-
-<style>
-/* ═══════════ VARIABLES ═══════════ */
-:root{
-  --g1:#FFD700;--g2:#FFC200;--g3:#FFB000;
-  --g4:#D4A017;--g5:#B8860B;--g6:#996515;--g7:#7A4F10;
-  --nG:#00FF87;--nR:#FF2D55;
-  --bg:#050508;--card:rgba(9,9,16,.97);
-  --inp:rgba(255,255,255,.04);
-  --brd:rgba(255,215,0,.15);--brdA:rgba(255,215,0,.55);
-  --tx:#F0E8D5;--txm:rgba(240,232,213,.44);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
-     min-height:100vh;overflow-x:hidden;direction:rtl;}
-
-/* ─── background ─── */
-.bg-l{position:fixed;inset:0;z-index:0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(180,130,10,.13) 0%,transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 90%,rgba(90,50,5,.16) 0%,transparent 60%),
-    radial-gradient(ellipse 100% 100% at 50% 50%,#07070F 0%,#050508 100%);}
-.bg-g{position:fixed;inset:0;z-index:0;
-  background-image:
-    linear-gradient(rgba(212,160,23,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(212,160,23,.04) 1px,transparent 1px);
-  background-size:60px 60px;
-  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);}
-#ptc{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
-.pt{position:absolute;border-radius:50%;animation:flt linear infinite;opacity:0;}
-@keyframes flt{
-  0%  {transform:translateY(100vh) scale(0);opacity:0}
-  10% {opacity:.6}
-  90% {opacity:.15}
-  100%{transform:translateY(-30px) scale(1);opacity:0}
-}
-
-/* ─── layout ─── */
-.wrap{position:relative;z-index:1;min-height:100vh;
-      display:flex;flex-direction:column;align-items:center;
-      justify-content:center;padding:44px 20px;}
-
-/* ─── logo ─── */
-.logo-box{text-align:center;margin-bottom:36px;
-          animation:lgE 1.2s cubic-bezier(.22,1,.36,1) both;}
-@keyframes lgE{from{opacity:0;transform:translateY(-28px) scale(.9)}to{opacity:1;transform:none}}
-
-.logo-txt{
-  font-family:'Cinzel',serif;font-weight:900;letter-spacing:10px;
-  font-size:clamp(38px,8vw,68px);
-  background:linear-gradient(135deg,
-    var(--g1) 0%,var(--g2) 14%,var(--g3) 28%,
-    var(--g4) 42%,var(--g5) 56%,var(--g6) 72%,
-    var(--g7) 86%,var(--g1) 100%);
-  background-size:200% 200%;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:gsh 4s ease-in-out infinite;
-  filter:drop-shadow(0 0 28px rgba(212,160,23,.5));}
-@keyframes gsh{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-
-.logo-line{height:2px;width:0;margin:10px auto;
-  background:linear-gradient(90deg,transparent,var(--g4),transparent);
-  animation:lx 1.5s .3s ease forwards;}
-@keyframes lx{to{width:70%}}
-
-.logo-sub{font-size:10.5px;letter-spacing:6px;color:var(--g5);
-          font-family:'Cinzel',serif;text-transform:uppercase;margin-top:4px;}
-
-/* ─── card ─── */
-.card{width:100%;max-width:520px;background:var(--card);
-  border:1px solid var(--brd);border-radius:24px;padding:48px 42px 40px;
-  position:relative;backdrop-filter:blur(30px);
-  box-shadow:
-    0 0 0 1px rgba(255,215,0,.05),
-    0 40px 80px rgba(0,0,0,.7),
-    0 0 40px rgba(212,160,23,.2),
-    inset 0 1px 0 rgba(255,215,0,.07);
-  animation:cdE 1s .25s cubic-bezier(.22,1,.36,1) both;}
-@keyframes cdE{from{opacity:0;transform:translateY(36px) scale(.96)}to{opacity:1;transform:none}}
-.card::before{content:'';position:absolute;inset:-1px;border-radius:25px;
-  background:linear-gradient(135deg,rgba(212,160,23,.25),transparent 40%,transparent 60%,rgba(212,160,23,.08));
-  z-index:-1;pointer-events:none;}
-
-.card-title{font-size:21px;font-weight:700;text-align:center;
-            margin-bottom:28px;letter-spacing:.5px;}
-.card-title span{color:var(--g3);}
-
-/* ─── referral banner ─── */
-.rn{display:flex;align-items:center;gap:9px;padding:10px 14px;margin-bottom:18px;
-    background:rgba(212,160,23,.07);border:1px solid rgba(212,160,23,.2);
-    border-radius:10px;font-size:12.5px;color:var(--g4);}
-
-/* ─── field ─── */
-.fg{margin-bottom:18px;}
-.lbl{display:block;font-size:11.5px;font-weight:700;letter-spacing:2px;
-     text-transform:uppercase;color:var(--g5);margin-bottom:7px;}
-.iw{position:relative;display:flex;align-items:center;}
-
-.fi{width:100%;padding:13px 46px 13px 18px;background:var(--inp);
-    border:1.5px solid var(--brd);border-radius:12px;color:var(--tx);
-    font-family:'Cairo',sans-serif;font-size:15px;font-weight:500;
-    outline:none;transition:all .3s ease;direction:ltr;}
-.fi::placeholder{color:var(--txm);}
-.fi:focus{border-color:var(--brdA);background:rgba(255,255,255,.055);
-          box-shadow:0 0 0 3px rgba(212,160,23,.1),0 0 18px rgba(212,160,23,.08);}
-.fi.ok{border-color:var(--nG);box-shadow:0 0 0 3px rgba(0,255,135,.07),0 0 14px rgba(0,255,135,.1);}
-.fi.er{border-color:var(--nR);box-shadow:0 0 0 3px rgba(255,45,85,.07),0 0 14px rgba(255,45,85,.1);}
-
-/* status icon */
-.si{position:absolute;left:13px;font-size:17px;font-weight:900;
-    animation:sip .3s cubic-bezier(.34,1.56,.64,1);}
-@keyframes sip{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.si.ok{color:var(--nG);text-shadow:0 0 10px var(--nG);}
-.si.er{color:var(--nR);text-shadow:0 0 10px var(--nR);}
-
-/* loading dots */
-.dots{display:flex;gap:3px;position:absolute;left:14px;}
-.dots span{width:5px;height:5px;border-radius:50%;background:var(--g3);
-           animation:db 1s infinite;}
-.dots span:nth-child(2){animation-delay:.15s;}
-.dots span:nth-child(3){animation-delay:.30s;}
-@keyframes db{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1.1);opacity:1}}
-
-/* field message */
-.fm{font-size:11.5px;margin-top:5px;min-height:16px;
-    padding-right:2px;letter-spacing:.4px;transition:all .3s;}
-.fm.ok{color:var(--nG);}
-.fm.er{color:var(--nR);}
-
-/* suggestions */
-.sugg{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px;}
-.stag{padding:4px 12px;border-radius:20px;
-  background:rgba(212,160,23,.09);border:1px solid rgba(212,160,23,.22);
-  color:var(--g3);font-size:12px;cursor:pointer;transition:all .2s;
-  font-family:'Cairo',sans-serif;}
-.stag:hover{background:rgba(212,160,23,.2);border-color:var(--g3);transform:translateY(-1px);}
-
-/* ─── phone row ─── */
-.ph-row{display:flex;gap:9px;}
-.ph-sel{flex-shrink:0;padding:13px 12px;background:var(--inp);
-  border:1.5px solid var(--brd);border-radius:12px;color:var(--tx);
-  font-family:'Cairo',sans-serif;font-size:13.5px;min-width:90px;
-  direction:ltr;outline:none;cursor:pointer;transition:border .3s;
-  -webkit-appearance:none;appearance:none;text-align:center;}
-.ph-sel:focus{border-color:var(--brdA);}
-.ph-sel option{background:#0D0D1B;}
-
-/* ─── divider ─── */
-.div{display:flex;align-items:center;gap:12px;margin:20px 0;}
-.div-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,.2),transparent);}
-.div-t{font-size:11px;color:var(--txm);letter-spacing:3px;white-space:nowrap;}
-
-/* ─── strength ─── */
-.sb-w{margin-top:9px;height:5px;border-radius:10px;background:rgba(255,255,255,.07);overflow:hidden;}
-.sb{height:100%;border-radius:10px;width:0%;transition:all .5s cubic-bezier(.22,1,.36,1);}
-.sb.s0{width:0;background:transparent;}
-.sb.s1{width:25%;background:var(--nR);box-shadow:0 0 8px var(--nR);}
-.sb.s2{width:50%;background:#FF9500;box-shadow:0 0 8px #FF9500;}
-.sb.s3{width:75%;background:var(--g1);box-shadow:0 0 8px var(--g1);}
-.sb.s4{width:100%;background:var(--nG);box-shadow:0 0 10px var(--nG);}
-.sl{font-size:11px;text-align:left;margin-top:4px;transition:color .3s;
-    letter-spacing:1px;text-transform:uppercase;}
-
-/* password rules */
-.pwr{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;}
-.pi{display:flex;align-items:center;gap:6px;font-size:11.5px;
-    color:var(--txm);transition:color .3s;}
-.pi.met{color:var(--nG);}
-.pi .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;
-         display:flex;align-items:center;justify-content:center;
-         font-size:9px;flex-shrink:0;transition:all .3s;}
-.pi.met .dot{background:var(--nG);border-color:var(--nG);box-shadow:0 0 8px var(--nG);}
-
-/* eye button */
-.eye{position:absolute;left:12px;font-size:15px;cursor:pointer;
-     background:none;border:none;color:var(--txm);transition:color .2s;
-     padding:4px;line-height:1;}
-.eye:hover{color:var(--g3);}
-
-/* ─── terms ─── */
-.tr{display:flex;align-items:flex-start;gap:12px;margin:20px 0;}
-.ck{width:20px;height:20px;flex-shrink:0;border:1.5px solid var(--brdA);
-    border-radius:6px;background:var(--inp);cursor:pointer;transition:all .3s;
-    display:flex;align-items:center;justify-content:center;margin-top:2px;}
-.ck.on{background:var(--g4);border-color:var(--g3);box-shadow:0 0 10px rgba(212,160,23,.4);}
-.ck .cm{font-size:12px;display:none;font-weight:900;}
-.ck.on .cm{display:block;}
-.tr-t{font-size:13px;color:var(--txm);line-height:1.65;}
-.tl{color:var(--g3);cursor:pointer;text-decoration:underline;text-underline-offset:2px;
-    transition:color .2s;}
-.tl:hover{color:var(--g1);}
-
-/* ─── submit ─── */
-.btn-sub{width:100%;padding:15px;border:none;border-radius:14px;
-  background:linear-gradient(135deg,var(--g4),var(--g2),var(--g5));
-  background-size:200% 200%;color:#1a0f00;
-  font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;
-  letter-spacing:2px;cursor:pointer;position:relative;overflow:hidden;
-  transition:all .3s;animation:gsh 3s ease infinite;
-  box-shadow:0 8px 28px rgba(180,130,10,.35);}
-.btn-sub:hover:not(:disabled){transform:translateY(-2px);
-  box-shadow:0 12px 36px rgba(180,130,10,.55);}
-.btn-sub:active:not(:disabled){transform:translateY(0);}
-.btn-sub:disabled{opacity:.32;cursor:not-allowed;animation:none;
-  background:rgba(100,80,30,.4);color:var(--txm);}
-.btn-sub::before{content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
-  transform:translateX(-100%);transition:transform .6s;}
-.btn-sub:hover::before{transform:translateX(100%);}
-
-.spin{display:inline-block;width:17px;height:17px;
-      border:2px solid rgba(0,0,0,.2);border-top-color:#1a0f00;
-      border-radius:50%;animation:sp .7s linear infinite;
-      vertical-align:middle;margin-right:8px;}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-/* login prompt */
-.lp{text-align:center;margin-top:24px;font-size:13.5px;color:var(--txm);}
-.ll{color:var(--g3);font-weight:700;text-decoration:none;margin-right:5px;
-    display:inline-flex;align-items:center;gap:4px;transition:color .2s;}
-.ll:hover{color:var(--g1);}
-
-/* ═══════════ MODALS ═══════════ */
-.ov{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.88);
-    backdrop-filter:blur(14px);display:flex;align-items:center;
-    justify-content:center;padding:20px;opacity:0;
-    transition:opacity .35s;pointer-events:none;}
-.ov.open{opacity:1;pointer-events:all;}
-
-.md{background:linear-gradient(145deg,#0D0D1B,#09090F);
-    border:1px solid rgba(212,160,23,.28);border-radius:26px;
-    padding:46px 40px;width:100%;max-width:600px;position:relative;
-    box-shadow:0 0 0 1px rgba(255,215,0,.05),0 60px 120px rgba(0,0,0,.9),
-               0 0 80px rgba(180,130,10,.12);
-    transform:scale(.9) translateY(18px);
-    transition:transform .38s cubic-bezier(.22,1,.36,1);
-    max-height:90vh;overflow-y:auto;}
-.ov.open .md{transform:none;}
-
-.md-x{position:absolute;top:18px;left:18px;width:36px;height:36px;
-      border-radius:50%;background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.09);color:var(--txm);
-      font-size:18px;cursor:pointer;display:flex;align-items:center;
-      justify-content:center;transition:all .2s;}
-.md-x:hover{background:rgba(255,45,85,.15);border-color:var(--nR);color:var(--nR);}
-
-/* terms modal */
-.tm-ic{font-size:46px;text-align:center;margin-bottom:8px;}
-.tm-h{font-size:22px;font-weight:900;text-align:center;margin-bottom:22px;
-  background:linear-gradient(135deg,var(--g1),var(--g5));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.ts{margin-bottom:20px;}
-.ts h3{font-size:12.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-       color:var(--g4);margin-bottom:8px;border-right:3px solid var(--g4);padding-right:10px;}
-.ts p,.ts li{font-size:13.5px;line-height:1.85;color:var(--txm);}
-.ts ul{padding-right:18px;}
-.ts li{margin-bottom:5px;}
-.ts li::marker{color:var(--g5);}
-.btn-acc{width:100%;padding:13px;background:linear-gradient(135deg,var(--g4),var(--g2));
-  border:none;border-radius:12px;color:#1a0f00;font-family:'Cairo',sans-serif;
-  font-size:15px;font-weight:900;cursor:pointer;margin-top:20px;
-  transition:all .3s;box-shadow:0 4px 18px rgba(180,130,10,.35);}
-.btn-acc:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(180,130,10,.5);}
-
-/* ── success modal ── */
-.sc-ring-wrap{position:relative;width:110px;height:110px;margin:0 auto 20px;}
-.sc-ring{position:absolute;inset:0;border-radius:50%;
-  border:3px solid transparent;
-  border-top-color:var(--nG);border-right-color:var(--nG);
-  animation:ring-spin 1.6s linear infinite;
-  box-shadow:0 0 18px rgba(0,255,135,.35);}
-.sc-ring2{position:absolute;inset:10px;border-radius:50%;
-  border:2px solid transparent;border-bottom-color:rgba(0,255,135,.4);
-  animation:ring-spin 2.4s linear infinite reverse;}
-@keyframes ring-spin{to{transform:rotate(360deg)}}
-.sc-emoji{position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;font-size:44px;animation:em-pop .5s cubic-bezier(.34,1.56,.64,1) both;}
-@keyframes em-pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.sc-h{font-size:26px;font-weight:900;color:var(--nG);text-align:center;margin-bottom:6px;
-      text-shadow:0 0 20px rgba(0,255,135,.5);
-      animation:sc-h-in .5s .2s cubic-bezier(.22,1,.36,1) both;}
-@keyframes sc-h-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.sc-s{font-size:13.5px;color:var(--txm);line-height:1.8;text-align:center;margin-bottom:14px;
-      animation:sc-h-in .5s .35s both;}
-.sc-email-wrap{text-align:center;margin-bottom:6px;
-               animation:sc-h-in .5s .45s both;}
-.sc-email{display:inline-flex;align-items:center;gap:8px;
-  padding:9px 20px;background:rgba(0,255,135,.09);
-  border:1px solid rgba(0,255,135,.3);border-radius:24px;color:var(--nG);
-  font-size:13px;font-weight:600;direction:ltr;letter-spacing:.5px;}
-.sc-email .em-ic{font-size:16px;}
-.wlc{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.14);
-     border-radius:14px;padding:18px;margin-top:16px;text-align:center;
-     animation:sc-h-in .5s .55s both;}
-.wlc p{font-size:13px;line-height:1.8;color:var(--txm);}
-.wlc strong{color:var(--g3);}
-/* countdown bar */
-.cd-bar-wrap{margin-top:20px;animation:sc-h-in .5s .65s both;}
-.cd-label{font-size:12px;color:var(--txm);text-align:center;margin-bottom:8px;
-          letter-spacing:1px;}
-.cd-label span{color:var(--nG);font-weight:700;font-size:16px;}
-.cd-track{height:5px;background:rgba(255,255,255,.07);border-radius:10px;overflow:hidden;}
-.cd-fill{height:100%;background:linear-gradient(90deg,var(--nG),var(--g1));
-         border-radius:10px;width:100%;
-         box-shadow:0 0 8px rgba(0,255,135,.5);
-         transition:width .9s linear;}
-.btn-go{width:100%;padding:14px;border:none;border-radius:12px;
-  background:linear-gradient(135deg,#004d2a,#00c463,#00FF87);
-  background-size:200% 200%;color:#001a0d;
-  font-family:'Cairo',sans-serif;font-size:15px;font-weight:900;
-  cursor:pointer;margin-top:14px;transition:all .3s;
-  animation:gsh 3s ease infinite,sc-h-in .5s .7s both;
-  box-shadow:0 6px 24px rgba(0,255,135,.3);}
-.btn-go:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,255,135,.5);}
-
-/* ─── toast ─── */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-  background:rgba(20,5,10,.92);border:1px solid rgba(255,45,85,.4);
-  border-radius:14px;padding:13px 24px;font-size:13.5px;color:#FF6B8A;
-  z-index:3000;opacity:0;transition:opacity .35s;pointer-events:none;
-  text-align:center;max-width:380px;backdrop-filter:blur(12px);
-  white-space:pre-line;}
-#toast.show{opacity:1;}
-
-/* ─── confetti ─── */
-.cf{position:fixed;border-radius:2px;
-    animation:cff 2.5s ease-in forwards;z-index:9999;pointer-events:none;top:-20px;}
-@keyframes cff{
-  0%  {transform:translateY(0) rotate(0deg);opacity:1}
-  100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-
-/* ─── shake ─── */
-@keyframes shk{
-  0%,100%{transform:translateX(0)}
-  20%{transform:translateX(-7px)}40%{transform:translateX(7px)}
-  60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-.shk{animation:shk .4s ease;}
-
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-thumb{background:rgba(212,160,23,.3);border-radius:3px;}
-
-@media(max-width:540px){
-  .card,.md{padding:32px 20px;}
-  .pwr{grid-template-columns:1fr;}
-  .logo-txt{letter-spacing:5px;}
-}
-</style>
-</head>
-<body>
-<div class="bg-l"></div>
-<div class="bg-g"></div>
-<div id="ptc"></div>
-<div id="toast"></div>
-
-<!-- ══ PAGE ══ -->
-<div class="wrap">
-
-  <!-- LOGO -->
-  <div class="logo-box">
-    <div class="logo-txt">QRMANI X</div>
-    <div class="logo-line"></div>
-    <div class="logo-sub">Sovereign Access System</div>
-  </div>
-
-  <!-- CARD -->
-  <div class="card">
-    <div class="card-title">إنشاء <span>حساب جديد</span></div>
-
-    <div class="rn" id="rn" style="display:none">
-      <span>🔗</span><span id="rn-t">انضممت عبر رابط إحالة خاص</span>
-    </div>
-
-    <!-- username -->
-    <div class="fg">
-      <label class="lbl">اسم المستخدم</label>
-      <div class="iw">
-        <input class="fi" id="uI" type="text"
-          placeholder="اختر اسماً فريداً…" autocomplete="off" dir="ltr">
-        <div id="uS"></div>
-      </div>
-      <div class="fm" id="uM"></div>
-      <div class="sugg" id="uG"></div>
-    </div>
-
-    <!-- email -->
-    <div class="fg">
-      <label class="lbl">البريد الإلكتروني</label>
-      <div class="iw">
-        <input class="fi" id="eI" type="email"
-          placeholder="example@domain.com" autocomplete="off" dir="ltr">
-        <div id="eS"></div>
-      </div>
-      <div class="fm" id="eM"></div>
-    </div>
-
-    <!-- phone -->
-    <div class="fg">
-      <label class="lbl">رقم الهاتف</label>
-      <div class="ph-row">
-        <select class="ph-sel" id="pc" dir="ltr">
-          <option value="+20">🇪🇬 +20</option>
-          <option value="+966">🇸🇦 +966</option>
-          <option value="+971">🇦🇪 +971</option>
-          <option value="+965">🇰🇼 +965</option>
-          <option value="+974">🇶🇦 +974</option>
-          <option value="+973">🇧🇭 +973</option>
-          <option value="+968">🇴🇲 +968</option>
-          <option value="+962">🇯🇴 +962</option>
-          <option value="+961">🇱🇧 +961</option>
-          <option value="+212">🇲🇦 +212</option>
-          <option value="+213">🇩🇿 +213</option>
-          <option value="+216">🇹🇳 +216</option>
-          <option value="+1">🇺🇸 +1</option>
-          <option value="+44">🇬🇧 +44</option>
-        </select>
-        <div class="iw" style="flex:1">
-          <input class="fi" id="phI" type="tel"
-            placeholder="01xxxxxxxxx" autocomplete="off" dir="ltr">
-          <div id="phS"></div>
-        </div>
-      </div>
-      <div class="fm" id="phM"></div>
-    </div>
-
-    <div class="div">
-      <div class="div-l"></div>
-      <div class="div-t">كلمة المرور</div>
-      <div class="div-l"></div>
-    </div>
-
-    <!-- password -->
-    <div class="fg">
-      <label class="lbl">كلمة المرور</label>
-      <div class="iw">
-        <input class="fi" id="pwI" type="password"
-          placeholder="••••••••••••" autocomplete="new-password"
-          dir="ltr" style="padding-left:42px">
-        <button class="eye" id="pwE" type="button">👁</button>
-      </div>
-      <div class="sb-w"><div class="sb s0" id="sBar"></div></div>
-      <div class="sl" id="sLbl" style="color:var(--txm)">أدخل كلمة المرور</div>
-      <div class="pwr">
-        <div class="pi" id="r-len"><span class="dot">✓</span>8 أحرف على الأقل</div>
-        <div class="pi" id="r-up"> <span class="dot">✓</span>حرف كبير A-Z</div>
-        <div class="pi" id="r-lw"> <span class="dot">✓</span>حرف صغير a-z</div>
-        <div class="pi" id="r-num"><span class="dot">✓</span>رقم 0-9</div>
-        <div class="pi" id="r-sp"> <span class="dot">✓</span>رمز خاص !@#$</div>
-        <div class="pi" id="r-ns"> <span class="dot">✓</span>بدون مسافات</div>
-      </div>
-    </div>
-
-    <!-- confirm -->
-    <div class="fg" style="margin-top:15px">
-      <label class="lbl">تأكيد كلمة المرور</label>
-      <div class="iw">
-        <input class="fi" id="cfI" type="password"
-          placeholder="••••••••••••" autocomplete="new-password"
-          dir="ltr" style="padding-left:42px">
-        <button class="eye" id="cfE" type="button">👁</button>
-        <div id="cfS"></div>
-      </div>
-      <div class="fm" id="cfM"></div>
-    </div>
-
-    <!-- terms -->
-    <div class="tr">
-      <div class="ck" id="ck"><span class="cm">✓</span></div>
-      <div class="tr-t">
-        أوافق على
-        <span class="tl" id="termsLink">شروط الاستخدام وسياسة الخصوصية</span>
-        لمنصة QRMANI X
-      </div>
-    </div>
-
-    <button class="btn-sub" id="subBtn" disabled>إنشاء الحساب</button>
-
-    <div class="lp">
-      لديك حساب بالفعل؟
-      <a href="login.html" class="ll"><span>تسجيل الدخول</span> ←</a>
-    </div>
-  </div>
-</div>
-
-<!-- ══ TERMS MODAL ══ -->
-<div class="ov" id="tmOv">
-  <div class="md">
-    <button class="md-x" id="tmClose">✕</button>
-    <div class="tm-ic">⚖️</div>
-    <div class="tm-h">شروط الاستخدام والاتفاقية</div>
-    <div class="ts"><h3>🔐 الأمان والهوية</h3><ul>
-      <li>يلزم التحقق من البريد الإلكتروني لتفعيل الحساب</li>
-      <li>يُمنع إنشاء حسابات متعددة بنفس البريد أو الهاتف أو الاسم</li>
-      <li>درجة الثقة يجب ألا تقل عن 50 نقطة للوصول الكامل للمنصة</li>
-      <li>بعد 3 محاولات خاطئة يُقفل الحساب 3 دقائق تلقائياً</li>
-      <li>العمليات المالية تستوجب رمز PIN أمني خاص</li>
-    </ul></div>
-    <div class="ts"><h3>⏳ الخمول والحذف</h3><ul>
-      <li>الحسابات الخاملة أكثر من 90 يوماً يُعلَّق وصولها تلقائياً</li>
-      <li>طلبات الحذف تنتظر 72 ساعة قبل التنفيذ للسماح بالتراجع</li>
-      <li>بعد الحذف لا يمكن التسجيل بنفس البيانات لمدة 40 يوماً</li>
-      <li>الحذف اليدوي للحسابات ممنوع — يتم عبر النظام فقط</li>
-    </ul></div>
-    <div class="ts"><h3>💰 النظام المالي والإحالات</h3><ul>
-      <li>كل مستخدم جديد يحصل على 10 نقاط ترحيبية فور إنشاء الحساب</li>
-      <li>جميع العمليات المالية مرتبطة برمز PIN أمني</li>
-      <li>الإحالة الذاتية محظورة — يجب أن يكون المُحيل شخصاً آخر</li>
-      <li>سجلات المعاملات محمية ولا يمكن تعديلها أو حذفها</li>
-    </ul></div>
-    <div class="ts"><h3>🔒 حماية البيانات</h3><ul>
-      <li>البريد الإلكتروني واسم المستخدم والدور لا يمكن تغييرها بعد الإنشاء</li>
-      <li>تغيير رقم الهاتف يستلزم موافقة المسؤول</li>
-      <li>كل جلسة دخول صالحة 24 ساعة فقط</li>
-    </ul></div>
-    <div class="ts"><h3>🛡️ المسؤولية القانونية</h3>
-      <p>باستخدام المنصة تقر بقراءة وفهم والموافقة على جميع الشروط أعلاه.
-         المنصة غير مسؤولة عن أي خسائر ناتجة عن انتهاك هذه الشروط.
-         جميع الحقوق محفوظة لـ QRMANI X © 2025.</p>
-    </div>
-    <button class="btn-acc" id="accBtn">✅ أوافق على جميع الشروط</button>
-  </div>
-</div>
-
-<!-- ══ SUCCESS MODAL ══ -->
-<div class="ov" id="scOv">
-  <div class="md">
-    <!-- spinning ring + emoji -->
-    <div class="sc-ring-wrap">
-      <div class="sc-ring"></div>
-      <div class="sc-ring2"></div>
-      <div class="sc-emoji">🎉</div>
-    </div>
-
-    <div class="sc-h">مرحباً بك في QRMANI X!</div>
-    <p class="sc-s">
-      تم إنشاء حسابك بنجاح! 🎊<br>
-      أرسلنا رابط التفعيل إلى بريدك الإلكتروني — تحقق منه وانقر الرابط لتفعيل حسابك.
-    </p>
-
-    <div class="sc-email-wrap">
-      <span class="sc-email">
-        <span class="em-ic">📧</span>
-        <span id="scEmail">—</span>
-      </span>
-    </div>
-
-    <div class="wlc">
-      <p>
-        🌟 <strong>أهلاً بك في مجتمعنا الحصري!</strong><br>
-        حسابك الآن <strong>قيد التنشيط</strong> — ما إن تنقر رابط التفعيل ستصبح عضواً كاملاً.<br><br>
-        🪙 <strong>10 نقاط ترحيبية</strong> في انتظارك بعد التفعيل!<br>
-        🔐 بياناتك آمنة ومحمية بأعلى معايير التشفير.
-      </p>
-    </div>
-
-    <!-- countdown bar -->
-    <div class="cd-bar-wrap">
-      <div class="cd-label">الانتقال لتسجيل الدخول تلقائياً خلال <span id="cdNum">8</span> ثوانٍ</div>
-      <div class="cd-track"><div class="cd-fill" id="cdFill"></div></div>
-    </div>
-
-    <button class="btn-go" id="goLogin">🔑 الانتقال الآن لتسجيل الدخول</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════
-     MAIN SCRIPT  —  يستنى Firebase يجهز أوله
-══════════════════════════════════════════════════════ -->
 <script>
 (function(){
 
-/* ════ particles ════ */
-(function(){
-  const c=document.getElementById('ptc');
-  const g=['#FFD700','#FFC200','#B8860B','#D4A017'];
-  for(let i=0;i<22;i++){
-    const p=document.createElement('div');p.className='pt';
-    const s=Math.random()*3+1;
-    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;`+
-      `background:${g[0|Math.random()*4]};`+
-      `animation-duration:${Math.random()*14+8}s;`+
-      `animation-delay:${Math.random()*12}s;`;
-    c.appendChild(p);
-  }
-})();
-
-/* ════ wait for Firebase ════ */
+/* ════ WAIT FIREBASE ════ */
 function boot(){
   const FB = window.__FB;
   if(!FB){ window.addEventListener('fb_ready',boot,{once:true}); return; }
@@ -640,510 +10,185 @@ function boot(){
 boot();
 
 function run(FB){
-  const {
-    db, auth, doc, getDoc, setDoc, collection, serverTimestamp,
-    createUserWithEmailAndPassword, sendEmailVerification
-  } = FB;
 
-  /* ── state ── */
-  const S = {
-    u:false, e:false, ph:false, pw:false, cf:false, terms:false,
-    ref: new URLSearchParams(location.search).get('ref') || null
-  };
+const {
+  db, auth, doc, getDoc, setDoc, serverTimestamp,
+  createUserWithEmailAndPassword, sendEmailVerification
+} = FB;
 
-  if(S.ref){
-    const rn=document.getElementById('rn');
-    rn.style.display='flex';
-    document.getElementById('rn-t').textContent=
-      'انضممت عبر رابط إحالة — UID: '+S.ref.slice(0,10)+'…';
+/* ════ STATE ════ */
+const S = { u:false,e:false,ph:false,pw:false,cf:false,terms:false };
+const cache = new Map();
+
+/* ════ HELPERS ════ */
+function setF(p,t,m){
+  const i=document.getElementById(p+'I');
+  const s=document.getElementById(p+'S');
+  const f=document.getElementById(p+'M');
+  i?.classList.remove('ok','er');
+  if(s) s.innerHTML='';
+  if(t==='loading'){
+    s.innerHTML='<div class="dots"><span></span><span></span><span></span></div>';
+    f.textContent=''; return;
+  }
+  if(t==='ok'){ i.classList.add('ok'); s.innerHTML='✓'; }
+  if(t==='er'){ i.classList.add('er'); s.innerHTML='✕'; }
+  f.textContent=m||'';
+}
+
+/* ════ CACHE + FIRESTORE ════ */
+async function regExists(type,val){
+  const key=type+'__'+val;
+  if(cache.has(key)) return cache.get(key);
+
+  try{
+    const snap=await getDoc(doc(db,'public_registry',key));
+    const ex=snap.exists();
+    cache.set(key,ex);
+    return ex;
+  }catch{ return false; }
+}
+
+/* ════ BUTTON ════ */
+function checkBtn(){
+  const ok = S.u&&S.e&&S.ph&&S.pw&&S.cf&&S.terms;
+  document.getElementById('subBtn').disabled=!ok;
+}
+
+/* ════ USERNAME ════ */
+let uReq=0,uT;
+document.getElementById('uI').addEventListener('input',function(){
+  clearTimeout(uT);
+  S.u=false; checkBtn();
+
+  const v=this.value.trim().toLowerCase();
+  const id=++uReq;
+
+  if(v.length<3){ setF('u','er','3 أحرف على الأقل'); return; }
+  if(!/^[a-z0-9_.]+$/.test(v)){ setF('u','er','حروف/أرقام فقط'); return; }
+
+  setF('u','loading');
+
+  uT=setTimeout(async()=>{
+    const ex=await regExists('usernames',v);
+    if(id!==uReq) return;
+
+    if(ex){ setF('u','er','الاسم مستخدم'); }
+    else { setF('u','ok','متاح'); S.u=true; }
+
+    checkBtn();
+  },400);
+});
+
+/* ════ EMAIL ════ */
+let eReq=0,eT;
+document.getElementById('eI').addEventListener('input',function(){
+  clearTimeout(eT);
+  S.e=false; checkBtn();
+
+  const v=this.value.trim().toLowerCase();
+  const id=++eReq;
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+    setF('e','er','إيميل غير صحيح'); return;
   }
 
-  /* ════ FIREBASE READS ════ */
+  setF('e','loading');
 
-  /*
-    قاعدة البيانات:
-      match /public_registry/{type}/{value}
-    يعني:
-      collection  → "public_registry"
-      document    → type  (مثلاً "usernames")
-      subcollection → value  (مثلاً "ahmed")
+  eT=setTimeout(async()=>{
+    const ex=await regExists('emails',v);
+    if(id!==eReq) return;
 
-    الـ path الصح للـ getDoc:
-      doc(db, "public_registry", type, value)
-      — دا بيعمل  public_registry/{type}/{value}
-      لكن Firestore مش بيفهم 4-segment إلا لو كانت collection/doc/collection/doc
-      إذاً الـ path ده:
-        collection "public_registry"  →  doc type  →  subcollection (value as col)  ...
-      
-    المنطق الصحيح هو:
-      doc(db, "public_registry", type)   ← الـ type هو اسم الـ document
-      وجوف subcollection اسمها "records" أو مباشرة:
+    if(ex){ setF('e','er','الإيميل مستخدم'); }
+    else { setF('e','ok','متاح'); S.e=true; }
 
-    الأبسط والأضمن حسب الـ rules:
-      getDoc( doc(db, "public_registry", type + "/" + value) )
-      — لكن Firestore SDK ما بيقبل "/" في اسم document
+    checkBtn();
+  },400);
+});
 
-    الطريقة الصح:
-      collection(db,"public_registry") → document(type) → collection("data") → document(value)
+/* ════ PHONE ════ */
+let phReq=0,phT;
+function valPhone(){
+  clearTimeout(phT);
+  S.ph=false; checkBtn();
 
-    بس الـ rules بتقول /{type}/{value} يعني هي:
-      collection: public_registry
-      document:   {type}    (مثلاً "usernames")
-      — وعشان تحط {value} لازم يبقى subcollection أو field
+  const raw=document.getElementById('phI').value;
+  const code=document.getElementById('pc').value;
+  const num=code+raw.replace(/\D/g,'');
 
-    الأبسط والمتوافق مع الـ rules:
-      نعاملها كـ collection "public_registry" 
-      والـ document هو  type + "_" + value  (مثلاً "usernames_ahmed")
-      ونكتب الـ Rules بشكل مطابق.
+  const id=++phReq;
 
-    لكن بما إن الـ rules موجودة بالفعل:
-      match /public_registry/{type}/{value}
-    ده يعني:
-      المسار: /public_registry/usernames/ahmed
-      Collection: public_registry
-      Document:   usernames     ← هو نفسه الـ {type}
-      ثم {value} هو subcollection أو document داخل الـ usernames ??
+  if(num.length<8){ setF('ph','er','رقم غير صحيح'); return; }
 
-    في Firestore:
-      /A/B/C  →  A=collection, B=document, C=subcollection (ممنوع إلا لو فيه document بعده)
-      /A/B/C/D → A=col, B=doc, C=col, D=doc
+  setF('ph','loading');
 
-    إذاً match /public_registry/{type}/{value} مش valid Firestore path
-    إلا لو كانت:
-      public_registry = collection
-      {type}          = document (مثلاً "usernames")
-      {value}         = subcollection (مثلاً "ahmed") — ده مش ممكن بدون doc بعده
+  phT=setTimeout(async()=>{
+    const ex=await regExists('phones',num);
+    if(id!==phReq) return;
 
-    الاستنتاج: الـ Rules مكتوبة بطريقة تعني:
-      /public_registry/{type}/{value}  حيث type وvalue أجزاء من path
-      والـ SDK call الصح هو:
-        doc(db, "public_registry", type, value)  ← 4 args = 2 segments = col/doc
-        بس ده بيطلع  "public_registry/usernames"  (يعني type فقط بدون value)
+    if(ex){ setF('ph','er','الرقم مستخدم'); }
+    else { setF('ph','ok','متاح'); S.ph=true; }
 
-    الحل النهائي المضمون:
-      نخزن كـ doc في collection "public_registry"
-      باسم مركب: type + "__" + value
-      مثلاً: "usernames__ahmed"
-  */
+    checkBtn();
+  },400);
+}
+document.getElementById('phI').addEventListener('input',valPhone);
 
-  async function regExists(type, value){
-    try{
-      const id = type+'__'+value;
-      const snap = await getDoc(doc(db,'public_registry',id));
-      return snap.exists();
-    }catch(err){
-      console.warn('regExists error',err.code, err.message);
-      return false;
-    }
-  }
+/* ════ PASSWORD ════ */
+document.getElementById('pwI').addEventListener('input',function(){
+  const v=this.value;
+  S.pw = v.length>=8 && /[A-Z]/.test(v) && /[0-9]/.test(v);
+  checkBtn();
+  document.getElementById('cfI').dispatchEvent(new Event('input'));
+});
 
-  async function regWrite(type, value, data){
-    const id = type+'__'+value;
-    await setDoc(doc(db,'public_registry',id),
-      { type, value, ...data, createdAt: serverTimestamp() });
-  }
+/* ════ CONFIRM ════ */
+document.getElementById('cfI').addEventListener('input',function(){
+  const ok = this.value === document.getElementById('pwI').value;
+  S.cf = ok;
+  setF('cf', ok?'ok':'er', ok?'متطابق':'غير متطابق');
+  checkBtn();
+});
 
-  async function blockedExists(val){
-    try{
-      const snap = await getDoc(doc(db,'blocked_recreate',val));
-      return snap.exists();
-    }catch(err){
-      console.warn('blocked check error',err.code);
-      return false;
-    }
-  }
+/* ════ TERMS ════ */
+document.getElementById('ck').onclick=()=>{
+  S.terms=!S.terms;
+  checkBtn();
+};
 
-  async function statsExist(){
-    try{
-      const snap = await getDoc(doc(db,'stats','global'));
-      return snap.exists();
-    }catch(e){ return true; }
-  }
+/* ════ SIGNUP ════ */
+let submitting=false;
 
-  /* ════ UI HELPERS ════ */
+document.getElementById('subBtn').addEventListener('click',async function(){
+  if(submitting || this.disabled) return;
+  submitting=true;
 
-  function setF(prefix, type, msg){
-    // prefix:  "u" | "e" | "ph" | "cf"
-    // inputs:  uI eI phI cfI
-    // status:  uS eS phS cfS
-    // msgs:    uM eM phM cfM
-    const inp = document.getElementById(prefix+'I');
-    const st  = document.getElementById(prefix+'S');
-    const ms  = document.getElementById(prefix+'M');
+  const email=document.getElementById('eI').value.trim();
+  const pass=document.getElementById('pwI').value;
+  const user=document.getElementById('uI').value.trim();
+  const phone=document.getElementById('phI').value;
 
-    if(inp){ inp.classList.remove('ok','er'); }
-    if(st)  st.innerHTML='';
+  this.innerHTML='جارى...';
 
-    if(type==='loading'){
-      if(st) st.innerHTML=
-        '<div class="dots"><span></span><span></span><span></span></div>';
-      if(ms){ ms.className='fm'; ms.textContent=''; }
-      return;
-    }
-    if(type==='ok'){
-      if(inp) inp.classList.add('ok');
-      if(st)  st.innerHTML='<span class="si ok">✓</span>';
-    } else if(type==='er'){
-      if(inp) inp.classList.add('er');
-      if(st)  st.innerHTML='<span class="si er">✕</span>';
-    }
-    if(ms){
-      ms.className='fm'+(type?' '+type:'');
-      ms.textContent=msg||'';
-    }
-  }
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await sendEmailVerification(cred.user);
 
-  function showToast(msg,dur=4500){
-    const t=document.getElementById('toast');
-    t.textContent=msg; t.classList.add('show');
-    clearTimeout(t._t);
-    t._t=setTimeout(()=>t.classList.remove('show'),dur);
-  }
-
-  function checkBtn(){
-    document.getElementById('subBtn').disabled=
-      !(S.u&&S.e&&S.ph&&S.pw&&S.cf&&S.terms);
-  }
-
-  /* ════ USERNAME ════ */
-  let uT;
-  document.getElementById('uI').addEventListener('input',function(){
-    clearTimeout(uT); S.u=false; checkBtn();
-    document.getElementById('uG').innerHTML='';
-    const v=this.value.trim().toLowerCase();
-    if(!v){ setF('u','',''); return; }
-    if(v.length<3){ setF('u','er','الاسم يجب أن يكون 3 أحرف على الأقل'); return; }
-    if(!/^[a-z0-9_.]+$/.test(v)){
-      setF('u','er','أحرف إنجليزية وأرقام و ( _ . ) فقط'); return; }
-    setF('u','loading');
-    uT=setTimeout(async()=>{
-      const exists = await regExists('usernames', v);
-      if(exists){
-        setF('u','er','هذا الاسم غير متاح — جرب أحد البدائل:');
-        const opts=[v+'_'+~~(Math.random()*999), v+~~(Math.random()*99),
-                    '_'+v+'_', v+'.vip', v+'_x'];
-        document.getElementById('uG').innerHTML=
-          opts.map(o=>`<span class="stag" data-s="${o}">${o}</span>`).join('');
-      } else {
-        setF('u','ok','✅ الاسم متاح!');
-        S.u=true;
-      }
-      checkBtn();
-    },180);
-  });
-
-  document.getElementById('uG').addEventListener('click',function(e){
-    if(!e.target.matches('.stag')) return;
-    const name=e.target.dataset.s;
-    document.getElementById('uI').value=name;
-    this.innerHTML='';
-    document.getElementById('uI').dispatchEvent(new Event('input'));
-  });
-
-  /* ════ EMAIL ════ */
-  let eT;
-  document.getElementById('eI').addEventListener('input',function(){
-    clearTimeout(eT); S.e=false; checkBtn();
-    const v=this.value.trim().toLowerCase();
-    if(!v){ setF('e','',''); return; }
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
-      setF('e','er','صيغة البريد الإلكتروني غير صحيحة'); return; }
-    setF('e','loading');
-    eT=setTimeout(async()=>{
-      if(await blockedExists(v)){
-        setF('e','er','⛔ هذا البريد محظور من التسجيل لمدة 40 يوم');
-        S.e=false; checkBtn(); return;
-      }
-      if(await regExists('emails',v)){
-        setF('e','er','⚠️ هذا البريد مسجل بالفعل — سجّل الدخول');
-        S.e=false;
-      } else {
-        setF('e','ok','✅ البريد متاح للتسجيل');
-        S.e=true;
-      }
-      checkBtn();
-    },180);
-  });
-
-  /* ════ PHONE ════ */
-  let phT;
-  function valPhone(){
-    clearTimeout(phT); S.ph=false; checkBtn();
-    const raw=document.getElementById('phI').value.trim();
-    const code=document.getElementById('pc').value;
-    if(!raw){ setF('ph','',''); return; }
-    const digits=raw.replace(/^0/,'').replace(/\D/g,'');
-    if(digits.length<6||digits.length>15){
-      setF('ph','er','رقم الهاتف غير صحيح'); return; }
-    const full=code+digits;
-    setF('ph','loading');
-    phT=setTimeout(async()=>{
-      if(await blockedExists(full)){
-        setF('ph','er','⛔ هذا الرقم محظور من التسجيل لمدة 40 يوم');
-        S.ph=false; checkBtn(); return;
-      }
-      if(await regExists('phones',full)){
-        setF('ph','er','⚠️ هذا الرقم مسجل بالفعل');
-        S.ph=false;
-      } else {
-        setF('ph','ok','✅ الرقم متاح');
-        S.ph=true;
-      }
-      checkBtn();
-    },180);
-  }
-  document.getElementById('phI').addEventListener('input',valPhone);
-  document.getElementById('pc').addEventListener('change',valPhone);
-
-  /* ════ PASSWORD ════ */
-  const sLbls=['','ضعيفة جداً 😰','ضعيفة 😟','متوسطة 🙂','قوية جداً 💪'];
-  const sCols=['var(--txm)','var(--nR)','#FF9500','var(--g1)','var(--nG)'];
-
-  document.getElementById('pwI').addEventListener('input',function(){
-    const pw=this.value;
-    const R={
-      len: pw.length>=8,
-      up:  /[A-Z]/.test(pw),
-      lw:  /[a-z]/.test(pw),
-      num: /[0-9]/.test(pw),
-      sp:  /[!@#$%^&*()\-_=+\[\]{}|;':",.<>/?`~]/.test(pw),
-      ns:  pw.length>0 && !/\s/.test(pw)
-    };
-    Object.entries(R).forEach(([k,v])=>{
-      const el=document.getElementById('r-'+k);
-      if(el) el.classList.toggle('met',v);
+    await setDoc(doc(db,'users',cred.user.uid),{
+      email,user,phone,
+      createdAt:serverTimestamp()
     });
-    const score=Object.values(R).filter(Boolean).length;
-    const bar=document.getElementById('sBar');
-    if(!pw){ bar.className='sb s0'; }
-    else    { bar.className='sb s'+(score<=2?1:score<=4?2:score<=5?3:4); }
-    const lvl=!pw?0:score<=2?1:score<=4?2:score<=5?3:4;
-    const sl=document.getElementById('sLbl');
-    sl.textContent=sLbls[lvl]||'أدخل كلمة المرور';
-    sl.style.color=sCols[lvl];
-    S.pw=score>=5;
-    checkBtn();
-    document.getElementById('cfI').dispatchEvent(new Event('input'));
-  });
 
-  /* ════ CONFIRM ════ */
-  document.getElementById('cfI').addEventListener('input',function(){
-    const pw=document.getElementById('pwI').value;
-    const cf=this.value;
-    const st=document.getElementById('cfS');
-    const ms=document.getElementById('cfM');
-    this.classList.remove('ok','er'); st.innerHTML='';
-    if(!cf){ ms.className='fm'; ms.textContent=''; S.cf=false; checkBtn(); return; }
-    if(cf===pw){
-      this.classList.add('ok');
-      st.innerHTML='<span class="si ok">✓</span>';
-      ms.className='fm ok'; ms.textContent='✅ كلمتا المرور متطابقتان';
-      S.cf=true;
-    } else {
-      this.classList.add('er');
-      st.innerHTML='<span class="si er">✕</span>';
-      ms.className='fm er'; ms.textContent='⚠️ كلمتا المرور غير متطابقتين';
-      S.cf=false;
-    }
-    checkBtn();
-  });
+    alert('تم إنشاء الحساب بنجاح');
 
-  /* ════ EYE TOGGLE ════ */
-  function eyeSetup(inpId,btnId){
-    document.getElementById(btnId).addEventListener('click',function(){
-      const inp=document.getElementById(inpId);
-      inp.type=inp.type==='password'?'text':'password';
-      this.textContent=inp.type==='password'?'👁':'🙈';
-    });
-  }
-  eyeSetup('pwI','pwE');
-  eyeSetup('cfI','cfE');
-
-  /* ════ TERMS ════ */
-  document.getElementById('ck').addEventListener('click',function(){
-    S.terms=!S.terms;
-    this.classList.toggle('on',S.terms);
-    checkBtn();
-  });
-  document.getElementById('termsLink').addEventListener('click',function(){
-    document.getElementById('tmOv').classList.add('open');
-    document.body.style.overflow='hidden';
-  });
-  function closeTermsModal(){
-    document.getElementById('tmOv').classList.remove('open');
-    document.body.style.overflow='';
-  }
-  document.getElementById('tmClose').addEventListener('click',closeTermsModal);
-  document.getElementById('tmOv').addEventListener('click',function(e){
-    if(e.target===this) closeTermsModal();
-  });
-  document.getElementById('accBtn').addEventListener('click',function(){
-    S.terms=true;
-    document.getElementById('ck').classList.add('on');
-    checkBtn(); closeTermsModal();
-  });
-
-  /* ════ CONFETTI ════ */
-  function confetti(){
-    const cols=['#FFD700','#00FF87','#FF6B6B','#4ECDC4','#FFB347','#C3F73A','#FF9FF3'];
-    for(let i=0;i<90;i++){
-      setTimeout(()=>{
-        const d=document.createElement('div');d.className='cf';
-        d.style.cssText=
-          `left:${Math.random()*100}%;`+
-          `background:${cols[0|Math.random()*cols.length]};`+
-          `width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;`+
-          `border-radius:${Math.random()>.5?'50%':'3px'};`+
-          `animation-duration:${Math.random()*2+2}s;`+
-          `animation-delay:${Math.random()*.4}s;`;
-        document.body.appendChild(d);
-        setTimeout(()=>d.remove(),3800);
-      },i*28);
-    }
+  }catch(e){
+    alert(e.code);
   }
 
-  /* ════ MAIN SIGNUP ════ */
-  document.getElementById('subBtn').addEventListener('click',async function(){
-    if(this.disabled) return;
+  this.innerHTML='إنشاء الحساب';
+  submitting=false;
+});
 
-    const email    = document.getElementById('eI').value.trim().toLowerCase();
-    const password = document.getElementById('pwI').value;
-    const username = document.getElementById('uI').value.trim().toLowerCase();
-    const rawPh    = document.getElementById('phI').value.trim();
-    const code     = document.getElementById('pc').value;
-    const phone    = code + rawPh.replace(/^0/,'').replace(/\D/g,'');
-
-    this.disabled=true;
-    this.innerHTML='<span class="spin"></span>جارٍ إنشاء الحساب…';
-
-    try{
-      /* 1 ─ Firebase Auth */
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      const uid  = cred.user.uid;
-
-      /* 2 ─ إرسال إيميل التفعيل */
-      await sendEmailVerification(cred.user);
-
-      /* 3 ─ هل أول مستخدم؟ */
-      const isFirst = !(await statsExist());
-
-      /* 4 ─ /users/{uid} */
-      await setDoc(doc(db,'users',uid),{
-        uid, username, email, phone,
-        role:          isFirst ? 'owner' : 'user',
-        status:        'pending',
-        emailVerified: false,
-        trustScore:    50,
-        points:        10,
-        failedAttempts:0,
-        lockUntil:     null,
-        lastLogin:     serverTimestamp(),
-        createdAt:     serverTimestamp(),
-        referredBy:    S.ref || null,
-        adminApproval: false
-      });
-
-      /* 5 ─ public_registry */
-      await regWrite('usernames', username, { uid });
-      await regWrite('emails',    email,    { uid });
-      await regWrite('phones',    phone,    { uid });
-
-      /* 6 ─ إحالة */
-      if(S.ref && S.ref !== uid){
-        await setDoc(doc(db,'referrals', S.ref+'_'+uid),{
-          referrerUid: S.ref,
-          referredUid: uid,
-          createdAt:   serverTimestamp()
-        });
-      }
-
-      /* 7 ─ جلسة 24 ساعة */
-      await setDoc(doc(db,'sessions',uid),{
-        uid,
-        createdAt: serverTimestamp(),
-        expiresAt: new Date(Date.now()+86400000)
-      });
-
-      /* ── SUCCESS ── */
-      confetti();
-      document.getElementById('scEmail').textContent=email;
-      openSuccessModal();
-
-
-    }catch(err){
-      console.error('[SIGNUP]', err.code, err.message);
-      this.innerHTML='إنشاء الحساب';
-      this.disabled=false; checkBtn();
-
-      const map={
-        'auth/email-already-in-use':
-          '⚠️ هذا البريد موجود في Firebase Auth بالفعل\nجرب تسجيل الدخول أو بريداً آخر',
-        'auth/weak-password':
-          '⚠️ كلمة المرور ضعيفة جداً — استخدم 8 أحرف متنوعة',
-        'auth/network-request-failed':
-          '⚠️ تحقق من اتصالك بالإنترنت وأعد المحاولة',
-        'auth/too-many-requests':
-          '⚠️ طلبات متكررة — انتظر دقيقة ثم أعد المحاولة',
-        'auth/invalid-email':
-          '⚠️ صيغة البريد الإلكتروني غير صحيحة',
-        'permission-denied':
-          '⚠️ Firestore رفض العملية\nتأكد من تطبيق الـ Security Rules الصحيحة',
-        'unavailable':
-          '⚠️ الخدمة غير متاحة مؤقتاً — أعد المحاولة'
-      };
-      showToast(map[err.code] || '⚠️ خطأ: '+err.code+'\n'+err.message.slice(0,80));
-
-      /* إذا كان خطأ Firestore بعد نجاح Auth نوضح المشكلة */
-      if(err.code && !err.code.startsWith('auth/')){
-        setF('e','er','فشل حفظ البيانات في Firestore — تحقق من الـ Rules');
-      }
-    }
-  });
-
-  /* ─ success modal with countdown ─ */
-  let cdTimer=null;
-  function openSuccessModal(){
-    const ov=document.getElementById('scOv');
-    ov.classList.add('open');
-    document.body.style.overflow='hidden';
-
-    // Start 8-second countdown
-    let secs=8;
-    const numEl=document.getElementById('cdNum');
-    const fillEl=document.getElementById('cdFill');
-    numEl.textContent=secs;
-    fillEl.style.width='100%';
-
-    // shrink bar every second
-    function tick(){
-      secs--;
-      numEl.textContent=secs;
-      fillEl.style.width=(secs/8*100)+'%';
-      if(secs<=0){ clearInterval(cdTimer); goToLogin(); }
-    }
-    cdTimer=setInterval(tick,1000);
-  }
-
-  function goToLogin(){ location.href='login.html'; }
-
-  document.getElementById('scOv').addEventListener('click',function(e){
-    if(e.target===this){ clearInterval(cdTimer); goToLogin(); }
-  });
-  document.getElementById('goLogin').addEventListener('click',function(){
-    clearInterval(cdTimer); goToLogin();
-  });
-
-  /* ─ Enter key ─ */
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Enter'){
-      const b=document.getElementById('subBtn');
-      if(!b.disabled) b.click();
-    }
-  });
-
-}/* end run() */
-
+}
 })();
 </script>
-</body>
-</html>
