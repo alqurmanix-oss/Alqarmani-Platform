@@ -1,670 +1,1073 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إنشاء حساب | QRMANI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>إنشاء حساب | QRMANI X</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
 
+<!-- ══════════════════════════════════════════════════════════
+     FIREBASE ESM MODULE  ─  single source of truth
+     الـ module معزول لكنه يضع كل حاجة على window.__FB
+     قبل ما يرفع event  fb_ready
+══════════════════════════════════════════════════════════ -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp, query, where, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAnalytics }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
-    authDomain: "alqurmani-auth-x.firebaseapp.com",
-    projectId: "alqurmani-auth-x",
-    storageBucket: "alqurmani-auth-x.firebasestorage.app",
-    messagingSenderId: "558487419521",
-    appId: "1:558487419521:web:fcf791247b7eefc2a82b80",
-    measurementId: "G-B34HTXXMVS"
-  };
+const app = initializeApp({
+  apiKey:            "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
+  authDomain:        "alqurmani-auth-x.firebaseapp.com",
+  projectId:         "alqurmani-auth-x",
+  storageBucket:     "alqurmani-auth-x.firebasestorage.app",
+  messagingSenderId: "558487419521",
+  appId:             "1:558487419521:web:fcf791247b7eefc2a82b80",
+  measurementId:     "G-B34HTXXMVS"
+});
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  
-  // تصدير الأدوات للنافذة العامة لاستخدامها في السكريبت السفلي
-  window._db = db;
-  window._auth = auth;
-  window._firestore = { doc, getDoc, setDoc, collection, serverTimestamp, query, where, getDocs, runTransaction };
-  window._authMethods = { createUserWithEmailAndPassword, sendEmailVerification };
+getAnalytics(app);
+
+window.__FB = {
+  db:   getFirestore(app),
+  auth: getAuth(app),
+  /* Firestore helpers */
+  doc, getDoc, setDoc, collection, serverTimestamp,
+  /* Auth helpers */
+  createUserWithEmailAndPassword, sendEmailVerification
+};
+
+window.dispatchEvent(new Event("fb_ready"));
 </script>
 
 <style>
-:root {
-  --gold-1: #FFD700;
-  --gold-2: #FFC200;
-  --gold-3: #FFB000;
-  --gold-4: #D4A017;
-  --gold-5: #B8860B;
-  --gold-6: #996515;
-  --gold-7: #7A4F10;
-  --neon-green: #00FF87;
-  --neon-red: #FF2D55;
-  --bg-deep: #050508;
-  --bg-card: rgba(10,10,18,0.97);
-  --bg-input: rgba(255,255,255,0.04);
-  --border-subtle: rgba(255,215,0,0.15);
-  --border-active: rgba(255,215,0,0.6);
-  --text-primary: #F0E8D5;
-  --text-muted: rgba(240,232,213,0.5);
-  --shadow-gold: 0 0 40px rgba(212,160,23,0.25);
-  --shadow-neon: 0 0 20px rgba(0,255,135,0.4);
+/* ═══════════ VARIABLES ═══════════ */
+:root{
+  --g1:#FFD700;--g2:#FFC200;--g3:#FFB000;
+  --g4:#D4A017;--g5:#B8860B;--g6:#996515;--g7:#7A4F10;
+  --nG:#00FF87;--nR:#FF2D55;
+  --bg:#050508;--card:rgba(9,9,16,.97);
+  --inp:rgba(255,255,255,.04);
+  --brd:rgba(255,215,0,.15);--brdA:rgba(255,215,0,.55);
+  --tx:#F0E8D5;--txm:rgba(240,232,213,.44);
 }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
+     min-height:100vh;overflow-x:hidden;direction:rtl;}
 
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  font-family: 'Cairo', 'Tajawal', sans-serif;
-  background: var(--bg-deep);
-  min-height: 100vh;
-  overflow-x: hidden;
-  color: var(--text-primary);
-  direction: rtl;
-}
-
-/* ─── ANIMATED BACKGROUND ─── */
-.bg-layer {
-  position: fixed; inset: 0; z-index: 0;
+/* ─── background ─── */
+.bg-l{position:fixed;inset:0;z-index:0;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(180,130,10,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 90%, rgba(90,50,5,0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 100% at 50% 50%, #07070F 0%, #050508 100%);
-}
-
-.bg-grid {
-  position: fixed; inset: 0; z-index: 0;
+    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(180,130,10,.13) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 90%,rgba(90,50,5,.16) 0%,transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%,#07070F 0%,#050508 100%);}
+.bg-g{position:fixed;inset:0;z-index:0;
   background-image:
-    linear-gradient(rgba(212,160,23,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(212,160,23,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    linear-gradient(rgba(212,160,23,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,160,23,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);}
+#ptc{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.pt{position:absolute;border-radius:50%;animation:flt linear infinite;opacity:0;}
+@keyframes flt{
+  0%  {transform:translateY(100vh) scale(0);opacity:0}
+  10% {opacity:.6}
+  90% {opacity:.15}
+  100%{transform:translateY(-30px) scale(1);opacity:0}
 }
 
-.particles {
-  position: fixed; inset: 0; z-index: 0; overflow: hidden;
-}
-.particle {
-  position: absolute; border-radius: 50%;
-  background: var(--gold-1);
-  animation: float-particle linear infinite;
-  opacity: 0;
-}
+/* ─── layout ─── */
+.wrap{position:relative;z-index:1;min-height:100vh;
+      display:flex;flex-direction:column;align-items:center;
+      justify-content:center;padding:44px 20px;}
 
-@keyframes float-particle {
-  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-  10%  { opacity: 0.6; }
-  90%  { opacity: 0.2; }
-  100% { transform: translateY(-20px) scale(1); opacity: 0; }
-}
+/* ─── logo ─── */
+.logo-box{text-align:center;margin-bottom:36px;
+          animation:lgE 1.2s cubic-bezier(.22,1,.36,1) both;}
+@keyframes lgE{from{opacity:0;transform:translateY(-28px) scale(.9)}to{opacity:1;transform:none}}
 
-/* ─── MAIN LAYOUT ─── */
-.page-wrapper {
-  position: relative; z-index: 1;
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px 20px;
-}
+.logo-txt{
+  font-family:'Cinzel',serif;font-weight:900;letter-spacing:10px;
+  font-size:clamp(38px,8vw,68px);
+  background:linear-gradient(135deg,
+    var(--g1) 0%,var(--g2) 14%,var(--g3) 28%,
+    var(--g4) 42%,var(--g5) 56%,var(--g6) 72%,
+    var(--g7) 86%,var(--g1) 100%);
+  background-size:200% 200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gsh 4s ease-in-out infinite;
+  filter:drop-shadow(0 0 28px rgba(212,160,23,.5));}
+@keyframes gsh{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 
-/* ─── LOGO ─── */
-.logo-container {
-  text-align: center; margin-bottom: 36px;
-  animation: logo-enter 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
-}
+.logo-line{height:2px;width:0;margin:10px auto;
+  background:linear-gradient(90deg,transparent,var(--g4),transparent);
+  animation:lx 1.5s .3s ease forwards;}
+@keyframes lx{to{width:70%}}
 
-@keyframes logo-enter {
-  from { opacity:0; transform: translateY(-30px) scale(0.9); }
-  to   { opacity:1; transform: translateY(0) scale(1); }
-}
+.logo-sub{font-size:10.5px;letter-spacing:6px;color:var(--g5);
+          font-family:'Cinzel',serif;text-transform:uppercase;margin-top:4px;}
 
-.logo-text {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(42px, 8vw, 72px);
-  font-weight: 900;
-  letter-spacing: 12px;
-  background: linear-gradient(
-    135deg,
-    var(--gold-1) 0%,
-    var(--gold-2) 14%,
-    var(--gold-3) 28%,
-    var(--gold-4) 42%,
-    var(--gold-5) 56%,
-    var(--gold-6) 72%,
-    var(--gold-7) 86%,
-    var(--gold-1) 100%
-  );
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gold-shimmer 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 30px rgba(212,160,23,0.5));
-}
-
-@keyframes gold-shimmer {
-  0%,100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-
-.logo-line {
-  height: 2px; width: 60%;
-  margin: 10px auto;
-  background: linear-gradient(90deg, transparent, var(--gold-4), transparent);
-  animation: line-expand 1.5s ease forwards;
-}
-
-@keyframes line-expand {
-  from { width: 0; opacity: 0; }
-  to   { width: 60%; opacity: 1; }
-}
-
-.logo-sub {
-  font-size: 11px; letter-spacing: 6px;
-  color: var(--gold-5); text-transform: uppercase;
-  font-family: 'Cinzel', serif;
-}
-
-/* ─── CARD ─── */
-.card {
-  width: 100%; max-width: 520px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 24px;
-  padding: 48px 44px 40px;
-  position: relative;
-  backdrop-filter: blur(30px);
+/* ─── card ─── */
+.card{width:100%;max-width:520px;background:var(--card);
+  border:1px solid var(--brd);border-radius:24px;padding:48px 42px 40px;
+  position:relative;backdrop-filter:blur(30px);
   box-shadow:
-    0 0 0 1px rgba(255,215,0,0.06),
-    0 40px 80px rgba(0,0,0,0.7),
-    var(--shadow-gold),
-    inset 0 1px 0 rgba(255,215,0,0.08);
-  animation: card-enter 1s cubic-bezier(0.22,1,0.36,1) 0.3s both;
-}
+    0 0 0 1px rgba(255,215,0,.05),
+    0 40px 80px rgba(0,0,0,.7),
+    0 0 40px rgba(212,160,23,.2),
+    inset 0 1px 0 rgba(255,215,0,.07);
+  animation:cdE 1s .25s cubic-bezier(.22,1,.36,1) both;}
+@keyframes cdE{from{opacity:0;transform:translateY(36px) scale(.96)}to{opacity:1;transform:none}}
+.card::before{content:'';position:absolute;inset:-1px;border-radius:25px;
+  background:linear-gradient(135deg,rgba(212,160,23,.25),transparent 40%,transparent 60%,rgba(212,160,23,.08));
+  z-index:-1;pointer-events:none;}
 
-@keyframes card-enter {
-  from { opacity:0; transform: translateY(40px) scale(0.96); }
-  to   { opacity:1; transform: translateY(0) scale(1); }
-}
+.card-title{font-size:21px;font-weight:700;text-align:center;
+            margin-bottom:28px;letter-spacing:.5px;}
+.card-title span{color:var(--g3);}
 
-.card::before {
-  content:''; position:absolute; inset:-1px;
-  border-radius: 25px;
-  background: linear-gradient(135deg, rgba(212,160,23,0.3), transparent 40%, transparent 60%, rgba(212,160,23,0.1));
-  z-index: -1; pointer-events: none;
-}
+/* ─── referral banner ─── */
+.rn{display:flex;align-items:center;gap:9px;padding:10px 14px;margin-bottom:18px;
+    background:rgba(212,160,23,.07);border:1px solid rgba(212,160,23,.2);
+    border-radius:10px;font-size:12.5px;color:var(--g4);}
 
-.card-title {
-  font-size: 22px; font-weight: 700;
-  text-align: center; margin-bottom: 32px;
-  color: var(--text-primary);
-  letter-spacing: 1px;
-}
-.card-title span { color: var(--gold-3); }
+/* ─── field ─── */
+.fg{margin-bottom:18px;}
+.lbl{display:block;font-size:11.5px;font-weight:700;letter-spacing:2px;
+     text-transform:uppercase;color:var(--g5);margin-bottom:7px;}
+.iw{position:relative;display:flex;align-items:center;}
 
-/* ─── FORM FIELDS ─── */
-.field-group { margin-bottom: 20px; position: relative; }
+.fi{width:100%;padding:13px 46px 13px 18px;background:var(--inp);
+    border:1.5px solid var(--brd);border-radius:12px;color:var(--tx);
+    font-family:'Cairo',sans-serif;font-size:15px;font-weight:500;
+    outline:none;transition:all .3s ease;direction:ltr;}
+.fi::placeholder{color:var(--txm);}
+.fi:focus{border-color:var(--brdA);background:rgba(255,255,255,.055);
+          box-shadow:0 0 0 3px rgba(212,160,23,.1),0 0 18px rgba(212,160,23,.08);}
+.fi.ok{border-color:var(--nG);box-shadow:0 0 0 3px rgba(0,255,135,.07),0 0 14px rgba(0,255,135,.1);}
+.fi.er{border-color:var(--nR);box-shadow:0 0 0 3px rgba(255,45,85,.07),0 0 14px rgba(255,45,85,.1);}
 
-.field-label {
-  display: block; font-size: 12px; font-weight: 600;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: var(--gold-5); margin-bottom: 8px;
-  transition: color 0.3s;
-}
+/* status icon */
+.si{position:absolute;left:13px;font-size:17px;font-weight:900;
+    animation:sip .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes sip{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.si.ok{color:var(--nG);text-shadow:0 0 10px var(--nG);}
+.si.er{color:var(--nR);text-shadow:0 0 10px var(--nR);}
 
-.input-wrapper {
-  position: relative; display: flex; align-items: center;
-}
+/* loading dots */
+.dots{display:flex;gap:3px;position:absolute;left:14px;}
+.dots span{width:5px;height:5px;border-radius:50%;background:var(--g3);
+           animation:db 1s infinite;}
+.dots span:nth-child(2){animation-delay:.15s;}
+.dots span:nth-child(3){animation-delay:.30s;}
+@keyframes db{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1.1);opacity:1}}
 
-.field-input {
-  width: 100%; padding: 14px 50px 14px 20px;
-  background: var(--bg-input);
-  border: 1.5px solid var(--border-subtle);
-  border-radius: 12px;
-  color: var(--text-primary);
-  font-family: 'Cairo', sans-serif;
-  font-size: 15px; font-weight: 500;
-  outline: none;
-  transition: all 0.3s ease;
-  direction: rtl;
-}
+/* field message */
+.fm{font-size:11.5px;margin-top:5px;min-height:16px;
+    padding-right:2px;letter-spacing:.4px;transition:all .3s;}
+.fm.ok{color:var(--nG);}
+.fm.er{color:var(--nR);}
 
-.field-input::placeholder { color: var(--text-muted); }
+/* suggestions */
+.sugg{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px;}
+.stag{padding:4px 12px;border-radius:20px;
+  background:rgba(212,160,23,.09);border:1px solid rgba(212,160,23,.22);
+  color:var(--g3);font-size:12px;cursor:pointer;transition:all .2s;
+  font-family:'Cairo',sans-serif;}
+.stag:hover{background:rgba(212,160,23,.2);border-color:var(--g3);transform:translateY(-1px);}
 
-.field-input:focus {
-  border-color: var(--border-active);
-  background: rgba(255,255,255,0.06);
-  box-shadow: 0 0 0 3px rgba(212,160,23,0.1), 0 0 20px rgba(212,160,23,0.1);
-}
+/* ─── phone row ─── */
+.ph-row{display:flex;gap:9px;}
+.ph-sel{flex-shrink:0;padding:13px 12px;background:var(--inp);
+  border:1.5px solid var(--brd);border-radius:12px;color:var(--tx);
+  font-family:'Cairo',sans-serif;font-size:13.5px;min-width:90px;
+  direction:ltr;outline:none;cursor:pointer;transition:border .3s;
+  -webkit-appearance:none;appearance:none;text-align:center;}
+.ph-sel:focus{border-color:var(--brdA);}
+.ph-sel option{background:#0D0D1B;}
 
-.field-input.valid {
-  border-color: var(--neon-green);
-  box-shadow: 0 0 0 3px rgba(0,255,135,0.08), 0 0 15px rgba(0,255,135,0.12);
-}
+/* ─── divider ─── */
+.div{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.div-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,.2),transparent);}
+.div-t{font-size:11px;color:var(--txm);letter-spacing:3px;white-space:nowrap;}
 
-.field-input.invalid {
-  border-color: var(--neon-red);
-  box-shadow: 0 0 0 3px rgba(255,45,85,0.08), 0 0 15px rgba(255,45,85,0.12);
-}
+/* ─── strength ─── */
+.sb-w{margin-top:9px;height:5px;border-radius:10px;background:rgba(255,255,255,.07);overflow:hidden;}
+.sb{height:100%;border-radius:10px;width:0%;transition:all .5s cubic-bezier(.22,1,.36,1);}
+.sb.s0{width:0;background:transparent;}
+.sb.s1{width:25%;background:var(--nR);box-shadow:0 0 8px var(--nR);}
+.sb.s2{width:50%;background:#FF9500;box-shadow:0 0 8px #FF9500;}
+.sb.s3{width:75%;background:var(--g1);box-shadow:0 0 8px var(--g1);}
+.sb.s4{width:100%;background:var(--nG);box-shadow:0 0 10px var(--nG);}
+.sl{font-size:11px;text-align:left;margin-top:4px;transition:color .3s;
+    letter-spacing:1px;text-transform:uppercase;}
 
-.field-icon {
-  position: absolute; left: 16px;
-  font-size: 18px; pointer-events: none;
-  transition: all 0.3s;
-}
+/* password rules */
+.pwr{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;}
+.pi{display:flex;align-items:center;gap:6px;font-size:11.5px;
+    color:var(--txm);transition:color .3s;}
+.pi.met{color:var(--nG);}
+.pi .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;
+         display:flex;align-items:center;justify-content:center;
+         font-size:9px;flex-shrink:0;transition:all .3s;}
+.pi.met .dot{background:var(--nG);border-color:var(--nG);box-shadow:0 0 8px var(--nG);}
 
-.status-icon {
-  position: absolute; left: 14px;
-  font-size: 18px; font-weight: 900;
-  transition: all 0.3s;
-  animation: pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
-}
+/* eye button */
+.eye{position:absolute;left:12px;font-size:15px;cursor:pointer;
+     background:none;border:none;color:var(--txm);transition:color .2s;
+     padding:4px;line-height:1;}
+.eye:hover{color:var(--g3);}
 
-@keyframes pop-in {
-  from { transform: scale(0); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
-}
+/* ─── terms ─── */
+.tr{display:flex;align-items:flex-start;gap:12px;margin:20px 0;}
+.ck{width:20px;height:20px;flex-shrink:0;border:1.5px solid var(--brdA);
+    border-radius:6px;background:var(--inp);cursor:pointer;transition:all .3s;
+    display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.ck.on{background:var(--g4);border-color:var(--g3);box-shadow:0 0 10px rgba(212,160,23,.4);}
+.ck .cm{font-size:12px;display:none;font-weight:900;}
+.ck.on .cm{display:block;}
+.tr-t{font-size:13px;color:var(--txm);line-height:1.65;}
+.tl{color:var(--g3);cursor:pointer;text-decoration:underline;text-underline-offset:2px;
+    transition:color .2s;}
+.tl:hover{color:var(--g1);}
 
-.status-icon.ok  { color: var(--neon-green); text-shadow: 0 0 12px var(--neon-green); }
-.status-icon.err { color: var(--neon-red);   text-shadow: 0 0 12px var(--neon-red); }
+/* ─── submit ─── */
+.btn-sub{width:100%;padding:15px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--g4),var(--g2),var(--g5));
+  background-size:200% 200%;color:#1a0f00;
+  font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;
+  letter-spacing:2px;cursor:pointer;position:relative;overflow:hidden;
+  transition:all .3s;animation:gsh 3s ease infinite;
+  box-shadow:0 8px 28px rgba(180,130,10,.35);}
+.btn-sub:hover:not(:disabled){transform:translateY(-2px);
+  box-shadow:0 12px 36px rgba(180,130,10,.55);}
+.btn-sub:active:not(:disabled){transform:translateY(0);}
+.btn-sub:disabled{opacity:.32;cursor:not-allowed;animation:none;
+  background:rgba(100,80,30,.4);color:var(--txm);}
+.btn-sub::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  transform:translateX(-100%);transition:transform .6s;}
+.btn-sub:hover::before{transform:translateX(100%);}
 
-/* ─── FEEDBACK MESSAGES ─── */
-.field-msg {
-  font-size: 11.5px; margin-top: 6px; padding-right: 4px;
-  min-height: 16px; transition: all 0.3s;
-  letter-spacing: 0.5px;
-}
-.field-msg.ok  { color: var(--neon-green); }
-.field-msg.err { color: var(--neon-red); }
+.spin{display:inline-block;width:17px;height:17px;
+      border:2px solid rgba(0,0,0,.2);border-top-color:#1a0f00;
+      border-radius:50%;animation:sp .7s linear infinite;
+      vertical-align:middle;margin-right:8px;}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-/* ─── SUGGESTIONS ─── */
-.suggestions {
-  margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;
-}
-.suggestion-tag {
-  padding: 4px 12px; border-radius: 20px;
-  background: rgba(212,160,23,0.1);
-  border: 1px solid rgba(212,160,23,0.25);
-  color: var(--gold-3); font-size: 12px; cursor: pointer;
-  transition: all 0.2s; font-family: 'Cairo', sans-serif;
-}
-.suggestion-tag:hover {
-  background: rgba(212,160,23,0.2);
-  border-color: var(--gold-3);
-  transform: translateY(-1px);
-}
+/* login prompt */
+.lp{text-align:center;margin-top:24px;font-size:13.5px;color:var(--txm);}
+.ll{color:var(--g3);font-weight:700;text-decoration:none;margin-right:5px;
+    display:inline-flex;align-items:center;gap:4px;transition:color .2s;}
+.ll:hover{color:var(--g1);}
 
-/* ─── PASSWORD STRENGTH ─── */
-.strength-bar-wrap {
-  margin-top: 10px;
-  height: 5px; border-radius: 10px;
-  background: rgba(255,255,255,0.08);
-  overflow: hidden;
-}
-.strength-bar {
-  height: 100%; border-radius: 10px;
-  transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
-  width: 0%;
-}
-.strength-0 { width:0%;   background: transparent; }
-.strength-1 { width:25%;  background: var(--neon-red); box-shadow: 0 0 8px var(--neon-red); }
-.strength-2 { width:50%;  background: #FF9500; box-shadow: 0 0 8px #FF9500; }
-.strength-3 { width:75%;  background: var(--gold-1); box-shadow: 0 0 8px var(--gold-1); }
-.strength-4 { width:100%; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
+/* ═══════════ MODALS ═══════════ */
+.ov{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.88);
+    backdrop-filter:blur(14px);display:flex;align-items:center;
+    justify-content:center;padding:20px;opacity:0;
+    transition:opacity .35s;pointer-events:none;}
+.ov.open{opacity:1;pointer-events:all;}
 
-.strength-label {
-  font-size: 11px; text-align: left;
-  margin-top: 4px; transition: color 0.3s;
-  letter-spacing: 1px; text-transform: uppercase;
-}
+.md{background:linear-gradient(145deg,#0D0D1B,#09090F);
+    border:1px solid rgba(212,160,23,.28);border-radius:26px;
+    padding:46px 40px;width:100%;max-width:600px;position:relative;
+    box-shadow:0 0 0 1px rgba(255,215,0,.05),0 60px 120px rgba(0,0,0,.9),
+               0 0 80px rgba(180,130,10,.12);
+    transform:scale(.9) translateY(18px);
+    transition:transform .38s cubic-bezier(.22,1,.36,1);
+    max-height:90vh;overflow-y:auto;}
+.ov.open .md{transform:none;}
 
-/* ─── PASSWORD RULES ─── */
-.pw-rules {
-  margin-top: 14px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 6px 12px;
-}
-.pw-rule {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11.5px; color: var(--text-muted);
-  transition: color 0.3s;
-}
-.pw-rule.met { color: var(--neon-green); }
-.pw-rule .rule-dot {
-  width: 14px; height: 14px; border-radius: 50%;
-  border: 1.5px solid currentColor;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; flex-shrink: 0; transition: all 0.3s;
-}
-.pw-rule.met .rule-dot {
-  background: var(--neon-green);
-  border-color: var(--neon-green);
-  box-shadow: 0 0 8px var(--neon-green);
-}
+.md-x{position:absolute;top:18px;left:18px;width:36px;height:36px;
+      border-radius:50%;background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.09);color:var(--txm);
+      font-size:18px;cursor:pointer;display:flex;align-items:center;
+      justify-content:center;transition:all .2s;}
+.md-x:hover{background:rgba(255,45,85,.15);border-color:var(--nR);color:var(--nR);}
 
-/* ─── PHONE INPUT ─── */
-.phone-row { display: flex; gap: 10px; }
-.phone-code {
-  flex-shrink: 0; padding: 14px 16px;
-  background: var(--bg-input);
-  border: 1.5px solid var(--border-subtle);
-  border-radius: 12px; color: var(--text-primary);
-  font-family: 'Cairo', sans-serif;
-  font-size: 15px; cursor: pointer;
-  transition: all 0.3s; min-width: 90px;
-  text-align: center; direction: ltr;
-}
-.phone-code:focus { outline: none; border-color: var(--border-active); }
+/* terms modal */
+.tm-ic{font-size:46px;text-align:center;margin-bottom:8px;}
+.tm-h{font-size:22px;font-weight:900;text-align:center;margin-bottom:22px;
+  background:linear-gradient(135deg,var(--g1),var(--g5));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ts{margin-bottom:20px;}
+.ts h3{font-size:12.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+       color:var(--g4);margin-bottom:8px;border-right:3px solid var(--g4);padding-right:10px;}
+.ts p,.ts li{font-size:13.5px;line-height:1.85;color:var(--txm);}
+.ts ul{padding-right:18px;}
+.ts li{margin-bottom:5px;}
+.ts li::marker{color:var(--g5);}
+.btn-acc{width:100%;padding:13px;background:linear-gradient(135deg,var(--g4),var(--g2));
+  border:none;border-radius:12px;color:#1a0f00;font-family:'Cairo',sans-serif;
+  font-size:15px;font-weight:900;cursor:pointer;margin-top:20px;
+  transition:all .3s;box-shadow:0 4px 18px rgba(180,130,10,.35);}
+.btn-acc:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(180,130,10,.5);}
 
-/* ─── TERMS ─── */
-.terms-row {
-  display: flex; align-items: flex-start; gap: 12px;
-  margin: 22px 0;
-}
-.custom-check {
-  width: 20px; height: 20px; flex-shrink: 0;
-  border: 1.5px solid var(--border-active);
-  border-radius: 6px; background: var(--bg-input);
-  cursor: pointer; transition: all 0.3s;
-  display: flex; align-items: center; justify-content: center;
-  margin-top: 2px;
-}
-.custom-check.checked {
-  background: var(--gold-4);
-  border-color: var(--gold-3);
-  box-shadow: 0 0 10px rgba(212,160,23,0.4);
-}
-.custom-check .check-mark { font-size: 12px; display: none; }
-.custom-check.checked .check-mark { display: block; }
-.terms-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-.terms-link {
-  color: var(--gold-3); cursor: pointer;
-  text-decoration: underline; text-underline-offset: 2px;
-  transition: color 0.2s;
-}
-.terms-link:hover { color: var(--gold-1); }
+/* success modal */
+.sc-c{width:86px;height:86px;border-radius:50%;margin:0 auto 16px;
+  background:radial-gradient(circle,rgba(0,255,135,.18),rgba(0,255,135,.04));
+  border:2px solid var(--nG);
+  box-shadow:0 0 28px rgba(0,255,135,.35),inset 0 0 16px rgba(0,255,135,.08);
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  animation:sp2 2.2s ease-in-out infinite;}
+@keyframes sp2{
+  0%,100%{box-shadow:0 0 28px rgba(0,255,135,.35),inset 0 0 16px rgba(0,255,135,.08)}
+  50%    {box-shadow:0 0 55px rgba(0,255,135,.65),inset 0 0 26px rgba(0,255,135,.18)}}
+.sc-h{font-size:24px;font-weight:900;color:var(--nG);text-align:center;margin-bottom:8px;
+      text-shadow:0 0 18px rgba(0,255,135,.45);}
+.sc-s{font-size:13.5px;color:var(--txm);line-height:1.75;text-align:center;margin-bottom:12px;}
+.sc-email{display:inline-block;padding:7px 18px;background:rgba(0,255,135,.09);
+  border:1px solid rgba(0,255,135,.28);border-radius:20px;color:var(--nG);
+  font-size:13px;font-weight:600;direction:ltr;letter-spacing:.5px;}
+.wlc{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.14);
+     border-radius:14px;padding:16px;margin-top:16px;text-align:center;}
+.wlc p{font-size:13px;line-height:1.75;color:var(--txm);}
+.wlc strong{color:var(--g3);}
+.btn-go{width:100%;padding:13px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,#004d2a,#00FF87);color:#001a0d;
+  font-family:'Cairo',sans-serif;font-size:15px;font-weight:900;
+  cursor:pointer;margin-top:20px;transition:all .3s;
+  box-shadow:0 4px 18px rgba(0,255,135,.28);}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(0,255,135,.5);}
 
-/* ─── SUBMIT BUTTON ─── */
-.btn-submit {
-  width: 100%; padding: 16px;
-  background: linear-gradient(135deg, var(--gold-4), var(--gold-2), var(--gold-5));
-  background-size: 200% 200%;
-  border: none; border-radius: 14px;
-  color: #1a0f00; font-family: 'Cairo', sans-serif;
-  font-size: 16px; font-weight: 900;
-  letter-spacing: 2px; cursor: pointer;
-  position: relative; overflow: hidden;
-  transition: all 0.3s;
-  box-shadow: 0 8px 30px rgba(180,130,10,0.4);
-}
-.btn-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(180,130,10,0.6);
-}
-.btn-submit:disabled {
-  opacity: 0.4; cursor: not-allowed;
-  background: rgba(100,80,30,0.4); color: var(--text-muted);
-}
+/* ─── toast ─── */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  background:rgba(20,5,10,.92);border:1px solid rgba(255,45,85,.4);
+  border-radius:14px;padding:13px 24px;font-size:13.5px;color:#FF6B8A;
+  z-index:3000;opacity:0;transition:opacity .35s;pointer-events:none;
+  text-align:center;max-width:380px;backdrop-filter:blur(12px);
+  white-space:pre-line;}
+#toast.show{opacity:1;}
 
-/* ─── MODALS ─── */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(12px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px; opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
+/* ─── confetti ─── */
+.cf{position:fixed;border-radius:2px;
+    animation:cff 2.5s ease-in forwards;z-index:9999;pointer-events:none;top:-20px;}
+@keyframes cff{
+  0%  {transform:translateY(0) rotate(0deg);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 
-.modal {
-  background: linear-gradient(145deg, #0D0D1A, #09090F);
-  border: 1px solid rgba(212,160,23,0.3);
-  border-radius: 28px; padding: 48px 44px;
-  width: 100%; max-width: 600px;
-  position: relative;
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
-  max-height: 90vh; overflow-y: auto;
-}
-.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+/* ─── shake ─── */
+@keyframes shk{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-7px)}40%{transform:translateX(7px)}
+  60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.shk{animation:shk .4s ease;}
 
-.success-email-badge {
-  display: inline-block; padding: 8px 20px;
-  background: rgba(0,255,135,0.1); border: 1px solid rgba(0,255,135,0.3);
-  border-radius: 20px; color: var(--neon-green); font-size: 13px;
-  font-weight: 600; direction: ltr;
-}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:rgba(212,160,23,.3);border-radius:3px;}
 
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
+@media(max-width:540px){
+  .card,.md{padding:32px 20px;}
+  .pwr{grid-template-columns:1fr;}
+  .logo-txt{letter-spacing:5px;}
 }
-.shake { animation: shake 0.4s ease; }
 </style>
 </head>
 <body>
+<div class="bg-l"></div>
+<div class="bg-g"></div>
+<div id="ptc"></div>
+<div id="toast"></div>
 
-<div class="bg-layer"></div>
-<div class="bg-grid"></div>
-<div class="particles" id="particles"></div>
+<!-- ══ PAGE ══ -->
+<div class="wrap">
 
-<div class="page-wrapper">
-  <div class="logo-container">
-    <div class="logo-text">QRMANI</div>
+  <!-- LOGO -->
+  <div class="logo-box">
+    <div class="logo-txt">QRMANI X</div>
     <div class="logo-line"></div>
     <div class="logo-sub">Sovereign Access System</div>
   </div>
 
-  <div class="card" id="signupCard">
+  <!-- CARD -->
+  <div class="card">
     <div class="card-title">إنشاء <span>حساب جديد</span></div>
 
-    <div class="referral-note" id="refNote" style="display:none; padding:10px; background:rgba(212,160,23,0.1); border-radius:10px; margin-bottom:15px; font-size:12px; color:var(--gold-1);">
-      <span class="ref-icon">🔗</span>
-      <span id="refText">انضممت عبر رابط إحالة خاص</span>
+    <div class="rn" id="rn" style="display:none">
+      <span>🔗</span><span id="rn-t">انضممت عبر رابط إحالة خاص</span>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">اسم المستخدم</label>
-      <div class="input-wrapper">
-        <input type="text" class="field-input" id="usernameInput" placeholder="اختر اسماً فريداً..." autocomplete="off" dir="ltr">
-        <div id="usernameStatus"></div>
+    <!-- username -->
+    <div class="fg">
+      <label class="lbl">اسم المستخدم</label>
+      <div class="iw">
+        <input class="fi" id="uI" type="text"
+          placeholder="اختر اسماً فريداً…" autocomplete="off" dir="ltr">
+        <div id="uS"></div>
       </div>
-      <div class="field-msg" id="usernameMsg"></div>
+      <div class="fm" id="uM"></div>
+      <div class="sugg" id="uG"></div>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">البريد الإلكتروني</label>
-      <div class="input-wrapper">
-        <input type="email" class="field-input" id="emailInput" placeholder="example@domain.com" autocomplete="off" dir="ltr">
-        <div id="emailStatus"></div>
+    <!-- email -->
+    <div class="fg">
+      <label class="lbl">البريد الإلكتروني</label>
+      <div class="iw">
+        <input class="fi" id="eI" type="email"
+          placeholder="example@domain.com" autocomplete="off" dir="ltr">
+        <div id="eS"></div>
       </div>
-      <div class="field-msg" id="emailMsg"></div>
+      <div class="fm" id="eM"></div>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">رقم الهاتف</label>
-      <div class="phone-row">
-        <select class="phone-code" id="phoneCode" dir="ltr">
+    <!-- phone -->
+    <div class="fg">
+      <label class="lbl">رقم الهاتف</label>
+      <div class="ph-row">
+        <select class="ph-sel" id="pc" dir="ltr">
           <option value="+20">🇪🇬 +20</option>
           <option value="+966">🇸🇦 +966</option>
           <option value="+971">🇦🇪 +971</option>
+          <option value="+965">🇰🇼 +965</option>
+          <option value="+974">🇶🇦 +974</option>
+          <option value="+973">🇧🇭 +973</option>
+          <option value="+968">🇴🇲 +968</option>
+          <option value="+962">🇯🇴 +962</option>
+          <option value="+961">🇱🇧 +961</option>
+          <option value="+212">🇲🇦 +212</option>
+          <option value="+213">🇩🇿 +213</option>
+          <option value="+216">🇹🇳 +216</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+44">🇬🇧 +44</option>
         </select>
-        <div class="input-wrapper" style="flex:1">
-          <input type="tel" class="field-input" id="phoneInput" placeholder="0xxxxxxxxx" dir="ltr">
-          <div id="phoneStatus"></div>
+        <div class="iw" style="flex:1">
+          <input class="fi" id="phI" type="tel"
+            placeholder="01xxxxxxxxx" autocomplete="off" dir="ltr">
+          <div id="phS"></div>
         </div>
       </div>
-      <div class="field-msg" id="phoneMsg"></div>
+      <div class="fm" id="phM"></div>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">كلمة المرور</label>
-      <div class="input-wrapper">
-        <input type="password" class="field-input" id="passwordInput" placeholder="••••••••••••" dir="ltr">
+    <div class="div">
+      <div class="div-l"></div>
+      <div class="div-t">كلمة المرور</div>
+      <div class="div-l"></div>
+    </div>
+
+    <!-- password -->
+    <div class="fg">
+      <label class="lbl">كلمة المرور</label>
+      <div class="iw">
+        <input class="fi" id="pwI" type="password"
+          placeholder="••••••••••••" autocomplete="new-password"
+          dir="ltr" style="padding-left:42px">
+        <button class="eye" id="pwE" type="button">👁</button>
       </div>
-      <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
-      <div class="pw-rules" style="font-size:10px; margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-         <div id="r-len">● 8 أحرف</div>
-         <div id="r-upper">● حرف كبير</div>
-         <div id="r-num">● رقم</div>
-         <div id="r-special">● رمز خاص</div>
+      <div class="sb-w"><div class="sb s0" id="sBar"></div></div>
+      <div class="sl" id="sLbl" style="color:var(--txm)">أدخل كلمة المرور</div>
+      <div class="pwr">
+        <div class="pi" id="r-len"><span class="dot">✓</span>8 أحرف على الأقل</div>
+        <div class="pi" id="r-up"> <span class="dot">✓</span>حرف كبير A-Z</div>
+        <div class="pi" id="r-lw"> <span class="dot">✓</span>حرف صغير a-z</div>
+        <div class="pi" id="r-num"><span class="dot">✓</span>رقم 0-9</div>
+        <div class="pi" id="r-sp"> <span class="dot">✓</span>رمز خاص !@#$</div>
+        <div class="pi" id="r-ns"> <span class="dot">✓</span>بدون مسافات</div>
       </div>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">تأكيد كلمة المرور</label>
-      <input type="password" class="field-input" id="confirmInput" placeholder="••••••••••••" dir="ltr">
-      <div class="field-msg" id="confirmMsg"></div>
+    <!-- confirm -->
+    <div class="fg" style="margin-top:15px">
+      <label class="lbl">تأكيد كلمة المرور</label>
+      <div class="iw">
+        <input class="fi" id="cfI" type="password"
+          placeholder="••••••••••••" autocomplete="new-password"
+          dir="ltr" style="padding-left:42px">
+        <button class="eye" id="cfE" type="button">👁</button>
+        <div id="cfS"></div>
+      </div>
+      <div class="fm" id="cfM"></div>
     </div>
 
-    <div class="terms-row">
-      <div class="custom-check" id="termsCheck" onclick="toggleTerms()"><span class="check-mark">✓</span></div>
-      <div class="terms-text">أوافق على الشروط</div>
+    <!-- terms -->
+    <div class="tr">
+      <div class="ck" id="ck"><span class="cm">✓</span></div>
+      <div class="tr-t">
+        أوافق على
+        <span class="tl" id="termsLink">شروط الاستخدام وسياسة الخصوصية</span>
+        لمنصة QRMANI X
+      </div>
     </div>
 
-    <button class="btn-submit" id="submitBtn" onclick="handleSignup()" disabled>إنشاء الحساب</button>
+    <button class="btn-sub" id="subBtn" disabled>إنشاء الحساب</button>
+
+    <div class="lp">
+      لديك حساب بالفعل؟
+      <a href="login.html" class="ll"><span>تسجيل الدخول</span> ←</a>
+    </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="successModalOverlay">
-  <div class="modal">
-    <h2 style="color:var(--neon-green)">تم التسجيل بنجاح!</h2>
-    <p style="margin:20px 0;">تم إرسال رابط التفعيل إلى بريدك الإلكتروني.</p>
-    <div id="successEmail" class="success-email-badge"></div>
-    <button class="btn-submit" onclick="location.href='login.html'" style="margin-top:20px;">الدخول الآن</button>
+<!-- ══ TERMS MODAL ══ -->
+<div class="ov" id="tmOv">
+  <div class="md">
+    <button class="md-x" id="tmClose">✕</button>
+    <div class="tm-ic">⚖️</div>
+    <div class="tm-h">شروط الاستخدام والاتفاقية</div>
+    <div class="ts"><h3>🔐 الأمان والهوية</h3><ul>
+      <li>يلزم التحقق من البريد الإلكتروني لتفعيل الحساب</li>
+      <li>يُمنع إنشاء حسابات متعددة بنفس البريد أو الهاتف أو الاسم</li>
+      <li>درجة الثقة يجب ألا تقل عن 50 نقطة للوصول الكامل للمنصة</li>
+      <li>بعد 3 محاولات خاطئة يُقفل الحساب 3 دقائق تلقائياً</li>
+      <li>العمليات المالية تستوجب رمز PIN أمني خاص</li>
+    </ul></div>
+    <div class="ts"><h3>⏳ الخمول والحذف</h3><ul>
+      <li>الحسابات الخاملة أكثر من 90 يوماً يُعلَّق وصولها تلقائياً</li>
+      <li>طلبات الحذف تنتظر 72 ساعة قبل التنفيذ للسماح بالتراجع</li>
+      <li>بعد الحذف لا يمكن التسجيل بنفس البيانات لمدة 40 يوماً</li>
+      <li>الحذف اليدوي للحسابات ممنوع — يتم عبر النظام فقط</li>
+    </ul></div>
+    <div class="ts"><h3>💰 النظام المالي والإحالات</h3><ul>
+      <li>كل مستخدم جديد يحصل على 10 نقاط ترحيبية فور إنشاء الحساب</li>
+      <li>جميع العمليات المالية مرتبطة برمز PIN أمني</li>
+      <li>الإحالة الذاتية محظورة — يجب أن يكون المُحيل شخصاً آخر</li>
+      <li>سجلات المعاملات محمية ولا يمكن تعديلها أو حذفها</li>
+    </ul></div>
+    <div class="ts"><h3>🔒 حماية البيانات</h3><ul>
+      <li>البريد الإلكتروني واسم المستخدم والدور لا يمكن تغييرها بعد الإنشاء</li>
+      <li>تغيير رقم الهاتف يستلزم موافقة المسؤول</li>
+      <li>كل جلسة دخول صالحة 24 ساعة فقط</li>
+    </ul></div>
+    <div class="ts"><h3>🛡️ المسؤولية القانونية</h3>
+      <p>باستخدام المنصة تقر بقراءة وفهم والموافقة على جميع الشروط أعلاه.
+         المنصة غير مسؤولة عن أي خسائر ناتجة عن انتهاك هذه الشروط.
+         جميع الحقوق محفوظة لـ QRMANI X © 2025.</p>
+    </div>
+    <button class="btn-acc" id="accBtn">✅ أوافق على جميع الشروط</button>
   </div>
 </div>
 
+<!-- ══ SUCCESS MODAL ══ -->
+<div class="ov" id="scOv">
+  <div class="md" style="text-align:center">
+    <div class="sc-c">🎉</div>
+    <div class="sc-h">مرحباً بك في QRMANI X!</div>
+    <p class="sc-s">تم إنشاء حسابك بنجاح 🎊<br>تم إرسال رابط التفعيل إلى:</p>
+    <span class="sc-email" id="scEmail">—</span>
+    <div class="wlc" style="margin-top:18px">
+      <p>أهلاً بك في مجتمعنا الحصري! 🌟<br>
+         حسابك <strong>قيد التنشيط</strong> — افحص بريدك وانقر رابط التفعيل.<br><br>
+         <strong>حصلت على 10 نقاط ترحيبية 🪙</strong> ستظهر بعد التفعيل!</p>
+    </div>
+    <button class="btn-go" id="goLogin">🔑 الانتقال لتسجيل الدخول</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN SCRIPT  —  يستنى Firebase يجهز أوله
+══════════════════════════════════════════════════════ -->
 <script>
-/* ─── الملحقات الأساسية ─── */
-const state = { username:false, email:false, phone:false, password:false, confirm:false, terms:false, ref:null };
+(function(){
 
-// جلب كود الإحالة من الرابط
-const params = new URLSearchParams(window.location.search);
-if(params.get('ref')) {
-    state.ref = params.get('ref');
-    document.getElementById('refNote').style.display = 'block';
+/* ════ particles ════ */
+(function(){
+  const c=document.getElementById('ptc');
+  const g=['#FFD700','#FFC200','#B8860B','#D4A017'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');p.className='pt';
+    const s=Math.random()*3+1;
+    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;`+
+      `background:${g[0|Math.random()*4]};`+
+      `animation-duration:${Math.random()*14+8}s;`+
+      `animation-delay:${Math.random()*12}s;`;
+    c.appendChild(p);
+  }
+})();
+
+/* ════ wait for Firebase ════ */
+function boot(){
+  const FB = window.__FB;
+  if(!FB){ window.addEventListener('fb_ready',boot,{once:true}); return; }
+  run(FB);
 }
+boot();
 
-function toggleTerms() {
-    state.terms = !state.terms;
-    document.getElementById('termsCheck').classList.toggle('checked', state.terms);
-    validateForm();
-}
+function run(FB){
+  const {
+    db, auth, doc, getDoc, setDoc, collection, serverTimestamp,
+    createUserWithEmailAndPassword, sendEmailVerification
+  } = FB;
 
-function setStatus(field, status, msg) {
-    const input = document.getElementById(field + 'Input');
-    const msgEl = document.getElementById(field + 'Msg');
-    input.className = 'field-input ' + (status === 'ok' ? 'valid' : 'invalid');
-    msgEl.textContent = msg;
-    msgEl.className = 'field-msg ' + status;
-    state[field] = (status === 'ok');
-    validateForm();
-}
+  /* ── state ── */
+  const S = {
+    u:false, e:false, ph:false, pw:false, cf:false, terms:false,
+    ref: new URLSearchParams(location.search).get('ref') || null
+  };
 
-function validateForm() {
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = !(state.username && state.email && state.phone && state.password && state.confirm && state.terms);
-}
+  if(S.ref){
+    const rn=document.getElementById('rn');
+    rn.style.display='flex';
+    document.getElementById('rn-t').textContent=
+      'انضممت عبر رابط إحالة — UID: '+S.ref.slice(0,10)+'…';
+  }
 
-/* ─── التحقق من البيانات عبر Firebase ─── */
-async function checkAvailability(type, value) {
-    const { doc, getDoc } = window._firestore;
-    const ref = doc(window._db, 'public_registry', type + '_' + value);
-    const snap = await getDoc(ref);
-    return !snap.exists();
-}
+  /* ════ FIREBASE READS ════ */
 
-document.getElementById('usernameInput').addEventListener('input', async (e) => {
-    const val = e.target.value.trim();
-    if(val.length < 3) return setStatus('username', 'err', 'قصير جداً');
-    const isOk = await checkAvailability('username', val.toLowerCase());
-    isOk ? setStatus('username', 'ok', 'اسم متاح') : setStatus('username', 'err', 'مستخدم بالفعل');
-});
+  /*
+    قاعدة البيانات:
+      match /public_registry/{type}/{value}
+    يعني:
+      collection  → "public_registry"
+      document    → type  (مثلاً "usernames")
+      subcollection → value  (مثلاً "ahmed")
 
-document.getElementById('emailInput').addEventListener('input', async (e) => {
-    const val = e.target.value.trim();
-    if(!val.includes('@')) return setStatus('email', 'err', 'بريد غير صالح');
-    const isOk = await checkAvailability('email', val.toLowerCase());
-    isOk ? setStatus('email', 'ok', 'بريد متاح') : setStatus('email', 'err', 'مسجل مسبقاً');
-});
+    الـ path الصح للـ getDoc:
+      doc(db, "public_registry", type, value)
+      — دا بيعمل  public_registry/{type}/{value}
+      لكن Firestore مش بيفهم 4-segment إلا لو كانت collection/doc/collection/doc
+      إذاً الـ path ده:
+        collection "public_registry"  →  doc type  →  subcollection (value as col)  ...
+      
+    المنطق الصحيح هو:
+      doc(db, "public_registry", type)   ← الـ type هو اسم الـ document
+      وجوف subcollection اسمها "records" أو مباشرة:
 
-document.getElementById('passwordInput').addEventListener('input', (e) => {
-    const val = e.target.value;
-    const hasUpper = /[A-Z]/.test(val);
-    const hasNum = /[0-9]/.test(val);
-    const isLong = val.length >= 8;
-    state.password = (hasUpper && hasNum && isLong);
-    document.getElementById('strengthBar').style.width = (isLong ? (hasUpper && hasNum ? '100%' : '50%') : '10%');
-    document.getElementById('strengthBar').style.backgroundColor = state.password ? 'var(--neon-green)' : 'var(--neon-red)';
-    validateForm();
-});
+    الأبسط والأضمن حسب الـ rules:
+      getDoc( doc(db, "public_registry", type + "/" + value) )
+      — لكن Firestore SDK ما بيقبل "/" في اسم document
 
-document.getElementById('confirmInput').addEventListener('input', (e) => {
-    const pass = document.getElementById('passwordInput').value;
-    if(e.target.value === pass) setStatus('confirm', 'ok', 'متطابق');
-    else setStatus('confirm', 'err', 'غير متطابق');
-});
+    الطريقة الصح:
+      collection(db,"public_registry") → document(type) → collection("data") → document(value)
 
-/* ─── المعالجة النهائية لإنشاء الحساب ─── */
-async function handleSignup() {
-    const btn = document.getElementById('submitBtn');
-    btn.innerHTML = '<span class="spinner"></span> جاري المعالجة...';
-    btn.disabled = true;
+    بس الـ rules بتقول /{type}/{value} يعني هي:
+      collection: public_registry
+      document:   {type}    (مثلاً "usernames")
+      — وعشان تحط {value} لازم يبقى subcollection أو field
 
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value;
-    const username = document.getElementById('usernameInput').value.trim();
-    const phone = document.getElementById('phoneCode').value + document.getElementById('phoneInput').value.trim();
+    الأبسط والمتوافق مع الـ rules:
+      نعاملها كـ collection "public_registry" 
+      والـ document هو  type + "_" + value  (مثلاً "usernames_ahmed")
+      ونكتب الـ Rules بشكل مطابق.
 
-    try {
-        const { createUserWithEmailAndPassword, sendEmailVerification } = window._authMethods;
-        const { doc, setDoc, serverTimestamp, runTransaction } = window._firestore;
+    لكن بما إن الـ rules موجودة بالفعل:
+      match /public_registry/{type}/{value}
+    ده يعني:
+      المسار: /public_registry/usernames/ahmed
+      Collection: public_registry
+      Document:   usernames     ← هو نفسه الـ {type}
+      ثم {value} هو subcollection أو document داخل الـ usernames ??
 
-        // 1. إنشاء الحساب في Auth
-        const userCred = await createUserWithEmailAndPassword(window._auth, email, password);
-        const uid = userCred.user.uid;
+    في Firestore:
+      /A/B/C  →  A=collection, B=document, C=subcollection (ممنوع إلا لو فيه document بعده)
+      /A/B/C/D → A=col, B=doc, C=col, D=doc
 
-        // 2. إرسال بريد التحقق
-        await sendEmailVerification(userCred.user);
+    إذاً match /public_registry/{type}/{value} مش valid Firestore path
+    إلا لو كانت:
+      public_registry = collection
+      {type}          = document (مثلاً "usernames")
+      {value}         = subcollection (مثلاً "ahmed") — ده مش ممكن بدون doc بعده
 
-        // 3. تخزين البيانات في Firestore مع نظام السجلات العامة لضمان التفرد
-        await setDoc(doc(window._db, 'users', uid), {
-            uid,
-            username,
-            email: email.toLowerCase(),
-            phone,
-            points: 10, // نقاط ترحيبية
-            role: 'user',
-            createdAt: serverTimestamp(),
-            referrer: state.ref || 'none',
-            status: 'pending_verification'
-        });
+    الاستنتاج: الـ Rules مكتوبة بطريقة تعني:
+      /public_registry/{type}/{value}  حيث type وvalue أجزاء من path
+      والـ SDK call الصح هو:
+        doc(db, "public_registry", type, value)  ← 4 args = 2 segments = col/doc
+        بس ده بيطلع  "public_registry/usernames"  (يعني type فقط بدون value)
 
-        // تسجيل البيانات في السجل العام لمنع التكرار مستقبلاً
-        await setDoc(doc(window._db, 'public_registry', 'username_' + username.toLowerCase()), { uid });
-        await setDoc(doc(window._db, 'public_registry', 'email_' + email.toLowerCase()), { uid });
+    الحل النهائي المضمون:
+      نخزن كـ doc في collection "public_registry"
+      باسم مركب: type + "__" + value
+      مثلاً: "usernames__ahmed"
+  */
 
-        // 4. إظهار النجاح
-        document.getElementById('successEmail').textContent = email;
-        document.getElementById('successModalOverlay').classList.add('open');
-
-    } catch (error) {
-        console.error(error);
-        btn.disabled = false;
-        btn.textContent = 'إنشاء الحساب';
-        document.getElementById('signupCard').classList.add('shake');
-        setTimeout(() => document.getElementById('signupCard').classList.remove('shake'), 500);
-        alert('خطأ: ' + error.message);
+  async function regExists(type, value){
+    try{
+      const id = type+'__'+value;
+      const snap = await getDoc(doc(db,'public_registry',id));
+      return snap.exists();
+    }catch(err){
+      console.warn('regExists error',err.code, err.message);
+      return false;
     }
-}
+  }
+
+  async function regWrite(type, value, data){
+    const id = type+'__'+value;
+    await setDoc(doc(db,'public_registry',id),
+      { type, value, ...data, createdAt: serverTimestamp() });
+  }
+
+  async function blockedExists(val){
+    try{
+      const snap = await getDoc(doc(db,'blocked_recreate',val));
+      return snap.exists();
+    }catch(err){
+      console.warn('blocked check error',err.code);
+      return false;
+    }
+  }
+
+  async function statsExist(){
+    try{
+      const snap = await getDoc(doc(db,'stats','global'));
+      return snap.exists();
+    }catch(e){ return true; }
+  }
+
+  /* ════ UI HELPERS ════ */
+
+  function setF(prefix, type, msg){
+    // prefix:  "u" | "e" | "ph" | "cf"
+    // inputs:  uI eI phI cfI
+    // status:  uS eS phS cfS
+    // msgs:    uM eM phM cfM
+    const inp = document.getElementById(prefix+'I');
+    const st  = document.getElementById(prefix+'S');
+    const ms  = document.getElementById(prefix+'M');
+
+    if(inp){ inp.classList.remove('ok','er'); }
+    if(st)  st.innerHTML='';
+
+    if(type==='loading'){
+      if(st) st.innerHTML=
+        '<div class="dots"><span></span><span></span><span></span></div>';
+      if(ms){ ms.className='fm'; ms.textContent=''; }
+      return;
+    }
+    if(type==='ok'){
+      if(inp) inp.classList.add('ok');
+      if(st)  st.innerHTML='<span class="si ok">✓</span>';
+    } else if(type==='er'){
+      if(inp) inp.classList.add('er');
+      if(st)  st.innerHTML='<span class="si er">✕</span>';
+    }
+    if(ms){
+      ms.className='fm'+(type?' '+type:'');
+      ms.textContent=msg||'';
+    }
+  }
+
+  function showToast(msg,dur=4500){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    clearTimeout(t._t);
+    t._t=setTimeout(()=>t.classList.remove('show'),dur);
+  }
+
+  function checkBtn(){
+    document.getElementById('subBtn').disabled=
+      !(S.u&&S.e&&S.ph&&S.pw&&S.cf&&S.terms);
+  }
+
+  /* ════ USERNAME ════ */
+  let uT;
+  document.getElementById('uI').addEventListener('input',function(){
+    clearTimeout(uT); S.u=false; checkBtn();
+    document.getElementById('uG').innerHTML='';
+    const v=this.value.trim().toLowerCase();
+    if(!v){ setF('u','',''); return; }
+    if(v.length<3){ setF('u','er','الاسم يجب أن يكون 3 أحرف على الأقل'); return; }
+    if(!/^[a-z0-9_.]+$/.test(v)){
+      setF('u','er','أحرف إنجليزية وأرقام و ( _ . ) فقط'); return; }
+    setF('u','loading');
+    uT=setTimeout(async()=>{
+      const exists = await regExists('usernames', v);
+      if(exists){
+        setF('u','er','هذا الاسم غير متاح — جرب أحد البدائل:');
+        const opts=[v+'_'+~~(Math.random()*999), v+~~(Math.random()*99),
+                    '_'+v+'_', v+'.vip', v+'_x'];
+        document.getElementById('uG').innerHTML=
+          opts.map(o=>`<span class="stag" data-s="${o}">${o}</span>`).join('');
+      } else {
+        setF('u','ok','✅ الاسم متاح!');
+        S.u=true;
+      }
+      checkBtn();
+    },680);
+  });
+
+  document.getElementById('uG').addEventListener('click',function(e){
+    if(!e.target.matches('.stag')) return;
+    const name=e.target.dataset.s;
+    document.getElementById('uI').value=name;
+    this.innerHTML='';
+    document.getElementById('uI').dispatchEvent(new Event('input'));
+  });
+
+  /* ════ EMAIL ════ */
+  let eT;
+  document.getElementById('eI').addEventListener('input',function(){
+    clearTimeout(eT); S.e=false; checkBtn();
+    const v=this.value.trim().toLowerCase();
+    if(!v){ setF('e','',''); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+      setF('e','er','صيغة البريد الإلكتروني غير صحيحة'); return; }
+    setF('e','loading');
+    eT=setTimeout(async()=>{
+      if(await blockedExists(v)){
+        setF('e','er','⛔ هذا البريد محظور من التسجيل لمدة 40 يوم');
+        S.e=false; checkBtn(); return;
+      }
+      if(await regExists('emails',v)){
+        setF('e','er','⚠️ هذا البريد مسجل بالفعل — سجّل الدخول');
+        S.e=false;
+      } else {
+        setF('e','ok','✅ البريد متاح للتسجيل');
+        S.e=true;
+      }
+      checkBtn();
+    },700);
+  });
+
+  /* ════ PHONE ════ */
+  let phT;
+  function valPhone(){
+    clearTimeout(phT); S.ph=false; checkBtn();
+    const raw=document.getElementById('phI').value.trim();
+    const code=document.getElementById('pc').value;
+    if(!raw){ setF('ph','',''); return; }
+    const digits=raw.replace(/^0/,'').replace(/\D/g,'');
+    if(digits.length<6||digits.length>15){
+      setF('ph','er','رقم الهاتف غير صحيح'); return; }
+    const full=code+digits;
+    setF('ph','loading');
+    phT=setTimeout(async()=>{
+      if(await blockedExists(full)){
+        setF('ph','er','⛔ هذا الرقم محظور من التسجيل لمدة 40 يوم');
+        S.ph=false; checkBtn(); return;
+      }
+      if(await regExists('phones',full)){
+        setF('ph','er','⚠️ هذا الرقم مسجل بالفعل');
+        S.ph=false;
+      } else {
+        setF('ph','ok','✅ الرقم متاح');
+        S.ph=true;
+      }
+      checkBtn();
+    },700);
+  }
+  document.getElementById('phI').addEventListener('input',valPhone);
+  document.getElementById('pc').addEventListener('change',valPhone);
+
+  /* ════ PASSWORD ════ */
+  const sLbls=['','ضعيفة جداً 😰','ضعيفة 😟','متوسطة 🙂','قوية جداً 💪'];
+  const sCols=['var(--txm)','var(--nR)','#FF9500','var(--g1)','var(--nG)'];
+
+  document.getElementById('pwI').addEventListener('input',function(){
+    const pw=this.value;
+    const R={
+      len: pw.length>=8,
+      up:  /[A-Z]/.test(pw),
+      lw:  /[a-z]/.test(pw),
+      num: /[0-9]/.test(pw),
+      sp:  /[!@#$%^&*()\-_=+\[\]{}|;':",.<>/?`~]/.test(pw),
+      ns:  pw.length>0 && !/\s/.test(pw)
+    };
+    Object.entries(R).forEach(([k,v])=>{
+      const el=document.getElementById('r-'+k);
+      if(el) el.classList.toggle('met',v);
+    });
+    const score=Object.values(R).filter(Boolean).length;
+    const bar=document.getElementById('sBar');
+    if(!pw){ bar.className='sb s0'; }
+    else    { bar.className='sb s'+(score<=2?1:score<=4?2:score<=5?3:4); }
+    const lvl=!pw?0:score<=2?1:score<=4?2:score<=5?3:4;
+    const sl=document.getElementById('sLbl');
+    sl.textContent=sLbls[lvl]||'أدخل كلمة المرور';
+    sl.style.color=sCols[lvl];
+    S.pw=score>=5;
+    checkBtn();
+    document.getElementById('cfI').dispatchEvent(new Event('input'));
+  });
+
+  /* ════ CONFIRM ════ */
+  document.getElementById('cfI').addEventListener('input',function(){
+    const pw=document.getElementById('pwI').value;
+    const cf=this.value;
+    const st=document.getElementById('cfS');
+    const ms=document.getElementById('cfM');
+    this.classList.remove('ok','er'); st.innerHTML='';
+    if(!cf){ ms.className='fm'; ms.textContent=''; S.cf=false; checkBtn(); return; }
+    if(cf===pw){
+      this.classList.add('ok');
+      st.innerHTML='<span class="si ok">✓</span>';
+      ms.className='fm ok'; ms.textContent='✅ كلمتا المرور متطابقتان';
+      S.cf=true;
+    } else {
+      this.classList.add('er');
+      st.innerHTML='<span class="si er">✕</span>';
+      ms.className='fm er'; ms.textContent='⚠️ كلمتا المرور غير متطابقتين';
+      S.cf=false;
+    }
+    checkBtn();
+  });
+
+  /* ════ EYE TOGGLE ════ */
+  function eyeSetup(inpId,btnId){
+    document.getElementById(btnId).addEventListener('click',function(){
+      const inp=document.getElementById(inpId);
+      inp.type=inp.type==='password'?'text':'password';
+      this.textContent=inp.type==='password'?'👁':'🙈';
+    });
+  }
+  eyeSetup('pwI','pwE');
+  eyeSetup('cfI','cfE');
+
+  /* ════ TERMS ════ */
+  document.getElementById('ck').addEventListener('click',function(){
+    S.terms=!S.terms;
+    this.classList.toggle('on',S.terms);
+    checkBtn();
+  });
+  document.getElementById('termsLink').addEventListener('click',function(){
+    document.getElementById('tmOv').classList.add('open');
+    document.body.style.overflow='hidden';
+  });
+  function closeTermsModal(){
+    document.getElementById('tmOv').classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.getElementById('tmClose').addEventListener('click',closeTermsModal);
+  document.getElementById('tmOv').addEventListener('click',function(e){
+    if(e.target===this) closeTermsModal();
+  });
+  document.getElementById('accBtn').addEventListener('click',function(){
+    S.terms=true;
+    document.getElementById('ck').classList.add('on');
+    checkBtn(); closeTermsModal();
+  });
+
+  /* ════ CONFETTI ════ */
+  function confetti(){
+    const cols=['#FFD700','#00FF87','#FF6B6B','#4ECDC4','#FFB347','#C3F73A','#FF9FF3'];
+    for(let i=0;i<90;i++){
+      setTimeout(()=>{
+        const d=document.createElement('div');d.className='cf';
+        d.style.cssText=
+          `left:${Math.random()*100}%;`+
+          `background:${cols[0|Math.random()*cols.length]};`+
+          `width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;`+
+          `border-radius:${Math.random()>.5?'50%':'3px'};`+
+          `animation-duration:${Math.random()*2+2}s;`+
+          `animation-delay:${Math.random()*.4}s;`;
+        document.body.appendChild(d);
+        setTimeout(()=>d.remove(),3800);
+      },i*28);
+    }
+  }
+
+  /* ════ MAIN SIGNUP ════ */
+  document.getElementById('subBtn').addEventListener('click',async function(){
+    if(this.disabled) return;
+
+    const email    = document.getElementById('eI').value.trim().toLowerCase();
+    const password = document.getElementById('pwI').value;
+    const username = document.getElementById('uI').value.trim().toLowerCase();
+    const rawPh    = document.getElementById('phI').value.trim();
+    const code     = document.getElementById('pc').value;
+    const phone    = code + rawPh.replace(/^0/,'').replace(/\D/g,'');
+
+    this.disabled=true;
+    this.innerHTML='<span class="spin"></span>جارٍ إنشاء الحساب…';
+
+    try{
+      /* 1 ─ Firebase Auth */
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      const uid  = cred.user.uid;
+
+      /* 2 ─ إرسال إيميل التفعيل */
+      await sendEmailVerification(cred.user);
+
+      /* 3 ─ هل أول مستخدم؟ */
+      const isFirst = !(await statsExist());
+
+      /* 4 ─ /users/{uid} */
+      await setDoc(doc(db,'users',uid),{
+        uid, username, email, phone,
+        role:          isFirst ? 'owner' : 'user',
+        status:        'pending',
+        emailVerified: false,
+        trustScore:    50,
+        points:        10,
+        failedAttempts:0,
+        lockUntil:     null,
+        lastLogin:     serverTimestamp(),
+        createdAt:     serverTimestamp(),
+        referredBy:    S.ref || null,
+        adminApproval: false
+      });
+
+      /* 5 ─ public_registry */
+      await regWrite('usernames', username, { uid });
+      await regWrite('emails',    email,    { uid });
+      await regWrite('phones',    phone,    { uid });
+
+      /* 6 ─ إحالة */
+      if(S.ref && S.ref !== uid){
+        await setDoc(doc(db,'referrals', S.ref+'_'+uid),{
+          referrerUid: S.ref,
+          referredUid: uid,
+          createdAt:   serverTimestamp()
+        });
+      }
+
+      /* 7 ─ جلسة 24 ساعة */
+      await setDoc(doc(db,'sessions',uid),{
+        uid,
+        createdAt: serverTimestamp(),
+        expiresAt: new Date(Date.now()+86400000)
+      });
+
+      /* ── SUCCESS ── */
+      confetti();
+      document.getElementById('scEmail').textContent=email;
+      document.getElementById('scOv').classList.add('open');
+
+    }catch(err){
+      console.error('[SIGNUP]', err.code, err.message);
+      this.innerHTML='إنشاء الحساب';
+      this.disabled=false; checkBtn();
+
+      const map={
+        'auth/email-already-in-use':
+          '⚠️ هذا البريد موجود في Firebase Auth بالفعل\nجرب تسجيل الدخول أو بريداً آخر',
+        'auth/weak-password':
+          '⚠️ كلمة المرور ضعيفة جداً — استخدم 8 أحرف متنوعة',
+        'auth/network-request-failed':
+          '⚠️ تحقق من اتصالك بالإنترنت وأعد المحاولة',
+        'auth/too-many-requests':
+          '⚠️ طلبات متكررة — انتظر دقيقة ثم أعد المحاولة',
+        'auth/invalid-email':
+          '⚠️ صيغة البريد الإلكتروني غير صحيحة',
+        'permission-denied':
+          '⚠️ Firestore رفض العملية\nتأكد من تطبيق الـ Security Rules الصحيحة',
+        'unavailable':
+          '⚠️ الخدمة غير متاحة مؤقتاً — أعد المحاولة'
+      };
+      showToast(map[err.code] || '⚠️ خطأ: '+err.code+'\n'+err.message.slice(0,80));
+
+      /* إذا كان خطأ Firestore بعد نجاح Auth نوضح المشكلة */
+      if(err.code && !err.code.startsWith('auth/')){
+        setF('e','er','فشل حفظ البيانات في Firestore — تحقق من الـ Rules');
+      }
+    }
+  });
+
+  /* ─ success backdrop + button ─ */
+  document.getElementById('scOv').addEventListener('click',function(e){
+    if(e.target===this) location.href='login.html';
+  });
+  document.getElementById('goLogin').addEventListener('click',function(){
+    location.href='login.html';
+  });
+
+  /* ─ Enter key ─ */
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+      const b=document.getElementById('subBtn');
+      if(!b.disabled) b.click();
+    }
+  });
+
+}/* end run() */
+
+})();
 </script>
 </body>
 </html>
