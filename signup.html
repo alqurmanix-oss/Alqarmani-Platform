@@ -1,1099 +1,774 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>إنشاء حساب | QRMANI X</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
-
-<script type="module">
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAnalytics }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp, query, where, getDocs }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const app = initializeApp({
-  apiKey:            "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
-  authDomain:        "alqurmani-auth-x.firebaseapp.com",
-  projectId:         "alqurmani-auth-x",
-  storageBucket:     "alqurmani-auth-x.firebasestorage.app",
-  messagingSenderId: "558487419521",
-  appId:             "1:558487419521:web:fcf791247b7eefc2a82b80",
-  measurementId:     "G-B34HTXXMVS"
-});
-
-getAnalytics(app);
-
-window.__FB = {
-  db:   getFirestore(app),
-  auth: getAuth(app),
-  doc, getDoc, setDoc, collection, serverTimestamp, query, where, getDocs,
-  createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail
-};
-
-window.dispatchEvent(new Event("fb_ready"));
-</script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QRMANI X — إنشاء حساب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-/* ═══════════ VARIABLES ═══════════ */
+*{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --g1:#FFD700;--g2:#FFC200;--g3:#FFB000;
-  --g4:#D4A017;--g5:#B8860B;--g6:#996515;--g7:#7A4F10;
-  --nG:#00FF87;--nR:#FF2D55;
-  --bg:#050508;--card:rgba(9,9,16,.97);
-  --inp:rgba(255,255,255,.04);
-  --brd:rgba(255,215,0,.15);--brdA:rgba(255,215,0,.55);
-  --tx:#F0E8D5;--txm:rgba(240,232,213,.44);
+  --g1:#FFD700;--g2:#FFC107;--g3:#FFB300;--g4:#D4A017;--g5:#B8860B;--g6:#996515;--g7:#7A4F10;
+  --ng:#00FF87;--nr:#FF2D55;--bg:#05050A;--card:rgba(10,10,20,.98);
+  --inp:rgba(255,255,255,.05);--brd:rgba(255,215,0,.18);--brdA:rgba(255,215,0,.6);
+  --tx:#F0E8D5;--txm:rgba(240,232,213,.45)
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
-     min-height:100vh;overflow-x:hidden;direction:rtl;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;direction:rtl}
 
-/* ─── background ─── */
-.bg-l{position:fixed;inset:0;z-index:0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(180,130,10,.13) 0%,transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 90%,rgba(90,50,5,.16) 0%,transparent 60%),
-    radial-gradient(ellipse 100% 100% at 50% 50%,#07070F 0%,#050508 100%);}
-.bg-g{position:fixed;inset:0;z-index:0;
-  background-image:
-    linear-gradient(rgba(212,160,23,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(212,160,23,.04) 1px,transparent 1px);
-  background-size:60px 60px;
-  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);}
-#ptc{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
-.pt{position:absolute;border-radius:50%;animation:flt linear infinite;opacity:0;}
-@keyframes flt{
-  0%  {transform:translateY(100vh) scale(0);opacity:0}
-  10% {opacity:.6}
-  90% {opacity:.15}
-  100%{transform:translateY(-30px) scale(1);opacity:0}
-}
+/* BG */
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 90% 70% at 15% 10%,rgba(180,130,10,.14),transparent 55%),
+             radial-gradient(ellipse 70% 90% at 85% 90%,rgba(90,50,5,.18),transparent 55%),
+             #05050A}
+body::after{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(212,160,23,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(212,160,23,.04) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000,transparent)}
 
-/* ─── layout ─── */
-.wrap{position:relative;z-index:1;min-height:100vh;
-      display:flex;flex-direction:column;align-items:center;
-      justify-content:center;padding:44px 20px;}
+/* LAYOUT */
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px}
 
-/* ─── logo ─── */
-.logo-box{text-align:center;margin-bottom:36px;
-          animation:lgE 1.2s cubic-bezier(.22,1,.36,1) both;}
-@keyframes lgE{from{opacity:0;transform:translateY(-28px) scale(.9)}to{opacity:1;transform:none}}
+/* LOGO */
+.logo{text-align:center;margin-bottom:32px;animation:fadeUp .8s ease both}
+.logo-txt{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(44px,9vw,76px);
+  letter-spacing:12px;
+  background:linear-gradient(135deg,var(--g1) 0%,var(--g2) 14%,var(--g3) 28%,var(--g4) 42%,var(--g5) 57%,var(--g6) 72%,var(--g7) 86%,var(--g1) 100%);
+  background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gs 4s ease infinite;filter:drop-shadow(0 0 32px rgba(212,160,23,.55))}
+@keyframes gs{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.logo-line{height:2px;margin:10px auto;background:linear-gradient(90deg,transparent,var(--g4),transparent);animation:lineW 1s .3s ease both}
+@keyframes lineW{from{width:0;opacity:0}to{width:65%;opacity:1}}
+.logo-sub{font-size:10px;letter-spacing:7px;color:var(--g6);font-family:'Cinzel',serif;text-transform:uppercase;margin-top:4px}
 
-.logo-txt{
-  font-family:'Cinzel',serif;font-weight:900;letter-spacing:10px;
-  font-size:clamp(38px,8vw,68px);
-  background:linear-gradient(135deg,
-    var(--g1) 0%,var(--g2) 14%,var(--g3) 28%,
-    var(--g4) 42%,var(--g5) 56%,var(--g6) 72%,
-    var(--g7) 86%,var(--g1) 100%);
-  background-size:200% 200%;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:gsh 4s ease-in-out infinite;
-  filter:drop-shadow(0 0 28px rgba(212,160,23,.5));}
-@keyframes gsh{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+/* CARD */
+.card{width:100%;max-width:500px;background:var(--card);border:1px solid var(--brd);border-radius:22px;
+  padding:44px 40px 38px;backdrop-filter:blur(24px);
+  box-shadow:0 0 0 1px rgba(255,215,0,.06),0 32px 64px rgba(0,0,0,.75),0 0 60px rgba(212,160,23,.18);
+  animation:fadeUp .8s .15s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.card-title{font-size:20px;font-weight:700;text-align:center;margin-bottom:26px}
+.card-title b{color:var(--g3)}
 
-.logo-line{height:2px;width:0;margin:10px auto;
-  background:linear-gradient(90deg,transparent,var(--g4),transparent);
-  animation:lx 1.5s .3s ease forwards;}
-@keyframes lx{to{width:70%}}
+/* REF BANNER */
+.ref-banner{display:none;align-items:center;gap:8px;padding:9px 14px;margin-bottom:16px;
+  background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.22);border-radius:10px;
+  font-size:12.5px;color:var(--g4)}
 
-.logo-sub{font-size:10.5px;letter-spacing:6px;color:var(--g5);
-          font-family:'Cinzel',serif;text-transform:uppercase;margin-top:4px;}
+/* FIELD */
+.field{margin-bottom:16px}
+.lbl{display:block;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--g5);margin-bottom:6px}
+.iw{position:relative}
+.fi{width:100%;padding:12px 44px 12px 16px;background:var(--inp);border:1.5px solid var(--brd);
+  border-radius:11px;color:var(--tx);font-family:'Cairo',sans-serif;font-size:14.5px;
+  outline:none;transition:border-color .2s,box-shadow .2s;direction:ltr}
+.fi::placeholder{color:var(--txm)}
+.fi:focus{border-color:var(--brdA);background:rgba(255,255,255,.06);box-shadow:0 0 0 3px rgba(212,160,23,.12)}
+.fi.ok{border-color:var(--ng)!important;box-shadow:0 0 0 3px rgba(0,255,135,.1)!important}
+.fi.er{border-color:var(--nr)!important;box-shadow:0 0 0 3px rgba(255,45,85,.1)!important}
 
-/* ─── card ─── */
-.card{width:100%;max-width:520px;background:var(--card);
-  border:1px solid var(--brd);border-radius:24px;padding:48px 42px 40px;
-  position:relative;backdrop-filter:blur(30px);
-  box-shadow:
-    0 0 0 1px rgba(255,215,0,.05),
-    0 40px 80px rgba(0,0,0,.7),
-    0 0 40px rgba(212,160,23,.2),
-    inset 0 1px 0 rgba(255,215,0,.07);
-  animation:cdE 1s .25s cubic-bezier(.22,1,.36,1) both;}
-@keyframes cdE{from{opacity:0;transform:translateY(36px) scale(.96)}to{opacity:1;transform:none}}
-.card::before{content:'';position:absolute;inset:-1px;border-radius:25px;
-  background:linear-gradient(135deg,rgba(212,160,23,.25),transparent 40%,transparent 60%,rgba(212,160,23,.08));
-  z-index:-1;pointer-events:none;}
+/* STATUS ICON */
+.si{position:absolute;top:50%;right:auto;left:12px;transform:translateY(-50%);font-size:16px;font-weight:900;pointer-events:none}
+.si.ok{color:var(--ng);text-shadow:0 0 10px var(--ng);animation:pop .25s ease}
+.si.er{color:var(--nr);text-shadow:0 0 10px var(--nr);animation:pop .25s ease}
+.si.ld{display:flex;gap:3px;align-items:center}
+.si.ld span{width:5px;height:5px;border-radius:50%;background:var(--g3);animation:ld 1s infinite}
+.si.ld span:nth-child(2){animation-delay:.15s}
+.si.ld span:nth-child(3){animation-delay:.3s}
+@keyframes ld{0%,80%,100%{transform:scale(.65);opacity:.4}40%{transform:scale(1.1);opacity:1}}
+@keyframes pop{from{transform:translateY(-50%) scale(0)}to{transform:translateY(-50%) scale(1)}}
 
-.card-title{font-size:21px;font-weight:700;text-align:center;
-            margin-bottom:28px;letter-spacing:.5px;}
-.card-title span{color:var(--g3);}
+/* MSG */
+.msg{font-size:11.5px;min-height:15px;margin-top:4px;padding-right:2px;transition:all .2s}
+.msg.ok{color:var(--ng)}.msg.er{color:var(--nr)}
 
-/* ─── referral banner ─── */
-.rn{display:flex;align-items:center;gap:9px;padding:10px 14px;margin-bottom:18px;
-    background:rgba(212,160,23,.07);border:1px solid rgba(212,160,23,.2);
-    border-radius:10px;font-size:12.5px;color:var(--g4);}
+/* SUGGESTIONS */
+.sugg{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.stag{padding:3px 11px;border-radius:16px;background:rgba(212,160,23,.1);
+  border:1px solid rgba(212,160,23,.25);color:var(--g3);font-size:12px;
+  cursor:pointer;font-family:'Cairo',sans-serif;transition:background .2s}
+.stag:hover{background:rgba(212,160,23,.22)}
 
-/* ─── field ─── */
-.fg{margin-bottom:18px;}
-.lbl{display:block;font-size:11.5px;font-weight:700;letter-spacing:2px;
-     text-transform:uppercase;color:var(--g5);margin-bottom:7px;}
-.iw{position:relative;display:flex;align-items:center;}
+/* PHONE */
+.ph-row{display:flex;gap:8px}
+.ph-cc{padding:12px 10px;background:var(--inp);border:1.5px solid var(--brd);border-radius:11px;
+  color:var(--tx);font-family:'Cairo',sans-serif;font-size:13px;direction:ltr;
+  outline:none;cursor:pointer;min-width:84px;transition:border .2s;-webkit-appearance:none;
+  background-image:none;text-align:center}
+.ph-cc:focus{border-color:var(--brdA)}
+.ph-cc option{background:#0D0D1B}
 
-.fi{width:100%;padding:13px 46px 13px 18px;background:var(--inp);
-    border:1.5px solid var(--brd);border-radius:12px;color:var(--tx);
-    font-family:'Cairo',sans-serif;font-size:15px;font-weight:500;
-    outline:none;transition:all .3s ease;direction:ltr;}
-.fi::placeholder{color:var(--txm);}
-.fi:focus{border-color:var(--brdA);background:rgba(255,255,255,.055);
-          box-shadow:0 0 0 3px rgba(212,160,23,.1),0 0 18px rgba(212,160,23,.08);}
-.fi.ok{border-color:var(--nG);box-shadow:0 0 0 3px rgba(0,255,135,.07),0 0 14px rgba(0,255,135,.1);}
-.fi.er{border-color:var(--nR);box-shadow:0 0 0 3px rgba(255,45,85,.07),0 0 14px rgba(255,45,85,.1);}
+/* EYE */
+.eye{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--txm);cursor:pointer;font-size:14px;
+  padding:2px;line-height:1;transition:color .2s}
+.eye:hover{color:var(--g3)}
 
-/* status icon */
-.si{position:absolute;left:13px;font-size:17px;font-weight:900;
-    animation:sip .3s cubic-bezier(.34,1.56,.64,1);}
-@keyframes sip{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.si.ok{color:var(--nG);text-shadow:0 0 10px var(--nG);}
-.si.er{color:var(--nR);text-shadow:0 0 10px var(--nR);}
+/* DIVIDER */
+.divr{display:flex;align-items:center;gap:10px;margin:18px 0}
+.divr-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,.22),transparent)}
+.divr-t{font-size:10.5px;color:var(--txm);letter-spacing:3px;white-space:nowrap}
 
-/* loading dots */
-.dots{display:flex;gap:3px;position:absolute;left:14px;}
-.dots span{width:5px;height:5px;border-radius:50%;background:var(--g3);
-           animation:db 1s infinite;}
-.dots span:nth-child(2){animation-delay:.15s;}
-.dots span:nth-child(3){animation-delay:.30s;}
-@keyframes db{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1.1);opacity:1}}
+/* STRENGTH */
+.sb-wrap{margin-top:8px;height:4px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden}
+.sb{height:100%;border-radius:8px;width:0;transition:width .4s ease,background .4s}
+.sl{font-size:10.5px;margin-top:4px;text-align:left;transition:color .3s;letter-spacing:1px;text-transform:uppercase}
 
-/* field message */
-.fm{font-size:11.5px;margin-top:5px;min-height:16px;
-    padding-right:2px;letter-spacing:.4px;transition:all .3s;}
-.fm.ok{color:var(--nG);}
-.fm.er{color:var(--nR);}
+/* PW RULES */
+.pwr{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;margin-top:11px}
+.pi{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--txm);transition:color .25s}
+.pi.met{color:var(--ng)}
+.pi .d{width:13px;height:13px;border-radius:50%;border:1.5px solid currentColor;
+  display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;transition:all .25s}
+.pi.met .d{background:var(--ng);border-color:var(--ng);box-shadow:0 0 7px var(--ng)}
 
-/* suggestions */
-.sugg{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px;}
-.stag{padding:4px 12px;border-radius:20px;
-  background:rgba(212,160,23,.09);border:1px solid rgba(212,160,23,.22);
-  color:var(--g3);font-size:12px;cursor:pointer;transition:all .2s;
-  font-family:'Cairo',sans-serif;}
-.stag:hover{background:rgba(212,160,23,.2);border-color:var(--g3);transform:translateY(-1px);}
+/* TERMS */
+.tr-row{display:flex;align-items:flex-start;gap:11px;margin:18px 0}
+.ck{width:19px;height:19px;flex-shrink:0;border:1.5px solid var(--brdA);border-radius:5px;
+  background:var(--inp);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  margin-top:2px;transition:all .2s;font-size:11px;color:transparent}
+.ck.on{background:var(--g4);border-color:var(--g3);color:#1a0f00;box-shadow:0 0 10px rgba(212,160,23,.4)}
+.tr-t{font-size:13px;color:var(--txm);line-height:1.6}
+.tl{color:var(--g3);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.tl:hover{color:var(--g1)}
 
-/* ─── phone row ─── */
-.ph-row{display:flex;gap:9px;}
-.ph-sel{flex-shrink:0;padding:13px 12px;background:var(--inp);
-  border:1.5px solid var(--brd);border-radius:12px;color:var(--tx);
-  font-family:'Cairo',sans-serif;font-size:13.5px;min-width:90px;
-  direction:ltr;outline:none;cursor:pointer;transition:border .3s;
-  -webkit-appearance:none;appearance:none;text-align:center;}
-.ph-sel:focus{border-color:var(--brdA);}
-.ph-sel option{background:#0D0D1B;}
+/* SUBMIT */
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'Cairo',sans-serif;
+  font-size:15px;font-weight:900;letter-spacing:2px;cursor:pointer;position:relative;
+  overflow:hidden;transition:transform .2s,box-shadow .2s}
+.btn:not(:disabled){background:linear-gradient(135deg,var(--g4),var(--g2),var(--g5));
+  background-size:200% 200%;animation:gs 3s ease infinite;color:#1a0f00;
+  box-shadow:0 6px 24px rgba(180,130,10,.4)}
+.btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(180,130,10,.6)}
+.btn:disabled{background:rgba(90,70,20,.35);color:var(--txm);cursor:not-allowed}
+.btn .sp{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.25);
+  border-top-color:#1a0f00;border-radius:50%;animation:spin .7s linear infinite;
+  vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* ─── divider ─── */
-.div{display:flex;align-items:center;gap:12px;margin:20px 0;}
-.div-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,160,23,.2),transparent);}
-.div-t{font-size:11px;color:var(--txm);letter-spacing:3px;white-space:nowrap;}
+/* LOGIN LINK */
+.lp{text-align:center;margin-top:22px;font-size:13px;color:var(--txm)}
+.ll{color:var(--g3);font-weight:700;text-decoration:none;margin-right:4px;transition:color .2s}
+.ll:hover{color:var(--g1)}
 
-/* ─── strength ─── */
-.sb-w{margin-top:9px;height:5px;border-radius:10px;background:rgba(255,255,255,.07);overflow:hidden;}
-.sb{height:100%;border-radius:10px;width:0%;transition:all .5s cubic-bezier(.22,1,.36,1);}
-.sb.s0{width:0;background:transparent;}
-.sb.s1{width:25%;background:var(--nR);box-shadow:0 0 8px var(--nR);}
-.sb.s2{width:50%;background:#FF9500;box-shadow:0 0 8px #FF9500;}
-.sb.s3{width:75%;background:var(--g1);box-shadow:0 0 8px var(--g1);}
-.sb.s4{width:100%;background:var(--nG);box-shadow:0 0 10px var(--nG);}
-.sl{font-size:11px;text-align:left;margin-top:4px;transition:color .3s;
-    letter-spacing:1px;text-transform:uppercase;}
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9000;
+  background:rgba(20,5,10,.95);border:1px solid rgba(255,45,85,.45);border-radius:12px;
+  padding:12px 22px;font-size:13px;color:#ff7090;pointer-events:none;opacity:0;
+  transition:opacity .3s;text-align:center;max-width:360px;backdrop-filter:blur(10px);white-space:pre-line}
+#toast.on{opacity:1}
 
-/* password rules */
-.pwr{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;}
-.pi{display:flex;align-items:center;gap:6px;font-size:11.5px;
-    color:var(--txm);transition:color .3s;}
-.pi.met{color:var(--nG);}
-.pi .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;
-         display:flex;align-items:center;justify-content:center;
-         font-size:9px;flex-shrink:0;transition:all .3s;}
-.pi.met .dot{background:var(--nG);border-color:var(--nG);box-shadow:0 0 8px var(--nG);}
+/* CONFETTI */
+.cf{position:fixed;top:-10px;border-radius:2px;pointer-events:none;z-index:9999;
+  animation:cffall ease-in forwards}
+@keyframes cffall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
-/* eye button */
-.eye{position:absolute;left:12px;font-size:15px;cursor:pointer;
-     background:none;border:none;color:var(--txm);transition:color .2s;
-     padding:4px;line-height:1;}
-.eye:hover{color:var(--g3);}
+/* ══════════ MODALS ══════════ */
+.ov{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.9);
+  backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;
+  padding:16px;opacity:0;pointer-events:none;transition:opacity .3s}
+.ov.on{opacity:1;pointer-events:all}
+.md{background:linear-gradient(150deg,#0D0D1C,#080810);border:1px solid rgba(212,160,23,.3);
+  border-radius:24px;padding:42px 38px;width:100%;max-width:580px;position:relative;
+  box-shadow:0 0 0 1px rgba(255,215,0,.05),0 50px 100px rgba(0,0,0,.9),0 0 70px rgba(180,130,10,.15);
+  transform:scale(.92) translateY(16px);transition:transform .35s cubic-bezier(.22,1,.36,1);
+  max-height:92vh;overflow-y:auto}
+.ov.on .md{transform:none}
+.md-x{position:absolute;top:16px;left:16px;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:var(--txm);font-size:17px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:all .2s}
+.md-x:hover{background:rgba(255,45,85,.18);border-color:var(--nr);color:var(--nr)}
 
-/* ─── terms ─── */
-.tr{display:flex;align-items:flex-start;gap:12px;margin:20px 0;}
-.ck{width:20px;height:20px;flex-shrink:0;border:1.5px solid var(--brdA);
-    border-radius:6px;background:var(--inp);cursor:pointer;transition:all .3s;
-    display:flex;align-items:center;justify-content:center;margin-top:2px;}
-.ck.on{background:var(--g4);border-color:var(--g3);box-shadow:0 0 10px rgba(212,160,23,.4);}
-.ck .cm{font-size:12px;display:none;font-weight:900;}
-.ck.on .cm{display:block;}
-.tr-t{font-size:13px;color:var(--txm);line-height:1.65;}
-.tl{color:var(--g3);cursor:pointer;text-decoration:underline;text-underline-offset:2px;
-    transition:color .2s;}
-.tl:hover{color:var(--g1);}
-
-/* ─── submit ─── */
-.btn-sub{width:100%;padding:15px;border:none;border-radius:14px;
-  background:linear-gradient(135deg,var(--g4),var(--g2),var(--g5));
-  background-size:200% 200%;color:#1a0f00;
-  font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;
-  letter-spacing:2px;cursor:pointer;position:relative;overflow:hidden;
-  transition:all .3s;animation:gsh 3s ease infinite;
-  box-shadow:0 8px 28px rgba(180,130,10,.35);}
-.btn-sub:hover:not(:disabled){transform:translateY(-2px);
-  box-shadow:0 12px 36px rgba(180,130,10,.55);}
-.btn-sub:active:not(:disabled){transform:translateY(0);}
-.btn-sub:disabled{opacity:.32;cursor:not-allowed;animation:none;
-  background:rgba(100,80,30,.4);color:var(--txm);}
-.btn-sub::before{content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
-  transform:translateX(-100%);transition:transform .6s;}
-.btn-sub:hover::before{transform:translateX(100%);}
-
-.spin{display:inline-block;width:17px;height:17px;
-      border:2px solid rgba(0,0,0,.2);border-top-color:#1a0f00;
-      border-radius:50%;animation:sp .7s linear infinite;
-      vertical-align:middle;margin-right:8px;}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-/* login prompt */
-.lp{text-align:center;margin-top:24px;font-size:13.5px;color:var(--txm);}
-.ll{color:var(--g3);font-weight:700;text-decoration:none;margin-right:5px;
-    display:inline-flex;align-items:center;gap:4px;transition:color .2s;}
-.ll:hover{color:var(--g1);}
-
-/* ═══════════ MODALS ═══════════ */
-.ov{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.88);
-    backdrop-filter:blur(14px);display:flex;align-items:center;
-    justify-content:center;padding:20px;opacity:0;
-    transition:opacity .35s;pointer-events:none;}
-.ov.open{opacity:1;pointer-events:all;}
-
-.md{background:linear-gradient(145deg,#0D0D1B,#09090F);
-    border:1px solid rgba(212,160,23,.28);border-radius:26px;
-    padding:46px 40px;width:100%;max-width:600px;position:relative;
-    box-shadow:0 0 0 1px rgba(255,215,0,.05),0 60px 120px rgba(0,0,0,.9),
-               0 0 80px rgba(180,130,10,.12);
-    transform:scale(.9) translateY(18px);
-    transition:transform .38s cubic-bezier(.22,1,.36,1);
-    max-height:90vh;overflow-y:auto;}
-.ov.open .md{transform:none;}
-
-.md-x{position:absolute;top:18px;left:18px;width:36px;height:36px;
-      border-radius:50%;background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.09);color:var(--txm);
-      font-size:18px;cursor:pointer;display:flex;align-items:center;
-      justify-content:center;transition:all .2s;}
-.md-x:hover{background:rgba(255,45,85,.15);border-color:var(--nR);color:var(--nR);}
-
-/* terms modal */
-.tm-ic{font-size:46px;text-align:center;margin-bottom:8px;}
-.tm-h{font-size:22px;font-weight:900;text-align:center;margin-bottom:22px;
+/* TERMS MODAL */
+.tm-ic{font-size:44px;text-align:center;margin-bottom:6px}
+.tm-h{font-size:21px;font-weight:900;text-align:center;margin-bottom:20px;
   background:linear-gradient(135deg,var(--g1),var(--g5));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.ts{margin-bottom:20px;}
-.ts h3{font-size:12.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-       color:var(--g4);margin-bottom:8px;border-right:3px solid var(--g4);padding-right:10px;}
-.ts p,.ts li{font-size:13.5px;line-height:1.85;color:var(--txm);}
-.ts ul{padding-right:18px;}
-.ts li{margin-bottom:5px;}
-.ts li::marker{color:var(--g5);}
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ts{margin-bottom:18px}
+.ts h3{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--g4);margin-bottom:8px;border-right:3px solid var(--g4);padding-right:10px}
+.ts p,.ts li{font-size:13px;line-height:1.85;color:var(--txm)}
+.ts ul{padding-right:16px}
+.ts li{margin-bottom:5px}
+.ts li::marker{color:var(--g5)}
 .btn-acc{width:100%;padding:13px;background:linear-gradient(135deg,var(--g4),var(--g2));
-  border:none;border-radius:12px;color:#1a0f00;font-family:'Cairo',sans-serif;
-  font-size:15px;font-weight:900;cursor:pointer;margin-top:20px;
-  transition:all .3s;box-shadow:0 4px 18px rgba(180,130,10,.35);}
-.btn-acc:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(180,130,10,.5);}
+  border:none;border-radius:11px;color:#1a0f00;font-family:'Cairo',sans-serif;
+  font-size:14px;font-weight:900;cursor:pointer;margin-top:18px;
+  box-shadow:0 4px 18px rgba(180,130,10,.35);transition:transform .2s,box-shadow .2s}
+.btn-acc:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(180,130,10,.5)}
 
-/* ── success modal ── */
-.sc-ring-wrap{position:relative;width:110px;height:110px;margin:0 auto 20px;}
-.sc-ring{position:absolute;inset:0;border-radius:50%;
-  border:3px solid transparent;
-  border-top-color:var(--nG);border-right-color:var(--nG);
-  animation:ring-spin 1.6s linear infinite;
-  box-shadow:0 0 18px rgba(0,255,135,.35);}
-.sc-ring2{position:absolute;inset:10px;border-radius:50%;
-  border:2px solid transparent;border-bottom-color:rgba(0,255,135,.4);
-  animation:ring-spin 2.4s linear infinite reverse;}
-@keyframes ring-spin{to{transform:rotate(360deg)}}
-.sc-emoji{position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;font-size:44px;animation:em-pop .5s cubic-bezier(.34,1.56,.64,1) both;}
-@keyframes em-pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.sc-h{font-size:26px;font-weight:900;color:var(--nG);text-align:center;margin-bottom:6px;
-      text-shadow:0 0 20px rgba(0,255,135,.5);
-      animation:sc-h-in .5s .2s cubic-bezier(.22,1,.36,1) both;}
-@keyframes sc-h-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.sc-s{font-size:13.5px;color:var(--txm);line-height:1.8;text-align:center;margin-bottom:14px;
-      animation:sc-h-in .5s .35s both;}
-.sc-email-wrap{text-align:center;margin-bottom:6px;
-               animation:sc-h-in .5s .45s both;}
-.sc-email{display:inline-flex;align-items:center;gap:8px;
-  padding:9px 20px;background:rgba(0,255,135,.09);
-  border:1px solid rgba(0,255,135,.3);border-radius:24px;color:var(--nG);
-  font-size:13px;font-weight:600;direction:ltr;letter-spacing:.5px;}
-.sc-email .em-ic{font-size:16px;}
-.wlc{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.14);
-     border-radius:14px;padding:18px;margin-top:16px;text-align:center;
-     animation:sc-h-in .5s .55s both;}
-.wlc p{font-size:13px;line-height:1.8;color:var(--txm);}
-.wlc strong{color:var(--g3);}
-/* countdown bar */
-.cd-bar-wrap{margin-top:20px;animation:sc-h-in .5s .65s both;}
-.cd-label{font-size:12px;color:var(--txm);text-align:center;margin-bottom:8px;
-          letter-spacing:1px;}
-.cd-label span{color:var(--nG);font-weight:700;font-size:16px;}
-.cd-track{height:5px;background:rgba(255,255,255,.07);border-radius:10px;overflow:hidden;}
-.cd-fill{height:100%;background:linear-gradient(90deg,var(--nG),var(--g1));
-         border-radius:10px;width:100%;
-         box-shadow:0 0 8px rgba(0,255,135,.5);
-         transition:width .9s linear;}
-.btn-go{width:100%;padding:14px;border:none;border-radius:12px;
-  background:linear-gradient(135deg,#004d2a,#00c463,#00FF87);
-  background-size:200% 200%;color:#001a0d;
-  font-family:'Cairo',sans-serif;font-size:15px;font-weight:900;
-  cursor:pointer;margin-top:14px;transition:all .3s;
-  animation:gsh 3s ease infinite,sc-h-in .5s .7s both;
-  box-shadow:0 6px 24px rgba(0,255,135,.3);}
-.btn-go:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,255,135,.5);}
+/* SUCCESS MODAL */
+.sc-ring{position:relative;width:100px;height:100px;margin:0 auto 18px}
+.sc-ring::before,.sc-ring::after{content:'';position:absolute;border-radius:50%;border:3px solid transparent}
+.sc-ring::before{inset:0;border-top-color:var(--ng);border-right-color:var(--ng);
+  animation:spin 1.5s linear infinite;box-shadow:0 0 16px rgba(0,255,135,.4)}
+.sc-ring::after{inset:12px;border-bottom-color:rgba(0,255,135,.35);animation:spin 2.2s linear infinite reverse}
+.sc-em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:42px;animation:pop2 .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop2{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.sc-h{font-size:24px;font-weight:900;color:var(--ng);text-align:center;margin-bottom:8px;
+  text-shadow:0 0 20px rgba(0,255,135,.5);animation:fadeUp .4s .2s both}
+.sc-sub{font-size:13.5px;color:var(--txm);text-align:center;line-height:1.8;margin-bottom:14px;animation:fadeUp .4s .3s both}
+.sc-email-box{text-align:center;margin-bottom:4px;animation:fadeUp .4s .4s both}
+.sc-email-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;
+  background:rgba(0,255,135,.09);border:1px solid rgba(0,255,135,.3);border-radius:22px;
+  color:var(--ng);font-size:13px;font-weight:600;direction:ltr}
+.sc-welcome{background:rgba(212,160,23,.07);border:1px solid rgba(212,160,23,.16);
+  border-radius:13px;padding:16px;margin-top:16px;text-align:center;animation:fadeUp .4s .5s both}
+.sc-welcome p{font-size:13px;line-height:1.8;color:var(--txm)}
+.sc-welcome strong{color:var(--g3)}
+/* countdown */
+.cd-wrap{margin-top:18px;animation:fadeUp .4s .6s both}
+.cd-lbl{font-size:11.5px;color:var(--txm);text-align:center;margin-bottom:7px}
+.cd-lbl b{color:var(--ng);font-size:15px}
+.cd-track{height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.cd-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--ng),var(--g1));
+  box-shadow:0 0 8px rgba(0,255,135,.5);width:100%;transition:width 1s linear}
+.btn-go{width:100%;padding:13px;border:none;border-radius:11px;margin-top:14px;
+  background:linear-gradient(135deg,#004d28,#00c463);color:#001a0d;
+  font-family:'Cairo',sans-serif;font-size:14.5px;font-weight:900;cursor:pointer;
+  box-shadow:0 4px 18px rgba(0,255,135,.3);transition:transform .2s,box-shadow .2s;
+  animation:fadeUp .4s .7s both}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(0,255,135,.5)}
 
-/* ─── toast ─── */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-  background:rgba(20,5,10,.92);border:1px solid rgba(255,45,85,.4);
-  border-radius:14px;padding:13px 24px;font-size:13.5px;color:#FF6B8A;
-  z-index:3000;opacity:0;transition:opacity .35s;pointer-events:none;
-  text-align:center;max-width:380px;backdrop-filter:blur(12px);
-  white-space:pre-line;}
-#toast.show{opacity:1;}
-
-/* ─── confetti ─── */
-.cf{position:fixed;border-radius:2px;
-    animation:cff 2.5s ease-in forwards;z-index:9999;pointer-events:none;top:-20px;}
-@keyframes cff{
-  0%  {transform:translateY(0) rotate(0deg);opacity:1}
-  100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-
-/* ─── shake ─── */
-@keyframes shk{
-  0%,100%{transform:translateX(0)}
-  20%{transform:translateX(-7px)}40%{transform:translateX(7px)}
-  60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-.shk{animation:shk .4s ease;}
-
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-thumb{background:rgba(212,160,23,.3);border-radius:3px;}
-
-@media(max-width:540px){
-  .card,.md{padding:32px 20px;}
-  .pwr{grid-template-columns:1fr;}
-  .logo-txt{letter-spacing:5px;}
+@media(max-width:520px){
+  .card,.md{padding:30px 18px}
+  .pwr{grid-template-columns:1fr}
+  .logo-txt{letter-spacing:6px}
 }
 </style>
 </head>
 <body>
-<div class="bg-l"></div>
-<div class="bg-g"></div>
-<div id="ptc"></div>
-<div id="toast"></div>
 
-<div class="wrap">
+<div class="page">
 
-  <div class="logo-box">
+  <!-- LOGO -->
+  <div class="logo">
     <div class="logo-txt">QRMANI X</div>
     <div class="logo-line"></div>
     <div class="logo-sub">Sovereign Access System</div>
   </div>
 
-  <div class="card" id="mainCard">
-    <div class="card-title">إنشاء <span>حساب جديد</span></div>
+  <!-- CARD -->
+  <div class="card">
+    <div class="card-title">إنشاء <b>حساب جديد</b></div>
 
-    <div class="rn" id="rn" style="display:none">
-      <span>🔗</span><span id="rn-t">انضممت عبر رابط إحالة خاص</span>
+    <div class="ref-banner" id="refBanner">
+      <span>🔗</span><span id="refTxt">انضممت عبر رابط إحالة</span>
     </div>
 
-    <div class="fg">
+    <!-- USERNAME -->
+    <div class="field">
       <label class="lbl">اسم المستخدم</label>
       <div class="iw">
-        <input class="fi" id="uI" type="text"
-          placeholder="اختر اسماً فريداً…" autocomplete="off" dir="ltr">
-        <div id="uS"></div>
+        <input class="fi" id="uI" type="text" placeholder="اختر اسماً فريداً…" autocomplete="off" dir="ltr" style="padding-left:44px">
+        <span class="si" id="uS"></span>
       </div>
-      <div class="fm" id="uM"></div>
+      <div class="msg" id="uM"></div>
       <div class="sugg" id="uG"></div>
     </div>
 
-    <div class="fg">
+    <!-- EMAIL -->
+    <div class="field">
       <label class="lbl">البريد الإلكتروني</label>
       <div class="iw">
-        <input class="fi" id="eI" type="email"
-          placeholder="example@domain.com" autocomplete="off" dir="ltr">
-        <div id="eS"></div>
+        <input class="fi" id="eI" type="email" placeholder="example@domain.com" autocomplete="off" dir="ltr" style="padding-left:44px">
+        <span class="si" id="eS"></span>
       </div>
-      <div class="fm" id="eM"></div>
+      <div class="msg" id="eM"></div>
     </div>
 
-    <div class="fg">
+    <!-- PHONE -->
+    <div class="field">
       <label class="lbl">رقم الهاتف</label>
       <div class="ph-row">
-        <select class="ph-sel" id="pc" dir="ltr">
-          <option value="+93">🇦🇫 +93</option>
-          <option value="+355">🇦🇱 +355</option>
-          <option value="+213">🇩🇿 +213</option>
-          <option value="+376">🇦🇩 +376</option>
-          <option value="+244">🇦🇴 +244</option>
-          <option value="+54">🇦🇷 +54</option>
-          <option value="+374">🇦🇲 +374</option>
-          <option value="+61">🇦🇺 +61</option>
-          <option value="+43">🇦🇹 +43</option>
-          <option value="+994">🇦🇿 +994</option>
-          <option value="+973">🇧🇭 +973</option>
-          <option value="+880">🇧🇩 +880</option>
-          <option value="+375">🇧🇾 +375</option>
-          <option value="+32">🇧🇪 +32</option>
-          <option value="+501">🇧🇿 +501</option>
-          <option value="+229">🇧🇯 +229</option>
-          <option value="+975">🇧🇹 +975</option>
-          <option value="+591">🇧🇴 +591</option>
-          <option value="+387">🇧🇦 +387</option>
-          <option value="+267">🇧🇼 +267</option>
-          <option value="+55">🇧🇷 +55</option>
-          <option value="+673">🇧🇳 +673</option>
-          <option value="+359">🇧🇬 +359</option>
-          <option value="+226">🇧🇫 +226</option>
-          <option value="+257">🇧🇮 +257</option>
-          <option value="+855">🇰🇭 +855</option>
-          <option value="+237">🇨🇲 +237</option>
-          <option value="+1">🇨🇦 +1</option>
-          <option value="+238">🇨🇻 +238</option>
-          <option value="+236">🇨🇫 +236</option>
-          <option value="+235">🇹🇩 +235</option>
-          <option value="+56">🇨🇱 +56</option>
-          <option value="+86">🇨🇳 +86</option>
-          <option value="+57">🇨🇴 +57</option>
-          <option value="+269">🇰🇲 +269</option>
-          <option value="+242">🇨🇬 +242</option>
-          <option value="+243">🇨🇩 +243</option>
-          <option value="+506">🇨🇷 +506</option>
-          <option value="+225">🇨🇮 +225</option>
-          <option value="+385">🇭🇷 +385</option>
-          <option value="+53">🇨🇺 +53</option>
-          <option value="+357">🇨🇾 +357</option>
-          <option value="+420">🇨🇿 +420</option>
-          <option value="+45">🇩🇰 +45</option>
-          <option value="+253">🇩🇯 +253</option>
-          <option value="+1">🇩🇴 +1</option>
-          <option value="+593">🇪🇨 +593</option>
-          <option value="+20" selected>🇪🇬 +20</option>
-          <option value="+503">🇸🇻 +503</option>
-          <option value="+240">🇬🇶 +240</option>
-          <option value="+291">🇪🇷 +291</option>
-          <option value="+372">🇪🇪 +372</option>
-          <option value="+251">🇪🇹 +251</option>
-          <option value="+679">🇫🇯 +679</option>
-          <option value="+358">🇫🇮 +358</option>
-          <option value="+33">🇫🇷 +33</option>
-          <option value="+241">🇬🇦 +241</option>
-          <option value="+220">🇬🇲 +220</option>
-          <option value="+995">🇬🇪 +995</option>
-          <option value="+49">🇩🇪 +49</option>
-          <option value="+233">🇬🇭 +233</option>
-          <option value="+30">🇬🇷 +30</option>
-          <option value="+502">🇬🇹 +502</option>
-          <option value="+224">🇬🇳 +224</option>
-          <option value="+245">🇬🇼 +245</option>
-          <option value="+592">🇬🇾 +592</option>
-          <option value="+509">🇭🇹 +509</option>
-          <option value="+504">🇭🇳 +504</option>
-          <option value="+36">🇭🇺 +36</option>
-          <option value="+354">🇮🇸 +354</option>
-          <option value="+91">🇮🇳 +91</option>
-          <option value="+62">🇮🇩 +62</option>
-          <option value="+98">🇮🇷 +98</option>
-          <option value="+964">🇮🇶 +964</option>
-          <option value="+353">🇮🇪 +353</option>
-          <option value="+972">🇮🇱 +972</option>
-          <option value="+39">🇮🇹 +39</option>
-          <option value="+1">🇯🇲 +1</option>
-          <option value="+81">🇯🇵 +81</option>
-          <option value="+962">🇯🇴 +962</option>
-          <option value="+7">🇰🇿 +7</option>
-          <option value="+254">🇰🇪 +254</option>
-          <option value="+686">🇰🇮 +686</option>
-          <option value="+850">🇰🇵 +850</option>
-          <option value="+82">🇰🇷 +82</option>
-          <option value="+965">🇰🇼 +965</option>
-          <option value="+996">🇰🇬 +996</option>
-          <option value="+856">🇱🇦 +856</option>
-          <option value="+371">🇱🇻 +371</option>
-          <option value="+961">🇱🇧 +961</option>
-          <option value="+266">🇱🇸 +266</option>
-          <option value="+231">🇱🇷 +231</option>
-          <option value="+218">🇱🇾 +218</option>
-          <option value="+423">🇱🇮 +423</option>
-          <option value="+370">🇱🇹 +370</option>
-          <option value="+352">🇱🇺 +352</option>
-          <option value="+261">🇲🇬 +261</option>
-          <option value="+265">🇲🇼 +265</option>
-          <option value="+60">🇲🇾 +60</option>
-          <option value="+960">🇲🇻 +960</option>
-          <option value="+223">🇲🇱 +223</option>
-          <option value="+356">🇲🇹 +356</option>
-          <option value="+692">🇲🇭 +692</option>
-          <option value="+222">🇲🇷 +222</option>
-          <option value="+230">🇲🇺 +230</option>
-          <option value="+52">🇲🇽 +52</option>
-          <option value="+691">🇫🇲 +691</option>
-          <option value="+373">🇲🇩 +373</option>
-          <option value="+377">🇲🇨 +377</option>
-          <option value="+976">🇲🇳 +976</option>
-          <option value="+382">🇲🇪 +382</option>
-          <option value="+212">🇲🇦 +212</option>
-          <option value="+258">🇲🇿 +258</option>
-          <option value="+95">🇲🇲 +95</option>
-          <option value="+264">🇳🇦 +264</option>
-          <option value="+674">🇳🇷 +674</option>
-          <option value="+977">🇳🇵 +977</option>
-          <option value="+31">🇳🇱 +31</option>
-          <option value="+64">🇳🇿 +64</option>
-          <option value="+505">🇳🇮 +505</option>
-          <option value="+227">🇳🇪 +227</option>
-          <option value="+234">🇳🇬 +234</option>
-          <option value="+47">🇳🇴 +47</option>
-          <option value="+968">🇴🇲 +968</option>
-          <option value="+92">🇵🇰 +92</option>
-          <option value="+680">🇵🇼 +680</option>
-          <option value="+507">🇵🇦 +507</option>
-          <option value="+675">🇵🇬 +675</option>
-          <option value="+595">🇵🇾 +595</option>
-          <option value="+51">🇵🇪 +51</option>
-          <option value="+63">🇵🇭 +63</option>
-          <option value="+48">🇵🇱 +48</option>
-          <option value="+351">🇵🇹 +351</option>
-          <option value="+974">🇶🇦 +974</option>
-          <option value="+40">🇷🇴 +40</option>
-          <option value="+7">🇷🇺 +7</option>
-          <option value="+250">🇷🇼 +250</option>
-          <option value="+1">🇰🇳 +1</option>
-          <option value="+1">🇱🇨 +1</option>
-          <option value="+1">🇻🇨 +1</option>
-          <option value="+685">🇼🇸 +685</option>
-          <option value="+378">🇸🇲 +378</option>
-          <option value="+239">🇸🇹 +239</option>
+        <select class="ph-cc" id="pc">
+          <option value="+20">🇪🇬 +20</option>
           <option value="+966">🇸🇦 +966</option>
-          <option value="+221">🇸🇳 +221</option>
-          <option value="+381">🇷🇸 +381</option>
-          <option value="+248">🇸🇨 +248</option>
-          <option value="+232">🇸🇱 +232</option>
-          <option value="+65">🇸🇬 +65</option>
-          <option value="+421">🇸🇰 +421</option>
-          <option value="+386">🇸🇮 +386</option>
-          <option value="+677">🇸🇧 +677</option>
-          <option value="+252">🇸🇴 +252</option>
-          <option value="+27">🇿🇦 +27</option>
-          <option value="+34">🇪🇸 +34</option>
-          <option value="+94">🇱🇰 +94</option>
-          <option value="+249">🇸🇩 +249</option>
-          <option value="+597">🇸🇷 +597</option>
-          <option value="+268">🇸🇿 +268</option>
-          <option value="+46">🇸🇪 +46</option>
-          <option value="+41">🇨🇭 +41</option>
-          <option value="+963">🇸🇾 +963</option>
-          <option value="+886">🇹🇼 +886</option>
-          <option value="+992">🇹🇯 +992</option>
-          <option value="+255">🇹🇿 +255</option>
-          <option value="+66">🇹🇭 +66</option>
-          <option value="+670">🇹🇱 +670</option>
-          <option value="+228">🇹🇬 +228</option>
-          <option value="+676">🇹🇴 +676</option>
-          <option value="+1">🇹🇹 +1</option>
-          <option value="+216">🇹🇳 +216</option>
-          <option value="+90">🇹🇷 +90</option>
-          <option value="+993">🇹🇲 +993</option>
-          <option value="+688">🇹🇻 +688</option>
-          <option value="+256">🇺🇬 +256</option>
-          <option value="+380">🇺🇦 +380</option>
           <option value="+971">🇦🇪 +971</option>
-          <option value="+44">🇬🇧 +44</option>
+          <option value="+965">🇰🇼 +965</option>
+          <option value="+974">🇶🇦 +974</option>
+          <option value="+973">🇧🇭 +973</option>
+          <option value="+968">🇴🇲 +968</option>
+          <option value="+962">🇯🇴 +962</option>
+          <option value="+961">🇱🇧 +961</option>
+          <option value="+212">🇲🇦 +212</option>
+          <option value="+213">🇩🇿 +213</option>
+          <option value="+216">🇹🇳 +216</option>
           <option value="+1">🇺🇸 +1</option>
-          <option value="+598">🇺🇾 +598</option>
-          <option value="+998">🇺🇿 +998</option>
-          <option value="+678">🇻🇺 +678</option>
-          <option value="+379">🇻🇦 +379</option>
-          <option value="+58">🇻🇪 +58</option>
-          <option value="+84">🇻🇳 +84</option>
-          <option value="+967">🇾🇪 +967</option>
-          <option value="+260">🇿🇲 +260</option>
-          <option value="+263">🇿🇼 +263</option>
+          <option value="+44">🇬🇧 +44</option>
         </select>
         <div class="iw" style="flex:1">
-          <input class="fi" id="phI" type="tel"
-            placeholder="01xxxxxxxxx" autocomplete="off" dir="ltr">
-          <div id="phS"></div>
+          <input class="fi" id="phI" type="tel" placeholder="01xxxxxxxxx" autocomplete="off" dir="ltr" style="padding-left:44px">
+          <span class="si" id="phS"></span>
         </div>
       </div>
-      <div class="fm" id="phM"></div>
+      <div class="msg" id="phM"></div>
     </div>
 
-    <div class="div">
-      <div class="div-l"></div>
-      <div class="div-t">كلمة المرور</div>
-      <div class="div-l"></div>
-    </div>
+    <div class="divr"><div class="divr-l"></div><div class="divr-t">كلمة المرور</div><div class="divr-l"></div></div>
 
-    <div class="fg">
+    <!-- PASSWORD -->
+    <div class="field">
       <label class="lbl">كلمة المرور</label>
       <div class="iw">
-        <input class="fi" id="pwI" type="password"
-          placeholder="••••••••••••" autocomplete="new-password"
-          dir="ltr" style="padding-left:42px">
+        <input class="fi" id="pwI" type="password" placeholder="••••••••••••" autocomplete="new-password" dir="ltr" style="padding-left:40px">
         <button class="eye" id="pwE" type="button">👁</button>
       </div>
-      <div class="sb-w"><div class="sb s0" id="sBar"></div></div>
+      <div class="sb-wrap"><div class="sb" id="sBar"></div></div>
       <div class="sl" id="sLbl" style="color:var(--txm)">أدخل كلمة المرور</div>
       <div class="pwr">
-        <div class="pi" id="r-len"><span class="dot">✓</span>8 أحرف على الأقل</div>
-        <div class="pi" id="r-up"> <span class="dot">✓</span>حرف كبير A-Z</div>
-        <div class="pi" id="r-lw"> <span class="dot">✓</span>حرف صغير a-z</div>
-        <div class="pi" id="r-num"><span class="dot">✓</span>رقم 0-9</div>
-        <div class="pi" id="r-sp"> <span class="dot">✓</span>رمز خاص !@#$</div>
-        <div class="pi" id="r-ns"> <span class="dot">✓</span>بدون مسافات</div>
+        <div class="pi" id="r-len"><span class="d">✓</span>8 أحرف على الأقل</div>
+        <div class="pi" id="r-up"><span class="d">✓</span>حرف كبير A-Z</div>
+        <div class="pi" id="r-lw"><span class="d">✓</span>حرف صغير a-z</div>
+        <div class="pi" id="r-num"><span class="d">✓</span>رقم 0-9</div>
+        <div class="pi" id="r-sp"><span class="d">✓</span>رمز خاص !@#</div>
+        <div class="pi" id="r-ns"><span class="d">✓</span>بدون مسافات</div>
       </div>
     </div>
 
-    <div class="fg" style="margin-top:15px">
+    <!-- CONFIRM -->
+    <div class="field" style="margin-top:14px">
       <label class="lbl">تأكيد كلمة المرور</label>
       <div class="iw">
-        <input class="fi" id="cfI" type="password"
-          placeholder="••••••••••••" autocomplete="new-password"
-          dir="ltr" style="padding-left:42px">
+        <input class="fi" id="cfI" type="password" placeholder="••••••••••••" autocomplete="new-password" dir="ltr" style="padding-left:40px">
         <button class="eye" id="cfE" type="button">👁</button>
-        <div id="cfS"></div>
+        <span class="si" id="cfS"></span>
       </div>
-      <div class="fm" id="cfM"></div>
+      <div class="msg" id="cfM"></div>
     </div>
 
-    <div class="tr">
-      <div class="ck" id="ck"><span class="cm">✓</span></div>
-      <div class="tr-t">
-        أوافق على
-        <span class="tl" id="termsLink">شروط الاستخدام وسياسة الخصوصية</span>
-        لمنصة QRMANI X
-      </div>
+    <!-- TERMS -->
+    <div class="tr-row">
+      <div class="ck" id="ck">✓</div>
+      <div class="tr-t">أوافق على <span class="tl" id="termsBtn">شروط الاستخدام وسياسة الخصوصية</span> لمنصة QRMANI X</div>
     </div>
 
-    <button class="btn-sub" id="subBtn" disabled>إنشاء الحساب</button>
+    <button class="btn" id="subBtn" disabled>إنشاء الحساب</button>
 
-    <div class="lp">
-      لديك حساب بالفعل؟
-      <a href="login.html" class="ll"><span>تسجيل الدخول</span> ←</a>
-    </div>
+    <div class="lp">لديك حساب؟ <a class="ll" href="login.html">تسجيل الدخول ←</a></div>
   </div>
 </div>
 
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ══ TERMS MODAL ══ -->
 <div class="ov" id="tmOv">
   <div class="md">
-    <button class="md-x" id="tmClose">✕</button>
+    <button class="md-x" id="tmX">✕</button>
     <div class="tm-ic">⚖️</div>
     <div class="tm-h">شروط الاستخدام والاتفاقية</div>
     <div class="ts"><h3>🔐 الأمان والهوية</h3><ul>
       <li>يلزم التحقق من البريد الإلكتروني لتفعيل الحساب</li>
-      <li>يُمنع إنشاء حسابات متعددة بنفس البريد أو الهاتف أو الاسم</li>
-      <li>درجة الثقة يجب ألا تقل عن 50 نقطة للوصول الكامل للمنصة</li>
-      <li>بعد 3 محاولات خاطئة يُقفل الحساب 3 دقائق تلقائياً</li>
-      <li>العمليات المالية تستوجب رمز PIN أمني خاص</li>
+      <li>يُمنع إنشاء حسابات متعددة بنفس البريد أو الهاتف أو اسم المستخدم</li>
+      <li>درجة الثقة يجب ألا تقل عن 50 نقطة للوصول الكامل</li>
+      <li>بعد 3 محاولات خاطئة يُقفل الحساب مؤقتاً 3 دقائق</li>
+      <li>العمليات المالية تستوجب رمز PIN خاص</li>
     </ul></div>
     <div class="ts"><h3>⏳ الخمول والحذف</h3><ul>
       <li>الحسابات الخاملة أكثر من 90 يوماً يُعلَّق وصولها تلقائياً</li>
       <li>طلبات الحذف تنتظر 72 ساعة قبل التنفيذ للسماح بالتراجع</li>
       <li>بعد الحذف لا يمكن التسجيل بنفس البيانات لمدة 40 يوماً</li>
-      <li>الحذف اليدوي للحسابات ممنوع — يتم عبر النظام فقط</li>
+      <li>الحذف اليدوي ممنوع — يتم عبر النظام فقط</li>
     </ul></div>
-    <div class="ts"><h3>💰 النظام المالي والإحالات</h3><ul>
+    <div class="ts"><h3>💰 المالية والإحالات</h3><ul>
       <li>كل مستخدم جديد يحصل على 10 نقاط ترحيبية فور إنشاء الحساب</li>
-      <li>جميع العمليات المالية مرتبطة برمز PIN أمني</li>
-      <li>الإحالة الذاتية محظورة — يجب أن يكون المُحيل شخصاً آخر</li>
-      <li>سجلات المعاملات محمية ولا يمكن تعديلها أو حذفها</li>
+      <li>العمليات المالية مرتبطة برمز PIN أمني</li>
+      <li>الإحالة الذاتية محظورة — المُحيل يجب أن يكون شخصاً آخر</li>
     </ul></div>
-    <div class="ts"><h3>🔒 حماية البيانات</h3><ul>
-      <li>البريد الإلكتروني واسم المستخدم والدور لا يمكن تغييرها بعد الإنشاء</li>
-      <li>تغيير رقم الهاتف يستلزم موافقة المسؤول</li>
-      <li>كل جلسة دخول صالحة 24 ساعة فقط</li>
+    <div class="ts"><h3>🔒 البيانات والجلسات</h3><ul>
+      <li>البريد واسم المستخدم والدور لا يمكن تغييرها بعد الإنشاء</li>
+      <li>تغيير الهاتف يستلزم موافقة المسؤول</li>
+      <li>كل جلسة صالحة 24 ساعة فقط</li>
     </ul></div>
-    <div class="ts"><h3>🛡️ المسؤولية القانونية</h3>
-      <p>باستخدام المنصة تقر بقراءة وفهم والموافقة على جميع الشروط أعلاه.
-         المنصة غير مسؤولة عن أي خسائر ناتجة عن انتهاك هذه الشروط.
-         جميع الحقوق محفوظة لـ QRMANI X © 2025.</p>
+    <div class="ts"><h3>🛡️ المسؤولية</h3>
+      <p>باستخدامك المنصة تقر بالموافقة على جميع الشروط أعلاه. جميع الحقوق محفوظة لـ QRMANI X © 2025.</p>
     </div>
     <button class="btn-acc" id="accBtn">✅ أوافق على جميع الشروط</button>
   </div>
 </div>
 
+<!-- ══ SUCCESS MODAL ══ -->
 <div class="ov" id="scOv">
-  <div class="md">
-    <div class="sc-ring-wrap">
-      <div class="sc-ring"></div>
-      <div class="sc-ring2"></div>
-      <div class="sc-emoji">🎉</div>
-    </div>
-
+  <div class="md" style="text-align:center">
+    <div class="sc-ring"><div class="sc-em">🎉</div></div>
     <div class="sc-h">مرحباً بك في QRMANI X!</div>
-    <p class="sc-s">
-      تم إنشاء حسابك بنجاح! 🎊<br>
-      أرسلنا رابط التفعيل إلى بريدك الإلكتروني — تحقق منه وانقر الرابط لتفعيل حسابك.
-    </p>
-
-    <div class="sc-email-wrap">
-      <span class="sc-email">
-        <span class="em-ic">📧</span>
-        <span id="scEmail">—</span>
-      </span>
+    <p class="sc-sub">تم إنشاء حسابك بنجاح 🎊<br>أرسلنا رابط التفعيل إلى بريدك الإلكتروني:</p>
+    <div class="sc-email-box">
+      <span class="sc-email-badge"><span>📧</span><span id="scEmail">—</span></span>
     </div>
-
-    <div class="wlc">
-      <p>
-        🌟 <strong>أهلاً بك في مجتمعنا الحصري!</strong><br>
-        حسابك الآن <strong>قيد التنشيط</strong> — ما إن تنقر رابط التفعيل ستصبح عضواً كاملاً.<br><br>
-        🪙 <strong>10 نقاط ترحيبية</strong> في انتظارك بعد التفعيل!<br>
-        🔐 بياناتك آمنة ومحمية بأعلى معايير التشفير.
-      </p>
+    <div class="sc-welcome">
+      <p>🌟 <strong>أهلاً بك في مجتمعنا الحصري!</strong><br>
+      حسابك الآن <strong>قيد التنشيط</strong> — انقر رابط التفعيل في بريدك لتصبح عضواً كاملاً.<br><br>
+      🪙 <strong>10 نقاط ترحيبية</strong> في انتظارك بعد التفعيل!<br>
+      🔐 بياناتك محمية بأعلى معايير التشفير.</p>
     </div>
-
-    <div class="cd-bar-wrap">
-      <div class="cd-label">الانتقال لتسجيل الدخول تلقائياً خلال <span id="cdNum">8</span> ثوانٍ</div>
-      <div class="cd-track"><div class="cd-fill" id="cdFill"></div></div>
+    <div class="cd-wrap">
+      <div class="cd-lbl">الانتقال تلقائياً خلال <b id="cdN">8</b> ثوانٍ</div>
+      <div class="cd-track"><div class="cd-bar" id="cdBar"></div></div>
     </div>
-
-    <button class="btn-go" id="goLogin">🔑 الانتقال الآن لتسجيل الدخول</button>
+    <button class="btn-go" id="goBtn">🔑 الانتقال الآن لتسجيل الدخول</button>
   </div>
 </div>
 
-<script>
-(function(){
+<!-- ══════════════════════════════════════════
+     FIREBASE + APP LOGIC
+══════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp }   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAnalytics }    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js';
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+                           from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification }
+                           from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-/* ════ particles ════ */
-(function(){
-  const c=document.getElementById('ptc');
-  const g=['#FFD700','#FFC200','#B8860B','#D4A017'];
-  for(let i=0;i<22;i++){
-    const p=document.createElement('div');p.className='pt';
-    const s=Math.random()*3+1;
-    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;`+
-      `background:${g[0|Math.random()*4]};`+
-      `animation-duration:${Math.random()*14+8}s;`+
-      `animation-delay:${Math.random()*12}s;`;
-    c.appendChild(p);
-  }
-})();
+/* ── init ── */
+const app  = initializeApp({
+  apiKey:            'AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU',
+  authDomain:        'alqurmani-auth-x.firebaseapp.com',
+  projectId:         'alqurmani-auth-x',
+  storageBucket:     'alqurmani-auth-x.firebasestorage.app',
+  messagingSenderId: '558487419521',
+  appId:             '1:558487419521:web:fcf791247b7eefc2a82b80',
+  measurementId:     'G-B34HTXXMVS'
+});
+getAnalytics(app);
+const db   = getFirestore(app);
+const auth = getAuth(app);
 
-/* ════ wait for Firebase ════ */
-function boot(){
-  const FB = window.__FB;
-  if(!FB){ window.addEventListener('fb_ready',boot,{once:true}); return; }
-  run(FB);
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
+const $  = id => document.getElementById(id);
+const q$ = s  => document.querySelector(s);
+
+function toast(msg, dur=4000){
+  const t=$('toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'), dur);
 }
-boot();
 
-function run(FB){
-  const {
-    db, auth, doc, getDoc, setDoc, collection, serverTimestamp, query, where, getDocs,
-    createUserWithEmailAndPassword, sendEmailVerification, fetchSignInMethodsForEmail
-  } = FB;
+/* Firestore read  ─  /public_registry/TYPE__VALUE */
+async function regExists(type, val){
+  try{ return (await getDoc(doc(db,'public_registry', type+'__'+val))).exists(); }
+  catch(e){ return false; }
+}
+async function regWrite(type, val, extra={}){
+  await setDoc(doc(db,'public_registry', type+'__'+val),
+    { type, value:val, ...extra, ts: serverTimestamp() });
+}
+async function blockedExists(val){
+  try{ return (await getDoc(doc(db,'blocked_recreate', val))).exists(); }
+  catch(e){ return false; }
+}
+async function statsExist(){
+  try{ return (await getDoc(doc(db,'stats','global'))).exists(); }
+  catch(e){ return true; }
+}
 
-  /* ── state ── */
-  const S = {
-    u:false, e:false, ph:false, pw:false, cf:false, terms:false,
-    ref: new URLSearchParams(location.search).get('ref') || null
-  };
+/* ── field status ── */
+function fOk(pfx, msg=''){
+  const i=$(`${pfx}I`), s=$(`${pfx}S`), m=$(`${pfx}M`);
+  i&&(i.className=i.className.replace(/ ?er| ?ok/g,'')+' ok');
+  s&&(s.className='si ok',s.innerHTML='✓');
+  m&&(m.className='msg ok',m.textContent=msg);
+}
+function fEr(pfx, msg=''){
+  const i=$(`${pfx}I`), s=$(`${pfx}S`), m=$(`${pfx}M`);
+  i&&(i.className=i.className.replace(/ ?er| ?ok/g,'')+' er');
+  s&&(s.className='si er',s.innerHTML='✕');
+  m&&(m.className='msg er',m.textContent=msg);
+}
+function fLd(pfx){
+  const i=$(`${pfx}I`), s=$(`${pfx}S`), m=$(`${pfx}M`);
+  i&&(i.className=i.className.replace(/ ?er| ?ok/g,''));
+  s&&(s.className='si ld',s.innerHTML='<span></span><span></span><span></span>');
+  m&&(m.className='msg',m.textContent='');
+}
+function fReset(pfx){
+  const i=$(`${pfx}I`), s=$(`${pfx}S`), m=$(`${pfx}M`);
+  i&&(i.className=i.className.replace(/ ?er| ?ok/g,''));
+  s&&(s.className='si',s.innerHTML='');
+  m&&(m.className='msg',m.textContent='');
+}
 
-  if(S.ref){
-    const rn=document.getElementById('rn');
-    rn.style.display='flex';
-    document.getElementById('rn-t').textContent=
-      'انضممت عبر رابط إحالة — UID: '+S.ref.slice(0,10)+'…';
+/* ── validate button ── */
+const S = { u:false, e:false, ph:false, pw:false, cf:false, terms:false,
+            ref: new URLSearchParams(location.search).get('ref')||null };
+
+function chkBtn(){
+  $('subBtn').disabled = !(S.u&&S.e&&S.ph&&S.pw&&S.cf&&S.terms);
+}
+
+/* referral */
+if(S.ref){
+  $('refBanner').style.display='flex';
+  $('refTxt').textContent='انضممت عبر إحالة — '+S.ref.slice(0,10)+'…';
+}
+
+/* ════════════════════════════════════════
+   USERNAME  (debounce 200ms)
+════════════════════════════════════════ */
+let uT;
+$('uI').addEventListener('input', function(){
+  clearTimeout(uT); S.u=false; chkBtn();
+  $('uG').innerHTML='';
+  const v = this.value.trim().toLowerCase();
+  if(!v){ fReset('u'); return; }
+  if(v.length<3){ fEr('u','الاسم أقل من 3 أحرف'); return; }
+  if(!/^[a-z0-9_.]+$/.test(v)){ fEr('u','أحرف إنجليزية وأرقام وـ و . فقط'); return; }
+  fLd('u');
+  uT = setTimeout(async()=>{
+    if(await regExists('usernames',v)){
+      fEr('u','الاسم مستخدم — جرّب:');
+      $('uG').innerHTML=[v+'_'+~~(Math.random()*999),v+~~(Math.random()*99),'_'+v+'_',v+'.x',v+'_pro']
+        .map(o=>`<span class="stag" data-n="${o}">${o}</span>`).join('');
+    } else { fOk('u','✅ الاسم متاح'); S.u=true; chkBtn(); }
+  }, 200);
+});
+
+$('uG').addEventListener('click', e=>{
+  if(!e.target.dataset.n) return;
+  $('uI').value=e.target.dataset.n; $('uG').innerHTML='';
+  $('uI').dispatchEvent(new Event('input'));
+});
+
+/* ════════════════════════════════════════
+   EMAIL  (debounce 200ms)
+════════════════════════════════════════ */
+let eT;
+$('eI').addEventListener('input', function(){
+  clearTimeout(eT); S.e=false; chkBtn();
+  const v = this.value.trim().toLowerCase();
+  if(!v){ fReset('e'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){ fEr('e','صيغة البريد غير صحيحة'); return; }
+  fLd('e');
+  eT = setTimeout(async()=>{
+    if(await blockedExists(v)){ fEr('e','⛔ هذا البريد محظور (40 يوم)'); return; }
+    if(await regExists('emails',v)){ fEr('e','⚠️ البريد مسجل — سجّل الدخول'); }
+    else { fOk('e','✅ البريد متاح'); S.e=true; chkBtn(); }
+  }, 200);
+});
+
+/* ════════════════════════════════════════
+   PHONE  (debounce 200ms)
+════════════════════════════════════════ */
+let phT;
+function doPhone(){
+  clearTimeout(phT); S.ph=false; chkBtn();
+  const raw=$('phI').value.trim();
+  const digits=raw.replace(/\D/g,'').replace(/^0/,'');
+  const full=$('pc').value+digits;
+  if(!raw){ fReset('ph'); return; }
+  if(digits.length<6||digits.length>14){ fEr('ph','رقم غير صحيح'); return; }
+  fLd('ph');
+  phT = setTimeout(async()=>{
+    if(await blockedExists(full)){ fEr('ph','⛔ الرقم محظور (40 يوم)'); return; }
+    if(await regExists('phones',full)){ fEr('ph','⚠️ الرقم مسجل بالفعل'); }
+    else { fOk('ph','✅ الرقم متاح'); S.ph=true; chkBtn(); }
+  }, 200);
+}
+$('phI').addEventListener('input', doPhone);
+$('pc').addEventListener('change', doPhone);
+
+/* ════════════════════════════════════════
+   PASSWORD
+════════════════════════════════════════ */
+const sLbl=['','ضعيفة جداً','ضعيفة','متوسطة','قوية جداً 💪'];
+const sCol=['var(--txm)','var(--nr)','#FF9500','var(--g1)','var(--ng)'];
+
+$('pwI').addEventListener('input', function(){
+  const pw=this.value;
+  const R={len:pw.length>=8,up:/[A-Z]/.test(pw),lw:/[a-z]/.test(pw),
+           num:/\d/.test(pw),sp:/[!@#$%^&*()\-_=+\[\]{}|;':",.<>/?`~]/.test(pw),
+           ns:pw.length>0&&!/\s/.test(pw)};
+  Object.entries(R).forEach(([k,v])=>$('r-'+k)?.classList.toggle('met',v));
+  const sc=Object.values(R).filter(Boolean).length;
+  const lvl=!pw?0:sc<=2?1:sc<=4?2:sc<=5?3:4;
+  $('sBar').style.cssText=`width:${[0,25,50,75,100][lvl]}%;background:${sCol[lvl]};box-shadow:0 0 8px ${sCol[lvl]}`;
+  $('sLbl').textContent=pw?sLbl[lvl]:'أدخل كلمة المرور';
+  $('sLbl').style.color=sCol[lvl];
+  S.pw=sc>=5; chkBtn();
+  $('cfI').dispatchEvent(new Event('input'));
+});
+
+/* ════════════════════════════════════════
+   CONFIRM
+════════════════════════════════════════ */
+$('cfI').addEventListener('input', function(){
+  const pw=$('pwI').value, cf=this.value;
+  this.classList.remove('ok','er'); $('cfS').innerHTML=''; $('cfM').textContent='';
+  if(!cf){ S.cf=false; chkBtn(); return; }
+  if(cf===pw){
+    this.classList.add('ok');
+    $('cfS').className='si ok'; $('cfS').innerHTML='✓';
+    $('cfM').className='msg ok'; $('cfM').textContent='✅ كلمتا المرور متطابقتان';
+    S.cf=true;
+  } else {
+    this.classList.add('er');
+    $('cfS').className='si er'; $('cfS').innerHTML='✕';
+    $('cfM').className='msg er'; $('cfM').textContent='⚠️ كلمتا المرور غير متطابقتين';
+    S.cf=false;
   }
+  chkBtn();
+});
 
-  /* ════ FIREBASE READS - التحقق المزدوج الفوري ════ */
-  async function regExists(type, value){
-    try{
-      let isTaken = false;
-      // 1. فحص مصادقة Firebase (لضمان أن الإيميل ليس مستخدماً حتى لو غاب عن قاعدة البيانات)
-      if(type === 'email'){
-         const methods = await fetchSignInMethodsForEmail(auth, value);
-         if(methods.length > 0) return true;
-      }
-      // 2. فحص قاعدة البيانات العامة public_registry
-      const id = type+'__'+value;
-      const snap = await getDoc(doc(db,'public_registry',id));
-      if(snap.exists()) return true;
-
-      // 3. فحص مجموعة users للطبقة الإضافية
-      const q = query(collection(db, "users"), where(type === 'user' ? 'username' : type, "==", value));
-      const qSnap = await getDocs(q);
-      if(!qSnap.empty) return true;
-
-      return false;
-    }catch(err){
-      console.warn('regExists error',err.code, err.message);
-      return false;
-    }
-  }
-
-  async function regWrite(type, value, data){
-    const id = type+'__'+value;
-    await setDoc(doc(db,'public_registry',id),
-      { type, value, ...data, createdAt: serverTimestamp() });
-  }
-
-  /* ════ UI HELPERS ════ */
-  function setF(prefix, type, msg){
-    const inp = document.getElementById(prefix+'I');
-    const st  = document.getElementById(prefix+'S');
-    const ms  = document.getElementById(prefix+'M');
-
-    if(inp){ inp.classList.remove('ok','er'); }
-    if(st)  st.innerHTML='';
-
-    if(type==='ld'){
-      if(st) st.innerHTML='<div class="dots"><span></span><span></span><span></span></div>';
-      ms.textContent='';
-      ms.className='fm';
-      S[prefix]=false;
-    }else if(type==='ok'){
-      if(inp) inp.classList.add('ok');
-      if(st) st.innerHTML='<span class="si ok">✔</span>';
-      ms.textContent=msg;
-      ms.className='fm ok';
-      S[prefix]=true;
-    }else if(type==='er'){
-      if(inp) inp.classList.add('er');
-      if(st) st.innerHTML='<span class="si er">✖</span>';
-      ms.textContent=msg;
-      ms.className='fm er';
-      S[prefix]=false;
-    }else{
-      ms.textContent='';
-      ms.className='fm';
-      S[prefix]=false;
-    }
-    chkBtn();
-  }
-
-  function chkBtn(){
-    const b = document.getElementById('subBtn');
-    b.disabled = !(S.u && S.e && S.ph && S.pw && S.cf && S.terms);
-  }
-
-  /* ════ VALIDATION DEBOUNCING ════ */
-  let timer_u, timer_e, timer_ph;
-
-  document.getElementById('uI').addEventListener('input',(ev)=>{
-    clearTimeout(timer_u);
-    const v=ev.target.value.trim().toLowerCase();
-    const sug=document.getElementById('uG');
-    sug.innerHTML='';
-    if(!v){ setF('u','', ''); return; }
-    if(v.length<3 || /[^a-z0-9_.]/.test(v)){
-      setF('u','er','يجب أن يكون 3 أحرف على الأقل وبدون رموز خاصة');
-      return;
-    }
-    setF('u','ld');
-    timer_u = setTimeout(async ()=>{
-      const ex = await regExists('username', v);
-      if(ex){
-        setF('u','er','هذا الاسم مستخدم بالفعل');
-        // suggestions
-        for(let i=0;i<3;i++){
-          const d=document.createElement('div');d.className='stag';
-          d.textContent=v+Math.floor(Math.random()*999);
-          d.onclick=()=>{ document.getElementById('uI').value=d.textContent; document.getElementById('uI').dispatchEvent(new Event('input')); };
-          sug.appendChild(d);
-        }
-      }else{
-        setF('u','ok','اسم مستخدم متاح');
-      }
-    },600);
+/* ════════════════════════════════════════
+   EYE TOGGLE
+════════════════════════════════════════ */
+['pw','cf'].forEach(p=>{
+  $(p+'E').addEventListener('click',()=>{
+    const i=$(p+'I'); i.type=i.type==='password'?'text':'password';
+    $(p+'E').textContent=i.type==='password'?'👁':'🙈';
   });
+});
 
-  document.getElementById('eI').addEventListener('input',(ev)=>{
-    clearTimeout(timer_e);
-    const v=ev.target.value.trim().toLowerCase();
-    if(!v){ setF('e','', ''); return; }
-    if(!v.includes('@') || !v.includes('.')){
-      setF('e','er','صيغة البريد غير صحيحة');
-      return;
+/* ════════════════════════════════════════
+   TERMS
+════════════════════════════════════════ */
+$('ck').addEventListener('click',function(){
+  S.terms=!S.terms; this.classList.toggle('on',S.terms); chkBtn();
+});
+$('termsBtn').addEventListener('click',()=>openModal('tmOv'));
+$('tmX').addEventListener('click',()=>closeModal('tmOv'));
+$('tmOv').addEventListener('click',e=>{ if(e.target===$('tmOv')) closeModal('tmOv'); });
+$('accBtn').addEventListener('click',()=>{
+  S.terms=true; $('ck').classList.add('on'); chkBtn(); closeModal('tmOv');
+});
+
+function openModal(id){ $(id).classList.add('on'); document.body.style.overflow='hidden'; }
+function closeModal(id){ $(id).classList.remove('on'); document.body.style.overflow=''; }
+
+/* ════════════════════════════════════════
+   CONFETTI
+════════════════════════════════════════ */
+function confetti(){
+  const c=['#FFD700','#00FF87','#FF6B6B','#4ECDC4','#FFB347','#C3F73A','#FF9FF3'];
+  for(let i=0;i<80;i++) setTimeout(()=>{
+    const d=document.createElement('div'); d.className='cf';
+    const s=~~(Math.random()*8+4);
+    d.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;`+
+      `background:${c[~~(Math.random()*c.length)]};`+
+      `border-radius:${Math.random()>.5?'50%':'3px'};`+
+      `animation-duration:${Math.random()*2+2.2}s;animation-delay:${Math.random()*.4}s;opacity:1`;
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(), 4000);
+  }, i*25);
+}
+
+/* ════════════════════════════════════════
+   SUCCESS MODAL WITH COUNTDOWN
+════════════════════════════════════════ */
+let cdInt;
+function openSuccess(email){
+  $('scEmail').textContent=email;
+  openModal('scOv');
+  confetti();
+
+  let n=8;
+  $('cdN').textContent=n;
+  $('cdBar').style.width='100%';
+
+  clearInterval(cdInt);
+  cdInt=setInterval(()=>{
+    n--;
+    $('cdN').textContent=n;
+    $('cdBar').style.width=(n/8*100)+'%';
+    if(n<=0){ clearInterval(cdInt); location.href='login.html'; }
+  },1000);
+}
+$('goBtn').addEventListener('click',()=>{ clearInterval(cdInt); location.href='login.html'; });
+$('scOv').addEventListener('click',e=>{ if(e.target===$('scOv')){ clearInterval(cdInt); location.href='login.html'; } });
+
+/* ════════════════════════════════════════
+   MAIN SIGNUP
+════════════════════════════════════════ */
+const sub=$('subBtn');
+
+sub.addEventListener('click', async function(){
+  if(this.disabled) return;
+
+  const email    = $('eI').value.trim().toLowerCase();
+  const password = $('pwI').value;
+  const username = $('uI').value.trim().toLowerCase();
+  const digits   = $('phI').value.trim().replace(/\D/g,'').replace(/^0/,'');
+  const phone    = $('pc').value + digits;
+
+  /* loading state */
+  this.disabled=true;
+  this.innerHTML='<span class="sp"></span>جارٍ الإنشاء…';
+
+  try{
+    /* 1 – Firebase Auth */
+    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = user.uid;
+
+    /* 2 – verification email (don't await — يبعت في الخلفية) */
+    sendEmailVerification(user).catch(()=>{});
+
+    /* 3 – first user? → owner */
+    const isFirst = !(await statsExist());
+
+    /* 4 – write user doc */
+    await setDoc(doc(db,'users',uid),{
+      uid, username, email, phone,
+      role:          isFirst ? 'owner' : 'user',
+      status:        'pending',
+      emailVerified: false,
+      trustScore:    50,
+      points:        10,
+      failedAttempts:0,
+      lockUntil:     null,
+      lastLogin:     serverTimestamp(),
+      createdAt:     serverTimestamp(),
+      referredBy:    S.ref||null,
+      adminApproval: false
+    });
+
+    /* 5 – public_registry (parallel writes) */
+    await Promise.all([
+      regWrite('usernames', username, {uid}),
+      regWrite('emails',    email,    {uid}),
+      regWrite('phones',    phone,    {uid})
+    ]);
+
+    /* 6 – referral */
+    if(S.ref && S.ref!==uid){
+      setDoc(doc(db,'referrals',S.ref+'_'+uid),{
+        referrerUid:S.ref, referredUid:uid, createdAt:serverTimestamp()
+      }).catch(()=>{});
     }
-    setF('e','ld');
-    timer_e = setTimeout(async ()=>{
-      const ex = await regExists('email', v);
-      if(ex) setF('e','er','هذا البريد مسجل مسبقاً');
-      else setF('e','ok','البريد متاح للاستخدام');
-    },600);
-  });
 
-  const checkPhone = ()=>{
-    clearTimeout(timer_ph);
-    const code = document.getElementById('pc').value;
-    const num = document.getElementById('phI').value.trim();
-    if(!num){ setF('ph','', ''); return; }
-    if(!/^\d+$/.test(num) || num.length<6){
-      setF('ph','er','رقم هاتف غير صالح');
-      return;
-    }
-    const full = code+num;
-    setF('ph','ld');
-    timer_ph = setTimeout(async ()=>{
-      const ex = await regExists('phone', full);
-      if(ex) setF('ph','er','رقم الهاتف مسجل بالفعل');
-      else setF('ph','ok','الرقم متاح');
-    },600);
-  };
-  document.getElementById('phI').addEventListener('input', checkPhone);
-  document.getElementById('pc').addEventListener('change', checkPhone);
+    /* 7 – session */
+    setDoc(doc(db,'sessions',uid),{
+      uid, createdAt:serverTimestamp(),
+      expiresAt:new Date(Date.now()+86400000)
+    }).catch(()=>{});
 
-  document.getElementById('pwI').addEventListener('input',(ev)=>{
-    const v=ev.target.value;
-    const l=v.length>=8, u=/[A-Z]/.test(v), lw=/[a-z]/.test(v),
-          n=/[0-9]/.test(v), sp=/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(v),
-          ns=!/\s/.test(v) && v.length>0;
+    /* ✅ DONE */
+    openSuccess(email);
 
-    const r=(id,ok)=>{
-      const el=document.getElementById(id);
-      if(ok){ el.classList.add('met'); el.querySelector('.dot').textContent='✓'; }
-      else{ el.classList.remove('met'); el.querySelector('.dot').textContent=''; }
-      return ok;
+  } catch(err){
+    console.error(err.code, err.message);
+    this.innerHTML='إنشاء الحساب';
+    this.disabled=false; chkBtn();
+
+    const map={
+      'auth/email-already-in-use': '⚠️ البريد موجود في Firebase Auth — سجّل الدخول',
+      'auth/weak-password':        '⚠️ كلمة المرور ضعيفة جداً',
+      'auth/network-request-failed':'⚠️ تحقق من اتصالك بالإنترنت',
+      'auth/too-many-requests':    '⚠️ محاولات كثيرة — انتظر قليلاً',
+      'permission-denied':         '⚠️ Firestore رفض العملية — تحقق من Rules',
     };
-    r('r-len',l); r('r-up',u); r('r-lw',lw);
-    r('r-num',n); r('r-sp',sp); r('r-ns',ns);
+    toast(map[err.code]||'⚠️ '+err.code+': '+err.message.slice(0,60));
+  }
+});
 
-    let sc=0;
-    if(l)sc++; if(u||lw)sc++; if(n)sc++; if(sp)sc++;
-    const b=document.getElementById('sBar'), lbl=document.getElementById('sLbl');
-    b.className='sb s'+sc;
-    const msgs=['أدخل كلمة المرور','ضعيفة جداً','متوسطة','قوية','قوية جداً!'];
-    lbl.textContent=msgs[sc];
-    lbl.style.color = sc>2 ? 'var(--nG)' : (sc>0 ? 'var(--g3)' : 'var(--txm)');
-
-    S.pw = (l && u && lw && n && sp && ns);
-    
-    // إعادة فحص التطابق إذا تغيرت كلمة المرور
-    document.getElementById('cfI').dispatchEvent(new Event('input'));
-    chkBtn();
-  });
-
-  document.getElementById('cfI').addEventListener('input',(ev)=>{
-    const pw = document.getElementById('pwI').value;
-    const cf = ev.target.value;
-    if(!cf){ setF('cf','', ''); return; }
-    if(cf===pw) setF('cf','ok','كلمتا المرور متطابقتان');
-    else setF('cf','er','كلمة المرور غير متطابقة');
-  });
-
-  /* eyes toggle */
-  const toggleEye=(id,eid)=>{
-    const i=document.getElementById(id), b=document.getElementById(eid);
-    b.onclick=()=>{
-      if(i.type==='password'){ i.type='text'; b.style.color='var(--g1)'; }
-      else{ i.type='password'; b.style.color='var(--txm)'; }
-    }
-  };
-  toggleEye('pwI','pwE'); toggleEye('cfI','cfE');
-
-  /* terms toggle */
-  document.getElementById('ck').onclick=function(){
-    this.classList.toggle('on');
-    S.terms = this.classList.contains('on');
-    chkBtn();
-  };
-
-  /* modals */
-  const tM=document.getElementById('tmOv'), sM=document.getElementById('scOv');
-  document.getElementById('termsLink').onclick=()=>tM.classList.add('open');
-  document.getElementById('tmClose').onclick=()=>tM.classList.remove('open');
-  document.getElementById('accBtn').onclick=()=>{
-    tM.classList.remove('open');
-    document.getElementById('ck').classList.add('on');
-    S.terms=true; chkBtn();
-  };
-
-  /* ════ SUBMIT HANDLER ════ */
-  document.getElementById('subBtn').onclick = async function(){
-    const b = this;
-    if(b.disabled) return;
-    
-    // فحص نهائي أخير لضمان عدم الخداع
-    b.innerHTML = '<div class="spin"></div> جاري تأمين البيانات...';
-    b.disabled = true;
-
-    const u = document.getElementById('uI').value.trim().toLowerCase();
-    const e = document.getElementById('eI').value.trim().toLowerCase();
-    const p = document.getElementById('pwI').value;
-    const ph = document.getElementById('pc').value + document.getElementById('phI').value.trim();
-
-    try {
-      const uEx = await regExists('username', u);
-      const eEx = await regExists('email', e);
-      const phEx = await regExists('phone', ph);
-
-      if(uEx || eEx || phEx){
-         throw new Error('تغيرت حالة البيانات، إما البريد أو الهاتف أو الاسم تم استخدامه قبل لحظات.');
-      }
-
-      // 1. Firebase Auth Creation
-      const cred = await createUserWithEmailAndPassword(auth, e, p);
-      const uid = cred.user.uid;
-
-      // 2. Send Email Verification
-      await sendEmailVerification(cred.user);
-
-      // 3. Write to Firestore User Document
-      await setDoc(doc(db, 'users', uid), {
-        uid: uid,
-        username: u,
-        email: e,
-        phone: ph,
-        role: 'user',
-        status: 'pending_verification',
-        points: 10, // نقاط ترحيبية
-        referrer: S.ref || 'none',
-        createdAt: serverTimestamp()
-      });
-
-      // 4. Reserve data in public_registry
-      await regWrite('username', u, { uid });
-      await regWrite('email', e, { uid });
-      await regWrite('phone', ph, { uid });
-
-      // Success Display
-      document.getElementById('scEmail').textContent = e;
-      sM.classList.add('open');
-
-      // Countdown logic
-      let c = 8;
-      const cn = document.getElementById('cdNum'), cf = document.getElementById('cdFill');
-      const iv = setInterval(()=>{
-        c--; cn.textContent=c;
-        cf.style.width = (c/8)*100+'%';
-        if(c<=0){ clearInterval(iv); location.href='login.html'; }
-      },1000);
-
-      document.getElementById('goLogin').onclick=()=>{
-        clearInterval(iv); location.href='login.html';
-      };
-
-    } catch(err) {
-      console.error(err);
-      b.disabled = false;
-      b.textContent = 'إنشاء الحساب';
-      document.getElementById('mainCard').classList.add('shk');
-      setTimeout(()=>document.getElementById('mainCard').classList.remove('shk'), 400);
-      
-      const t = document.getElementById('toast');
-      t.textContent = 'حدث خطأ: ' + err.message;
-      t.classList.add('show');
-      setTimeout(()=>t.classList.remove('show'), 3000);
-    }
-  };
-
-} // end run()
-
-})();
+/* enter key */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!sub.disabled) sub.click();
+});
 </script>
 </body>
 </html>
