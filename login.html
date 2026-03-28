@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALQURMANI X | بوابة الدخول الملكية</title>
+    <title>ALQURMANI X | بوابة الدخول الإمبراطورية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* نظام الألوان الفاخر */
         :root { 
             --gold: #d4af37; 
+            --gold-light: #f1d38a;
             --gold-dark: #9a7b2a;
-            --gold-glow: rgba(212, 175, 55, 0.4); 
+            --gold-glow: rgba(212, 175, 55, 0.5); 
             --bg: #050505; 
-            --glass: rgba(255, 255, 255, 0.03); 
-            --border: rgba(212, 175, 55, 0.25); 
+            --card-bg: rgba(15, 15, 15, 0.9);
+            --glass: rgba(255, 255, 255, 0.02); 
+            --border: rgba(212, 175, 55, 0.3); 
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -23,160 +26,173 @@
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            background: radial-gradient(circle at center, #151515 0%, #000 100%); 
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); 
             font-family: 'Cairo', sans-serif; 
             color: #fff; 
             padding: 20px; 
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        /* الحاوية الرئيسية الفاخرة */
+        /* حاوية التصميم الملكي */
         .card { 
             width: 100%; 
-            max-width: 440px; 
-            padding: 50px 40px; 
-            border-radius: 35px; 
-            background: rgba(10, 10, 10, 0.8); 
-            backdrop-filter: blur(20px);
+            max-width: 450px; 
+            padding: 60px 45px; 
+            border-radius: 40px; 
+            background: var(--card-bg); 
+            backdrop-filter: blur(25px);
             border: 1px solid var(--border); 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(212, 175, 55, 0.05); 
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 40px rgba(212, 175, 55, 0.1); 
             text-align: center; 
-            animation: fadeIn 1s ease-out;
+            animation: royalFade 1.2s ease-out;
             position: relative;
+            z-index: 10;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes royalFade { 
+            from { opacity: 0; transform: scale(0.9) translateY(40px); } 
+            to { opacity: 1; transform: scale(1) translateY(0); } 
+        }
 
-        .logo-area { margin-bottom: 40px; }
+        .logo-container { margin-bottom: 45px; }
         .title { 
-            font-size: 36px; 
+            font-size: 42px; 
             font-weight: 900; 
             color: var(--gold); 
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px var(--gold-glow);
+            letter-spacing: 4px;
+            text-shadow: 0 0 25px var(--gold-glow);
             margin: 0;
+            background: linear-gradient(to bottom, var(--gold-light), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .subtitle { color: #666; font-size: 14px; margin-top: 5px; letter-spacing: 1px; }
+        .subtitle { color: #555; font-size: 13px; margin-top: 8px; letter-spacing: 3px; font-weight: 700; }
 
-        .input-group { position: relative; margin-bottom: 20px; text-align: right; }
+        .field-wrapper { margin-bottom: 25px; position: relative; }
         input { 
             width: 100%; 
-            padding: 18px 20px; 
-            border-radius: 15px; 
+            padding: 20px; 
+            border-radius: 18px; 
             border: 1px solid #222; 
             background: var(--glass); 
             color: #fff; 
             font-size: 16px; 
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
         }
         input:focus { 
             border-color: var(--gold); 
-            background: rgba(212, 175, 55, 0.07); 
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+            background: rgba(212, 175, 55, 0.08); 
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            transform: translateY(-2px);
         }
 
         button { 
             width: 100%; 
-            padding: 18px; 
+            padding: 20px; 
             border: none; 
-            border-radius: 15px; 
+            border-radius: 18px; 
             font-weight: 900; 
-            font-size: 18px; 
+            font-size: 19px; 
             cursor: pointer; 
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark)); 
+            background: linear-gradient(135deg, var(--gold), #8a6d1f); 
             color: #000; 
-            transition: 0.4s; 
-            margin-top: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: 0.5s; 
+            margin-top: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
         }
         button:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3); 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3); 
+            filter: brightness(1.1);
         }
         button:active { transform: translateY(0); }
-        button:disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(1); }
+        button:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
 
-        .links { margin-top: 30px; font-size: 15px; color: #888; }
-        .links a { 
+        .footer-links { margin-top: 40px; font-size: 14px; color: #666; }
+        .footer-links a { 
             color: var(--gold); 
             text-decoration: none; 
             font-weight: 700; 
             transition: 0.3s;
-            display: inline-block;
-            margin: 5px 0;
+            margin: 0 5px;
         }
-        .links a:hover { text-shadow: 0 0 10px var(--gold-glow); }
+        .footer-links a:hover { text-shadow: 0 0 15px var(--gold-glow); color: #fff; }
 
-        /* المنبثقة الاحترافية */
-        .modal { 
+        /* نظام المنبثقات (Modal) الإمبراطوري */
+        .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); 
+            background: rgba(0,0,0,0.96); 
             display: none; justify-content: center; align-items: center; 
-            z-index: 9999; backdrop-filter: blur(15px);
+            z-index: 1000; backdrop-filter: blur(20px);
         }
-        .modal-box { 
-            background: #0a0a0a; padding: 45px; border-radius: 30px; 
+        .modal-card { 
+            background: #080808; padding: 50px; border-radius: 35px; 
             border: 1px solid var(--gold); text-align: center; 
-            width: 90%; max-width: 400px; 
-            animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 420px; position: relative;
+            animation: popIn 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        @keyframes modalPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .m-icon { font-size: 60px; margin-bottom: 20px; display: block; }
-        .m-title { font-size: 24px; font-weight: 900; color: var(--gold); margin-bottom: 15px; }
-        .m-msg { color: #ccc; line-height: 1.6; margin-bottom: 25px; }
+        .m-icon { font-size: 70px; margin-bottom: 25px; display: block; filter: drop-shadow(0 0 10px var(--gold-glow)); }
+        .m-title { font-size: 26px; font-weight: 900; color: var(--gold); margin-bottom: 15px; }
+        .m-body { color: #aaa; line-height: 1.8; margin-bottom: 30px; font-size: 16px; }
 
-        .btn-action { 
+        .action-btn { 
             background: transparent; border: 1px solid var(--gold); 
-            color: var(--gold); padding: 14px; border-radius: 12px; 
-            width: 100%; font-weight: bold; cursor: pointer; 
-            text-decoration: none; display: block; transition: 0.3s;
+            color: var(--gold); padding: 16px; border-radius: 15px; 
+            width: 100%; font-weight: 800; cursor: pointer; 
+            text-decoration: none; display: block; transition: 0.4s;
+            font-size: 16px;
         }
-        .btn-action:hover { background: var(--gold); color: #000; }
+        .action-btn:hover { background: var(--gold); color: #000; box-shadow: 0 10px 20px var(--gold-glow); }
         
-        .close-modal { position: absolute; top: 20px; left: 20px; color: #555; cursor: pointer; font-size: 24px; }
+        .x-close { position: absolute; top: 25px; left: 25px; color: #444; cursor: pointer; font-size: 26px; transition: 0.3s; }
+        .x-close:hover { color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <div class="logo-area">
+    <div class="logo-container">
         <h1 class="title">ALQURMANI X</h1>
-        <div class="subtitle">PREMIUM DIGITAL EMPIRE</div>
+        <div class="subtitle">THE DIGITAL EMPIRE</div>
     </div>
 
-    <div class="input-group">
-        <input type="email" id="email" placeholder="البريد الإلكتروني" autocomplete="email">
+    <div class="field-wrapper">
+        <input type="email" id="email" placeholder="البريد الإلكتروني الملكي" autocomplete="email">
     </div>
     
-    <div class="input-group">
-        <input type="password" id="pass" placeholder="كلمة المرور">
+    <div class="field-wrapper">
+        <input type="password" id="pass" placeholder="كلمة المرور السرية">
     </div>
 
-    <button id="loginBtn">دخول المنصة</button>
+    <button id="loginBtn">فتح بوابة الدخول</button>
 
-    <div class="links">
-        ليس لديك حساب؟ <a href="signup.html">عضوية جديدة</a> <br>
-        <a href="#" id="forgot">نسيت كلمة السر؟</a>
+    <div class="footer-links">
+        ليس لديك عضوية؟ <a href="signup.html">انضم للإمبراطورية</a> <br><br>
+        <a href="#" id="forgotBtn">نسيت مفتاح الدخول؟</a>
     </div>
 </div>
 
-<div class="modal" id="modal">
-    <div class="modal-box">
-        <div class="close-modal" id="closeModal">✕</div>
-        <span id="mIcon" class="m-icon">⚠️</span>
-        <div id="mTitle" class="m-title">تنبيه إداري</div>
-        <p id="mMsg" class="m-msg"></p>
-        <div id="mAction"></div>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+        <div class="x-close" id="closeX">✕</div>
+        <span id="mIcon" class="m-icon">⚜️</span>
+        <div id="mTitle" class="m-title">نظام الحماية</div>
+        <p id="mMsg" class="m-body"></p>
+        <div id="mActionArea"></div>
     </div>
 </div>
 
 <script type="module">
+    // استيراد أدوات القمة
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // إعدادات الربط الإمبراطورية
     const firebaseConfig = {
         apiKey: "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
         authDomain: "alqurmani-auth-x.firebaseapp.com",
@@ -191,91 +207,99 @@
     const db = getFirestore(app);
 
     const loginBtn = document.getElementById("loginBtn");
-    const modal = document.getElementById("modal");
+    const overlay = document.getElementById("modalOverlay");
 
-    function showModal(title, msg, icon = "⚠️", actionHTML = "") {
+    // محرك المنبثقات الذكي
+    function triggerModal(title, msg, icon = "⚠️", actionHTML = "", autoHide = false) {
         document.getElementById("mTitle").innerText = title;
         document.getElementById("mMsg").innerText = msg;
         document.getElementById("mIcon").innerText = icon;
-        document.getElementById("mAction").innerHTML = actionHTML;
-        modal.style.display = "flex";
+        document.getElementById("mActionArea").innerHTML = actionHTML;
+        overlay.style.display = "flex";
+        
+        if(autoHide) {
+            setTimeout(() => { overlay.style.display = "none"; }, 4000);
+        }
     }
 
-    document.getElementById("closeModal").onclick = () => modal.style.display = "none";
+    document.getElementById("closeX").onclick = () => overlay.style.display = "none";
 
     loginBtn.onclick = async () => {
         const email = document.getElementById("email").value.trim();
         const pass = document.getElementById("pass").value.trim();
 
         if (!email || !pass) {
-            showModal("بيانات ناقصة", "ملك القرماني يجب أن يدخل بياناته كاملة.", "❌");
+            triggerModal("بيانات مفقودة", "يرجى ملء الحقول المطلوبة لفتح البوابة.", "⚠️", "", true);
             return;
         }
 
         loginBtn.disabled = true;
-        loginBtn.innerText = "جاري فحص الحصون...";
+        loginBtn.innerText = "جاري استدعاء السجلات...";
 
         try {
+            // الخطوة 1: التحقق من الهوية (Authentication)
             const userCredential = await signInWithEmailAndPassword(auth, email, pass);
             const user = userCredential.user;
 
-            // جلب بيانات المستخدم من Firestore لفحص الرتبة والحالة
-            const userDoc = await getDoc(doc(db, "users", user.uid));
+            // الخطوة 2: التحقق من القاعدة الحديدية (Firestore)
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
             
-            if (!userDoc.exists()) {
-                showModal("خطأ تقني", "لم يتم العثور على سجلاتك في القاعدة. تواصل مع الدعم.", "📁", `<a href="m-support.htm" class="btn-action">الدعم الفني</a>`);
+            if (!userSnap.exists()) {
+                triggerModal("كيان غير مسجل", "حسابك موجود في التوثيق ولكن ليس له سجل في قاعدة البيانات.", "❌", `<a href="m-support.htm" class="btn-action">مراجعة الدعم الفني</a>`);
                 await signOut(auth);
             } else {
-                const userData = userDoc.data();
-                const status = userData.status || "active";
+                const data = userSnap.data();
+                const status = data.status || "active";
 
-                // فحص بنود الدستور الحديدي
-                if (status === "banned" || status === "معطل") {
-                    showModal("حظر نهائي", "عذراً، هذا الحساب معطل بقرار إداري نهائي.", "🚫", `<a href="m-support.htm" class="btn-action">تقديم التماس للدعم</a>`);
+                // الخطوة 3: تنفيذ أحكام الدستور
+                if (status === "banned" || status === "معطل" || status === "محذوف") {
+                    triggerModal("حكم إداري", "عذراً، هذا الحساب تم تعطيله بشكل نهائي لمخالفة القوانين.", "🚫", `<a href="m-support.htm" class="btn-action">مركز الدعم</a>`);
                     await signOut(auth);
                 } else if (status === "frozen" || status === "مجمد") {
-                    showModal("حساب مجمد", "حسابك قيد التجميد المؤقت لمراجعة الأنشطة.", "❄️", `<a href="m-support.htm" class="btn-action">تواصل مع الإدارة</a>`);
+                    triggerModal("حساب مجمد", "حسابك قيد التجميد المؤقت لمراجعة الأمان.", "❄️", `<a href="m-support.htm" class="btn-action">تواصل مع الإدارة</a>`);
                     await signOut(auth);
                 } else if (!user.emailVerified) {
-                    showModal("تفعيل الهوية", "بريدك الإلكتروني غير موثق. يرجى تفعيله للمتابعة.", "📩", `<button id="resendEmail" class="btn-action">إرسال رابط التفعيل الآن</button>`);
+                    // فحص تفعيل البريد
+                    triggerModal("تفعيل الهوية", "بريدك الإلكتروني لم يوثق بعد. اضغط أدناه لإرسال رابط جديد.", "📩", `<button id="resendBtn" class="btn-action">إرسال رابط التفعيل الآن</button>`);
                     
-                    document.getElementById("resendEmail").onclick = async () => {
+                    document.getElementById("resendBtn").onclick = async () => {
                         await sendEmailVerification(user);
-                        alert("تم إرسال رابط التفعيل لبريدك بنجاح.");
+                        alert("تم إرسال رابط التفعيل! تفقد صندوق الوارد.");
                     };
                     await signOut(auth);
                 } else {
-                    // النجاح التام
-                    showModal("تم التصديق", "مرحباً بك في إمبراطوريتك.. جاري الدخول.", "✅");
-                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
+                    // الدخول المظفر
+                    triggerModal("مرحباً بك", "تم التصديق على هويتك.. جاري فتح الإمبراطورية.", "👑", "", true);
+                    setTimeout(() => { window.location.href = "dashboard.html"; }, 2000);
                 }
             }
 
         } catch (error) {
-            console.error(error);
-            let errorMsg = "تأكد من صحة البريد وكلمة المرور.";
-            if (error.code === 'auth/user-not-found') errorMsg = "هذا الحساب غير مسجل لدينا.";
-            if (error.code === 'auth/wrong-password') errorMsg = "كلمة المرور غير صحيحة.";
-            showModal("فشل الدخول", errorMsg, "❌");
+            console.error("Auth Error:", error.code);
+            let msg = "تأكد من صحة البيانات وحاول مرة أخرى.";
+            if (error.code === 'auth/invalid-credential') msg = "البريد أو كلمة المرور غير متوافقة مع السجلات.";
+            if (error.code === 'auth/too-many-requests') msg = "محاولات كثيرة خاطئة! تم حظرك مؤقتاً لحماية الحساب.";
+            triggerModal("فشل الدخول", msg, "❌", "", true);
         }
         
         loginBtn.disabled = false;
-        loginBtn.innerText = "دخول المنصة";
+        loginBtn.innerText = "فتح بوابة الدخول";
     };
 
-    // استعادة كلمة السر
-    document.getElementById("forgot").onclick = async (e) => {
+    // استعادة المفتاح
+    document.getElementById("forgotBtn").onclick = async (e) => {
         e.preventDefault();
         const email = document.getElementById("email").value.trim();
         if (!email) {
-            showModal("تنبيه", "يرجى كتابة البريد الإلكتروني أولاً لاستلام رابط الاستعادة.", "📧");
+            triggerModal("تنبيه", "اكتب بريدك الإلكتروني أولاً لاستعادة كلمة السر.", "📧", "", true);
             return;
         }
         try {
             await sendPasswordResetEmail(auth, email);
-            showModal("تم الإرسال", "راجع بريدك الإلكتروني الآن (بما في ذلك Spam) لتغيير كلمة السر.", "📩");
+            triggerModal("تم الإرسال", "راجع بريدك الإلكتروني الآن ستجد رابط تغيير كلمة السر.", "📩", "", true);
         } catch (error) {
-            showModal("خطأ", "تأكد من صحة البريد المكتوب.", "❌");
+            triggerModal("خطأ", "هذا البريد غير مسجل في نظامنا.", "❌", "", true);
         }
     };
 </script>
