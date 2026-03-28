@@ -310,32 +310,56 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
   transition:all .3s;box-shadow:0 4px 18px rgba(180,130,10,.35);}
 .btn-acc:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(180,130,10,.5);}
 
-/* success modal */
-.sc-c{width:86px;height:86px;border-radius:50%;margin:0 auto 16px;
-  background:radial-gradient(circle,rgba(0,255,135,.18),rgba(0,255,135,.04));
-  border:2px solid var(--nG);
-  box-shadow:0 0 28px rgba(0,255,135,.35),inset 0 0 16px rgba(0,255,135,.08);
-  display:flex;align-items:center;justify-content:center;font-size:38px;
-  animation:sp2 2.2s ease-in-out infinite;}
-@keyframes sp2{
-  0%,100%{box-shadow:0 0 28px rgba(0,255,135,.35),inset 0 0 16px rgba(0,255,135,.08)}
-  50%    {box-shadow:0 0 55px rgba(0,255,135,.65),inset 0 0 26px rgba(0,255,135,.18)}}
-.sc-h{font-size:24px;font-weight:900;color:var(--nG);text-align:center;margin-bottom:8px;
-      text-shadow:0 0 18px rgba(0,255,135,.45);}
-.sc-s{font-size:13.5px;color:var(--txm);line-height:1.75;text-align:center;margin-bottom:12px;}
-.sc-email{display:inline-block;padding:7px 18px;background:rgba(0,255,135,.09);
-  border:1px solid rgba(0,255,135,.28);border-radius:20px;color:var(--nG);
+/* ── success modal ── */
+.sc-ring-wrap{position:relative;width:110px;height:110px;margin:0 auto 20px;}
+.sc-ring{position:absolute;inset:0;border-radius:50%;
+  border:3px solid transparent;
+  border-top-color:var(--nG);border-right-color:var(--nG);
+  animation:ring-spin 1.6s linear infinite;
+  box-shadow:0 0 18px rgba(0,255,135,.35);}
+.sc-ring2{position:absolute;inset:10px;border-radius:50%;
+  border:2px solid transparent;border-bottom-color:rgba(0,255,135,.4);
+  animation:ring-spin 2.4s linear infinite reverse;}
+@keyframes ring-spin{to{transform:rotate(360deg)}}
+.sc-emoji{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:44px;animation:em-pop .5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes em-pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.sc-h{font-size:26px;font-weight:900;color:var(--nG);text-align:center;margin-bottom:6px;
+      text-shadow:0 0 20px rgba(0,255,135,.5);
+      animation:sc-h-in .5s .2s cubic-bezier(.22,1,.36,1) both;}
+@keyframes sc-h-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.sc-s{font-size:13.5px;color:var(--txm);line-height:1.8;text-align:center;margin-bottom:14px;
+      animation:sc-h-in .5s .35s both;}
+.sc-email-wrap{text-align:center;margin-bottom:6px;
+               animation:sc-h-in .5s .45s both;}
+.sc-email{display:inline-flex;align-items:center;gap:8px;
+  padding:9px 20px;background:rgba(0,255,135,.09);
+  border:1px solid rgba(0,255,135,.3);border-radius:24px;color:var(--nG);
   font-size:13px;font-weight:600;direction:ltr;letter-spacing:.5px;}
+.sc-email .em-ic{font-size:16px;}
 .wlc{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.14);
-     border-radius:14px;padding:16px;margin-top:16px;text-align:center;}
-.wlc p{font-size:13px;line-height:1.75;color:var(--txm);}
+     border-radius:14px;padding:18px;margin-top:16px;text-align:center;
+     animation:sc-h-in .5s .55s both;}
+.wlc p{font-size:13px;line-height:1.8;color:var(--txm);}
 .wlc strong{color:var(--g3);}
-.btn-go{width:100%;padding:13px;border:none;border-radius:12px;
-  background:linear-gradient(135deg,#004d2a,#00FF87);color:#001a0d;
+/* countdown bar */
+.cd-bar-wrap{margin-top:20px;animation:sc-h-in .5s .65s both;}
+.cd-label{font-size:12px;color:var(--txm);text-align:center;margin-bottom:8px;
+          letter-spacing:1px;}
+.cd-label span{color:var(--nG);font-weight:700;font-size:16px;}
+.cd-track{height:5px;background:rgba(255,255,255,.07);border-radius:10px;overflow:hidden;}
+.cd-fill{height:100%;background:linear-gradient(90deg,var(--nG),var(--g1));
+         border-radius:10px;width:100%;
+         box-shadow:0 0 8px rgba(0,255,135,.5);
+         transition:width .9s linear;}
+.btn-go{width:100%;padding:14px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,#004d2a,#00c463,#00FF87);
+  background-size:200% 200%;color:#001a0d;
   font-family:'Cairo',sans-serif;font-size:15px;font-weight:900;
-  cursor:pointer;margin-top:20px;transition:all .3s;
-  box-shadow:0 4px 18px rgba(0,255,135,.28);}
-.btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(0,255,135,.5);}
+  cursor:pointer;margin-top:14px;transition:all .3s;
+  animation:gsh 3s ease infinite,sc-h-in .5s .7s both;
+  box-shadow:0 6px 24px rgba(0,255,135,.3);}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,255,135,.5);}
 
 /* ─── toast ─── */
 #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
@@ -546,17 +570,43 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
 
 <!-- ══ SUCCESS MODAL ══ -->
 <div class="ov" id="scOv">
-  <div class="md" style="text-align:center">
-    <div class="sc-c">🎉</div>
-    <div class="sc-h">مرحباً بك في QRMANI X!</div>
-    <p class="sc-s">تم إنشاء حسابك بنجاح 🎊<br>تم إرسال رابط التفعيل إلى:</p>
-    <span class="sc-email" id="scEmail">—</span>
-    <div class="wlc" style="margin-top:18px">
-      <p>أهلاً بك في مجتمعنا الحصري! 🌟<br>
-         حسابك <strong>قيد التنشيط</strong> — افحص بريدك وانقر رابط التفعيل.<br><br>
-         <strong>حصلت على 10 نقاط ترحيبية 🪙</strong> ستظهر بعد التفعيل!</p>
+  <div class="md">
+    <!-- spinning ring + emoji -->
+    <div class="sc-ring-wrap">
+      <div class="sc-ring"></div>
+      <div class="sc-ring2"></div>
+      <div class="sc-emoji">🎉</div>
     </div>
-    <button class="btn-go" id="goLogin">🔑 الانتقال لتسجيل الدخول</button>
+
+    <div class="sc-h">مرحباً بك في QRMANI X!</div>
+    <p class="sc-s">
+      تم إنشاء حسابك بنجاح! 🎊<br>
+      أرسلنا رابط التفعيل إلى بريدك الإلكتروني — تحقق منه وانقر الرابط لتفعيل حسابك.
+    </p>
+
+    <div class="sc-email-wrap">
+      <span class="sc-email">
+        <span class="em-ic">📧</span>
+        <span id="scEmail">—</span>
+      </span>
+    </div>
+
+    <div class="wlc">
+      <p>
+        🌟 <strong>أهلاً بك في مجتمعنا الحصري!</strong><br>
+        حسابك الآن <strong>قيد التنشيط</strong> — ما إن تنقر رابط التفعيل ستصبح عضواً كاملاً.<br><br>
+        🪙 <strong>10 نقاط ترحيبية</strong> في انتظارك بعد التفعيل!<br>
+        🔐 بياناتك آمنة ومحمية بأعلى معايير التشفير.
+      </p>
+    </div>
+
+    <!-- countdown bar -->
+    <div class="cd-bar-wrap">
+      <div class="cd-label">الانتقال لتسجيل الدخول تلقائياً خلال <span id="cdNum">8</span> ثوانٍ</div>
+      <div class="cd-track"><div class="cd-fill" id="cdFill"></div></div>
+    </div>
+
+    <button class="btn-go" id="goLogin">🔑 الانتقال الآن لتسجيل الدخول</button>
   </div>
 </div>
 
@@ -779,7 +829,7 @@ function run(FB){
         S.u=true;
       }
       checkBtn();
-    },680);
+    },180);
   });
 
   document.getElementById('uG').addEventListener('click',function(e){
@@ -812,7 +862,7 @@ function run(FB){
         S.e=true;
       }
       checkBtn();
-    },700);
+    },180);
   });
 
   /* ════ PHONE ════ */
@@ -840,7 +890,7 @@ function run(FB){
         S.ph=true;
       }
       checkBtn();
-    },700);
+    },180);
   }
   document.getElementById('phI').addEventListener('input',valPhone);
   document.getElementById('pc').addEventListener('change',valPhone);
@@ -1017,7 +1067,8 @@ function run(FB){
       /* ── SUCCESS ── */
       confetti();
       document.getElementById('scEmail').textContent=email;
-      document.getElementById('scOv').classList.add('open');
+      openSuccessModal();
+
 
     }catch(err){
       console.error('[SIGNUP]', err.code, err.message);
@@ -1049,12 +1100,37 @@ function run(FB){
     }
   });
 
-  /* ─ success backdrop + button ─ */
+  /* ─ success modal with countdown ─ */
+  let cdTimer=null;
+  function openSuccessModal(){
+    const ov=document.getElementById('scOv');
+    ov.classList.add('open');
+    document.body.style.overflow='hidden';
+
+    // Start 8-second countdown
+    let secs=8;
+    const numEl=document.getElementById('cdNum');
+    const fillEl=document.getElementById('cdFill');
+    numEl.textContent=secs;
+    fillEl.style.width='100%';
+
+    // shrink bar every second
+    function tick(){
+      secs--;
+      numEl.textContent=secs;
+      fillEl.style.width=(secs/8*100)+'%';
+      if(secs<=0){ clearInterval(cdTimer); goToLogin(); }
+    }
+    cdTimer=setInterval(tick,1000);
+  }
+
+  function goToLogin(){ location.href='login.html'; }
+
   document.getElementById('scOv').addEventListener('click',function(e){
-    if(e.target===this) location.href='login.html';
+    if(e.target===this){ clearInterval(cdTimer); goToLogin(); }
   });
   document.getElementById('goLogin').addEventListener('click',function(){
-    location.href='login.html';
+    clearInterval(cdTimer); goToLogin();
   });
 
   /* ─ Enter key ─ */
