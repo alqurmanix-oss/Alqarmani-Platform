@@ -1,1 +1,996 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ALQURMANI X | لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   ROOT VARIABLES
+══════════════════════════════════════ */
+:root{
+  --g1:#FFD700;--g2:#F5C842;--g3:#D4A017;--g4:#B8860B;--g5:#8B6914;
+  --ng:#00FF87;--nr:#FF2D55;--nb:#00C8FF;
+  --bg:#04040A;--bg2:#070710;--bg3:#0A0A18;
+  --card:rgba(12,12,22,.96);--card2:rgba(15,15,28,.98);
+  --brd:rgba(212,160,23,.2);--brdA:rgba(212,160,23,.5);
+  --tx:#F0E8D5;--txm:rgba(240,232,213,.45);--txs:rgba(240,232,213,.25);
+  --sidebar:260px;
+  --header:68px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
+  display:none; /* auth guard */
+}
+body.ready{display:flex;flex-direction:column}
 
+/* ══════════════════════════════════════
+   ANIMATED BG
+══════════════════════════════════════ */
+.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-canvas::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 10%,rgba(180,130,10,.1) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 90%,rgba(0,200,255,.06) 0%,transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%,#07070F 0%,#04040A 100%);
+}
+.bg-canvas::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(212,160,23,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,160,23,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* ══════════════════════════════════════
+   LAYOUT SHELL
+══════════════════════════════════════ */
+.shell{position:relative;z-index:1;display:flex;height:100vh;width:100%}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:linear-gradient(180deg,rgba(10,10,22,.99) 0%,rgba(6,6,14,.99) 100%);
+  border-left:1px solid var(--brd);
+  display:flex;flex-direction:column;
+  height:100vh;overflow:hidden;
+  position:relative;z-index:100;
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+.sidebar::before{
+  content:'';position:absolute;top:0;right:0;width:1px;height:100%;
+  background:linear-gradient(180deg,transparent,var(--g3) 30%,var(--g3) 70%,transparent);
+  opacity:.4;
+}
+
+.sb-logo{
+  padding:24px 22px 20px;border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;gap:12px;
+}
+.sb-logo-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--g3),var(--g5));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-weight:900;font-size:14px;color:#1a0f00;
+  box-shadow:0 4px 14px rgba(212,160,23,.35);
+  flex-shrink:0;
+}
+.sb-logo-txt{
+  font-family:'Cinzel',serif;font-weight:900;font-size:13px;
+  background:linear-gradient(135deg,var(--g1),var(--g4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:1px;line-height:1.2;
+}
+.sb-logo-sub{font-size:9px;color:var(--txm);letter-spacing:3px;text-transform:uppercase}
+
+/* user mini card in sidebar */
+.sb-user{
+  padding:18px 22px;border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;gap:12px;
+}
+.sb-avatar{
+  width:44px;height:44px;border-radius:50%;
+  border:2px solid var(--g3);
+  background:linear-gradient(135deg,#1a1a2e,#0f0f1e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:var(--g2);
+  flex-shrink:0;position:relative;overflow:hidden;
+  box-shadow:0 0 12px rgba(212,160,23,.3);
+}
+.sb-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.sb-uinfo{flex:1;min-width:0}
+.sb-uname{font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-ustatus{font-size:10px;display:flex;align-items:center;gap:5px;margin-top:3px}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.status-dot.active{background:var(--ng);box-shadow:0 0 6px var(--ng);animation:pulse-dot 2s infinite}
+.status-dot.pending{background:#FF9500;box-shadow:0 0 6px #FF9500}
+.status-dot.suspended{background:var(--nr);box-shadow:0 0 6px var(--nr)}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* nav sections */
+.sb-nav{flex:1;overflow-y:auto;padding:14px 0;scrollbar-width:none}
+.sb-nav::-webkit-scrollbar{display:none}
+.sb-section-lbl{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--txs);padding:14px 22px 6px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:13px;
+  padding:11px 22px;margin:2px 10px;
+  border-radius:12px;cursor:pointer;text-decoration:none;
+  color:var(--txm);font-size:13px;font-weight:600;
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.nav-item::before{
+  content:'';position:absolute;right:0;top:0;bottom:0;width:0;
+  background:linear-gradient(90deg,rgba(212,160,23,.12),transparent);
+  border-radius:12px;transition:width .2s;
+}
+.nav-item:hover{color:var(--tx);background:rgba(255,255,255,.04)}
+.nav-item:hover::before{width:100%}
+.nav-item.active{
+  color:var(--g2);background:rgba(212,160,23,.1);
+  border:1px solid rgba(212,160,23,.2);
+}
+.nav-item.active::before{width:100%}
+.nav-item.active .ni-icon{filter:drop-shadow(0 0 6px var(--g2))}
+.ni-icon{font-size:18px;width:22px;text-align:center;flex-shrink:0}
+.ni-badge{
+  margin-right:auto;padding:2px 8px;border-radius:10px;
+  background:rgba(255,45,85,.2);color:var(--nr);
+  font-size:9px;font-weight:700;
+}
+.ni-badge.gold{background:rgba(212,160,23,.15);color:var(--g2)}
+.ni-badge.green{background:rgba(0,255,135,.15);color:var(--ng)}
+
+/* sidebar footer */
+.sb-footer{padding:16px 22px;border-top:1px solid var(--brd)}
+.logout-btn{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-radius:11px;cursor:pointer;
+  background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.15);
+  color:rgba(255,45,85,.8);font-size:13px;font-weight:600;
+  font-family:'Cairo',sans-serif;width:100%;
+  transition:all .2s;
+}
+.logout-btn:hover{background:rgba(255,45,85,.15);color:var(--nr);border-color:rgba(255,45,85,.3)}
+
+/* ══════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════ */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+
+/* HEADER */
+.topbar{
+  height:var(--header);flex-shrink:0;
+  background:rgba(4,4,10,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;padding:0 24px;gap:16px;
+  position:relative;z-index:50;
+}
+.topbar-ham{
+  display:none;font-size:22px;cursor:pointer;color:var(--g3);
+  width:36px;height:36px;align-items:center;justify-content:center;
+  border-radius:10px;background:rgba(212,160,23,.08);
+  border:1px solid rgba(212,160,23,.15);transition:all .2s;
+}
+.topbar-ham:hover{background:rgba(212,160,23,.15)}
+.topbar-title{
+  font-family:'Cinzel',serif;font-weight:700;font-size:15px;
+  background:linear-gradient(135deg,var(--g1),var(--g4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:2px;
+}
+.topbar-right{display:flex;align-items:center;gap:12px;margin-right:auto}
+.topbar-time{font-size:11px;color:var(--txm);letter-spacing:1px;font-family:'Cinzel',serif}
+.notif-wrap{position:relative;cursor:pointer}
+.notif-btn{
+  width:38px;height:38px;border-radius:11px;
+  background:rgba(255,255,255,.04);border:1px solid var(--brd);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;transition:all .2s;
+}
+.notif-btn:hover{background:rgba(212,160,23,.1);border-color:var(--brdA)}
+.notif-count{
+  position:absolute;top:-4px;left:-4px;
+  background:var(--nr);color:#fff;font-size:9px;
+  padding:2px 5px;border-radius:8px;
+  display:none;font-weight:700;
+  box-shadow:0 0 8px var(--nr);
+}
+.notif-count.show{display:block}
+
+/* PAGE CONTENT */
+.page-content{
+  flex:1;overflow-y:auto;padding:28px 28px 40px;
+  scrollbar-width:thin;scrollbar-color:rgba(212,160,23,.2) transparent;
+}
+.page-content::-webkit-scrollbar{width:4px}
+.page-content::-webkit-scrollbar-thumb{background:rgba(212,160,23,.25);border-radius:2px}
+
+/* GREETING */
+.greeting{margin-bottom:28px;animation:fup .6s ease both}
+.greeting-line1{font-size:13px;color:var(--txm);letter-spacing:1px;margin-bottom:4px}
+.greeting-name{
+  font-family:'Cinzel',serif;font-size:26px;font-weight:900;
+  background:linear-gradient(135deg,var(--g1) 0%,var(--g2) 50%,var(--g4) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(212,160,23,.35));
+}
+.account-status-row{
+  display:flex;align-items:center;gap:10px;margin-top:8px;
+  font-size:12px;color:var(--txm);
+}
+.status-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;
+}
+.status-pill.active{background:rgba(0,255,135,.1);border:1px solid rgba(0,255,135,.25);color:var(--ng)}
+.status-pill.pending{background:rgba(255,149,0,.1);border:1px solid rgba(255,149,0,.25);color:#FF9500}
+.status-pill.suspended{background:rgba(255,45,85,.1);border:1px solid rgba(255,45,85,.25);color:var(--nr)}
+
+@keyframes fup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* CARDS ROW */
+.cards-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+
+/* QCOIN CARD */
+.qcoin-card{
+  background:linear-gradient(135deg,rgba(18,14,4,.98) 0%,rgba(10,8,2,.98) 100%);
+  border:1.5px solid var(--g3);border-radius:20px;padding:22px 20px;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+  animation:fup .6s .1s ease both;
+  text-decoration:none;color:inherit;display:block;
+  box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 40px rgba(212,160,23,.08);
+}
+.qcoin-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 80% at 80% 20%,rgba(212,160,23,.12),transparent 60%);
+  pointer-events:none;
+}
+.qcoin-card:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.7),0 0 50px rgba(212,160,23,.18)}
+.qcoin-card:active{transform:translateY(0)}
+.qcoin-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--g4);margin-bottom:10px}
+.qcoin-amount{
+  font-size:22px;font-weight:900;font-family:'Cinzel',serif;
+  color:var(--g1);letter-spacing:-1px;
+  text-shadow:0 0 20px rgba(255,215,0,.4);
+}
+.qcoin-amount span{font-size:13px;color:var(--g4);margin-right:4px}
+.qcoin-egp{font-size:11px;color:rgba(0,255,135,.8);margin-top:5px;font-weight:600}
+.qcoin-icon{
+  position:absolute;top:50%;left:18px;transform:translateY(-50%);
+  font-size:36px;opacity:.25;
+  filter:drop-shadow(0 0 10px var(--g2));
+}
+.qcoin-action{
+  margin-top:14px;display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:10px;
+  background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.25);
+  color:var(--g2);font-size:11px;font-weight:700;cursor:pointer;
+  transition:all .2s;
+}
+.qcoin-action:hover{background:rgba(212,160,23,.22);border-color:rgba(212,160,23,.5)}
+
+/* POINTS CARD */
+.points-card{
+  background:linear-gradient(135deg,rgba(0,12,24,.98) 0%,rgba(0,8,18,.98) 100%);
+  border:1.5px solid rgba(0,200,255,.3);border-radius:20px;padding:22px 20px;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+  animation:fup .6s .15s ease both;
+  text-decoration:none;color:inherit;display:block;
+  box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 40px rgba(0,200,255,.05);
+}
+.points-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 80% at 80% 20%,rgba(0,200,255,.1),transparent 60%);
+  pointer-events:none;
+}
+.points-card:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.7),0 0 50px rgba(0,200,255,.15)}
+.points-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(0,200,255,.6);margin-bottom:10px}
+.points-amount{
+  font-size:28px;font-weight:900;font-family:'Cinzel',serif;
+  color:var(--nb);
+  text-shadow:0 0 20px rgba(0,200,255,.5);
+}
+.points-sub{font-size:11px;color:var(--txm);margin-top:5px}
+.points-icon{
+  position:absolute;top:50%;left:18px;transform:translateY(-50%);
+  font-size:36px;opacity:.2;
+}
+.points-action{
+  margin-top:14px;display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:10px;
+  background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.25);
+  color:var(--nb);font-size:11px;font-weight:700;cursor:pointer;
+  transition:all .2s;
+}
+.points-action:hover{background:rgba(0,200,255,.2);border-color:rgba(0,200,255,.5)}
+
+/* QUICK STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat-card{
+  background:var(--card);border:1px solid var(--brd);border-radius:16px;padding:16px;
+  display:flex;flex-direction:column;gap:6px;
+  animation:fup .6s .2s ease both;
+}
+.stat-icon{font-size:20px}
+.stat-val{font-size:18px;font-weight:900;font-family:'Cinzel',serif;color:var(--g2)}
+.stat-lbl{font-size:10px;color:var(--txm);letter-spacing:1px}
+
+/* PORTALS SECTION */
+.section-head{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+  animation:fup .6s .25s ease both;
+}
+.section-head h2{font-size:13px;font-weight:700;color:var(--txm);letter-spacing:2px;text-transform:uppercase}
+.section-line{flex:1;height:1px;background:linear-gradient(90deg,var(--brd),transparent)}
+
+.portals-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.portal-card{
+  background:var(--card);border:1px solid var(--brd);border-radius:18px;
+  padding:20px 16px;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;align-items:flex-start;gap:10px;
+  transition:all .2s;position:relative;overflow:hidden;cursor:pointer;
+  animation:fup .6s .3s ease both;
+}
+.portal-card::before{
+  content:'';position:absolute;inset:0;opacity:0;
+  background:linear-gradient(135deg,rgba(212,160,23,.08),transparent);
+  transition:opacity .2s;
+}
+.portal-card:hover{border-color:var(--brdA);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.portal-card:hover::before{opacity:1}
+.portal-card:active{transform:none}
+.pc-icon{font-size:28px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.pc-title{font-size:13px;font-weight:700;color:var(--g2)}
+.pc-desc{font-size:11px;color:var(--txm);line-height:1.5}
+.pc-arrow{
+  margin-right:auto;font-size:16px;color:var(--txs);transition:color .2s;
+}
+.portal-card:hover .pc-arrow{color:var(--g3)}
+
+/* RECENT ACTIVITY */
+.activity-list{display:flex;flex-direction:column;gap:10px;animation:fup .6s .35s ease both}
+.act-item{
+  background:var(--card);border:1px solid var(--brd);border-radius:14px;
+  padding:14px 16px;display:flex;align-items:center;gap:14px;
+}
+.act-icon{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+}
+.act-icon.gold{background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.2)}
+.act-icon.blue{background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.2)}
+.act-icon.green{background:rgba(0,255,135,.1);border:1px solid rgba(0,255,135,.2)}
+.act-icon.red{background:rgba(255,45,85,.1);border:1px solid rgba(255,45,85,.2)}
+.act-info{flex:1;min-width:0}
+.act-title{font-size:13px;font-weight:600;color:var(--tx)}
+.act-time{font-size:10.5px;color:var(--txm);margin-top:2px}
+.act-val{font-size:13px;font-weight:700;white-space:nowrap}
+.act-val.pos{color:var(--ng)}
+.act-val.neg{color:var(--nr)}
+.act-val.neu{color:var(--g2)}
+
+/* LOADING OVERLAY */
+.loading-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:var(--bg);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:20px;
+}
+.loading-logo{
+  font-family:'Cinzel',serif;font-weight:900;font-size:36px;
+  background:linear-gradient(135deg,var(--g1),var(--g4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:pulse 1.5s ease-in-out infinite;letter-spacing:8px;
+}
+@keyframes pulse{0%,100%{opacity:1;filter:drop-shadow(0 0 20px rgba(212,160,23,.6))}50%{opacity:.5;filter:drop-shadow(0 0 8px rgba(212,160,23,.2))}}
+.loading-bar{width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.loading-fill{height:100%;background:linear-gradient(90deg,var(--g3),var(--g1));border-radius:2px;animation:fill 1.8s ease-in-out infinite}
+@keyframes fill{0%{width:0;opacity:1}80%{width:100%;opacity:1}100%{width:100%;opacity:0}}
+.loading-text{font-size:11px;color:var(--txm);letter-spacing:3px;text-transform:uppercase}
+
+/* SIDEBAR OVERLAY (mobile) */
+.sb-overlay{
+  position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(4px);display:none;opacity:0;transition:opacity .3s;
+}
+.sb-overlay.show{display:block;opacity:1}
+
+/* NOTIFICATIONS PANEL */
+.notif-panel{
+  position:fixed;top:var(--header);left:0;width:340px;max-height:70vh;z-index:500;
+  background:var(--card2);border:1px solid var(--brd);border-radius:0 0 20px 20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);
+  transform:translateY(-20px);opacity:0;pointer-events:none;
+  transition:all .25s cubic-bezier(.22,1,.36,1);overflow:hidden;
+}
+.notif-panel.open{transform:none;opacity:1;pointer-events:all}
+.np-header{padding:16px 20px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
+.np-title{font-size:13px;font-weight:700;color:var(--g2)}
+.np-clear{font-size:11px;color:var(--txm);cursor:pointer;transition:color .2s}
+.np-clear:hover{color:var(--nr)}
+.np-list{padding:12px;max-height:340px;overflow-y:auto;scrollbar-width:none}
+.np-item{padding:12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid transparent;
+  display:flex;gap:12px;align-items:flex-start;margin-bottom:8px;transition:background .2s}
+.np-item:hover{background:rgba(255,255,255,.05)}
+.np-item.unread{border-color:rgba(212,160,23,.15)}
+.np-icon{font-size:20px;flex-shrink:0}
+.np-text{font-size:12px;color:var(--tx);line-height:1.5}
+.np-time{font-size:10px;color:var(--txm);margin-top:3px}
+.np-empty{text-align:center;padding:30px;font-size:13px;color:var(--txm)}
+
+/* MOBILE */
+@media(max-width:768px){
+  :root{--sidebar:260px}
+  .sidebar{
+    position:fixed;top:0;right:0;bottom:0;z-index:100;
+    transform:translateX(100%);
+    box-shadow:-10px 0 40px rgba(0,0,0,.8);
+  }
+  .sidebar.open{transform:none}
+  .topbar-ham{display:flex}
+  .topbar-title{font-size:13px}
+  .topbar-time{display:none}
+  .page-content{padding:20px 16px 40px}
+  .cards-row{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .portals-grid{grid-template-columns:1fr}
+}
+@media(max-width:380px){
+  .stats-row{grid-template-columns:1fr}
+}
+
+/* SHIMMER SKELETON */
+.shimmer{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px;display:inline-block}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">ALQURMANI X</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+  <div class="loading-text">جارٍ تحميل لوحة التحكم…</div>
+</div>
+
+<div class="bg-canvas"></div>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<!-- NOTIFICATIONS PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="np-header">
+    <span class="np-title">🔔 الإشعارات</span>
+    <span class="np-clear" onclick="clearNotifs()">مسح الكل</span>
+  </div>
+  <div class="np-list" id="notifList">
+    <div class="np-empty">لا توجد إشعارات جديدة</div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">AX</div>
+      <div>
+        <div class="sb-logo-txt">ALQURMANI X</div>
+        <div class="sb-logo-sub">Dashboard v2.0</div>
+      </div>
+    </div>
+
+    <div class="sb-user">
+      <div class="sb-avatar" id="sbAvatar">
+        <span id="sbInitials">QX</span>
+        <img id="sbPhoto" src="" alt="">
+      </div>
+      <div class="sb-uinfo">
+        <div class="sb-uname" id="sbName">جاري التحميل…</div>
+        <div class="sb-ustatus">
+          <span class="status-dot" id="sbDot"></span>
+          <span id="sbStatusTxt" style="color:var(--txm);font-size:10px">—</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <!-- رئيسي -->
+      <div class="sb-section-lbl">الرئيسية</div>
+      <a href="dashboard.html" class="nav-item active">
+        <span class="ni-icon">🏠</span> لوحة التحكم
+      </a>
+      <a href="profile.html" class="nav-item">
+        <span class="ni-icon">👤</span> الملف الشخصي
+      </a>
+      <a href="notifications.html" class="nav-item">
+        <span class="ni-icon">🔔</span> الإشعارات
+        <span class="ni-badge" id="notifBadgeSb" style="display:none">0</span>
+      </a>
+
+      <!-- مالي -->
+      <div class="sb-section-lbl">المالية</div>
+      <a href="wallet.html" class="nav-item">
+        <span class="ni-icon">🪙</span> محفظة Q-Coin
+      </a>
+      <a href="points.html" class="nav-item">
+        <span class="ni-icon">⭐</span> نقاطي
+      </a>
+      <a href="exchange.html" class="nav-item">
+        <span class="ni-icon">🔄</span> تبديل النقاط
+      </a>
+      <a href="transactions.html" class="nav-item">
+        <span class="ni-icon">📊</span> سجل المعاملات
+      </a>
+
+      <!-- الأعمال -->
+      <div class="sb-section-lbl">الأعمال والمجتمع</div>
+      <a href="team.html" class="nav-item">
+        <span class="ni-icon">👥</span> فريقي
+        <span class="ni-badge gold" id="teamBadge" style="display:none">0</span>
+      </a>
+      <a href="referrals.html" class="nav-item">
+        <span class="ni-icon">🔗</span> الإحالات
+        <span class="ni-badge green" id="refBadge" style="display:none">0</span>
+      </a>
+      <a href="social.html" class="nav-item">
+        <span class="ni-icon">🌐</span> المجتمع الرقمي
+      </a>
+      <a href="merchant.html" class="nav-item">
+        <span class="ni-icon">📈</span> بوابة التجارة
+      </a>
+
+      <!-- الخدمات -->
+      <div class="sb-section-lbl">الخدمات</div>
+      <a href="employee.html" class="nav-item">
+        <span class="ni-icon">🛡️</span> دخول كموظف
+      </a>
+      <a href="client.html" class="nav-item">
+        <span class="ni-icon">🤝</span> دخول كعميل
+      </a>
+      <a href="support.html" class="nav-item">
+        <span class="ni-icon">💬</span> الدعم الفني
+      </a>
+      <a href="settings.html" class="nav-item">
+        <span class="ni-icon">⚙️</span> الإعدادات
+      </a>
+    </nav>
+
+    <div class="sb-footer">
+      <button class="logout-btn" onclick="doLogout()">
+        <span>🚪</span> تسجيل الخروج
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-ham" onclick="openSidebar()">☰</div>
+      <div class="topbar-title">ALQURMANI X</div>
+      <div class="topbar-right">
+        <div class="topbar-time" id="liveTime">—</div>
+        <div class="notif-wrap">
+          <div class="notif-btn" onclick="toggleNotif(event)">🔔</div>
+          <div class="notif-count" id="notifCountTop">0</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+      <!-- GREETING -->
+      <div class="greeting">
+        <div class="greeting-line1">مرحباً بعودتك 👋</div>
+        <div class="greeting-name" id="greetName">—</div>
+        <div class="account-status-row">
+          <span class="status-pill pending" id="statusPill">جاري التحميل…</span>
+          <span style="font-size:11px;color:var(--txm)">|</span>
+          <span style="font-size:11px;color:var(--txm)" id="memberSince">—</span>
+        </div>
+      </div>
+
+      <!-- FINANCE CARDS ROW -->
+      <div class="cards-row">
+
+        <!-- Q-COIN CARD (يسحب من wallet.js) -->
+        <a href="wallet.html" class="qcoin-card">
+          <div class="qcoin-label">⚡ رصيد Q-Coin</div>
+          <div class="qcoin-amount">
+            <span>Q</span><span id="qcoinVal">—</span>
+          </div>
+          <div class="qcoin-egp" id="qcoinEGP">≈ جاري التحميل…</div>
+          <div class="qcoin-icon">🪙</div>
+          <div class="qcoin-action">💱 تبديل العملة</div>
+        </a>
+
+        <!-- POINTS CARD (يسحب من points.js) -->
+        <a href="points.html" class="points-card">
+          <div class="points-label">🌟 رصيد النقاط</div>
+          <div class="points-amount" id="pointsVal">—</div>
+          <div class="points-sub" id="pointsSub">جاري التحميل…</div>
+          <div class="points-icon">⭐</div>
+          <div class="points-action" onclick="event.preventDefault();location.href='exchange.html'">🔄 تبديل النقاط</div>
+        </a>
+      </div>
+
+      <!-- QUICK STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-icon">🔗</span>
+          <span class="stat-val" id="refCount">—</span>
+          <span class="stat-lbl">إجمالي الإحالات</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">👥</span>
+          <span class="stat-val" id="teamCount">—</span>
+          <span class="stat-lbl">أعضاء الفريق</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">📊</span>
+          <span class="stat-val" id="txCount">—</span>
+          <span class="stat-lbl">معاملاتي</span>
+        </div>
+      </div>
+
+      <!-- PORTALS -->
+      <div class="section-head">
+        <h2>البوابات الرئيسية</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="portals-grid">
+        <a href="employee.html" class="portal-card">
+          <span class="pc-icon">🛡️</span>
+          <div class="pc-title">دخول كموظف</div>
+          <div class="pc-desc">إدارة المهام والصلاحيات الوظيفية</div>
+          <span class="pc-arrow">←</span>
+        </a>
+        <a href="merchant.html" class="portal-card">
+          <span class="pc-icon">📈</span>
+          <div class="pc-title">بوابة التجارة</div>
+          <div class="pc-desc">إدارة الأعمال والمبيعات والعروض</div>
+          <span class="pc-arrow">←</span>
+        </a>
+        <a href="client.html" class="portal-card">
+          <span class="pc-icon">🤝</span>
+          <div class="pc-title">دخول كعميل</div>
+          <div class="pc-desc">تصفح الخدمات والعروض المتاحة</div>
+          <span class="pc-arrow">←</span>
+        </a>
+        <a href="social.html" class="portal-card">
+          <span class="pc-icon">🌐</span>
+          <div class="pc-title">المجتمع الرقمي</div>
+          <div class="pc-desc">تواصل مع أعضاء ALQURMANI X</div>
+          <span class="pc-arrow">←</span>
+        </a>
+        <a href="referrals.html" class="portal-card">
+          <span class="pc-icon">🔗</span>
+          <div class="pc-title">الإحالات</div>
+          <div class="pc-desc">دعوة أصدقاء وكسب مكافآت</div>
+          <span class="pc-arrow">←</span>
+        </a>
+        <a href="support.html" class="portal-card">
+          <span class="pc-icon">💬</span>
+          <div class="pc-title">الدعم الفني</div>
+          <div class="pc-desc">فتح تذاكر الدعم والمساعدة</div>
+          <span class="pc-arrow">←</span>
+        </a>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="section-head" style="margin-top:24px">
+        <h2>آخر النشاطات</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="activity-list" id="activityList">
+        <div class="act-item">
+          <div class="act-icon gold shimmer" style="width:38px;height:38px"></div>
+          <div class="act-info">
+            <div class="shimmer" style="width:140px;height:13px;margin-bottom:6px"></div>
+            <div class="shimmer" style="width:80px;height:10px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     FIREBASE + APP LOGIC
+══════════════════════════════════════════════════════ -->
+<script type="module">
+import {initializeApp}
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {getAuth,onAuthStateChanged,signOut}
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import {getFirestore,doc,getDoc,collection,query,where,orderBy,limit,getDocs,onSnapshot}
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+/* ── Firebase init ── */
+const app  = initializeApp({
+  apiKey:            'AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU',
+  authDomain:        'alqurmani-auth-x.firebaseapp.com',
+  projectId:         'alqurmani-auth-x',
+  storageBucket:     'alqurmani-auth-x.firebasestorage.app',
+  messagingSenderId: '558487419521',
+  appId:             '1:558487419521:web:fcf791247b7eefc2a82b80',
+  measurementId:     'G-B34HTXXMVS'
+});
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ── helpers ── */
+const $ = id => document.getElementById(id);
+
+/* ── live clock ── */
+function updateClock(){
+  const now=new Date();
+  $('liveTime').textContent=now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+updateClock();
+setInterval(updateClock,1000);
+
+/* ── sidebar toggle ── */
+window.openSidebar=()=>{
+  $('sidebar').classList.add('open');
+  $('sbOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+};
+window.closeSidebar=()=>{
+  $('sidebar').classList.remove('open');
+  $('sbOverlay').classList.remove('show');
+  document.body.style.overflow='';
+};
+
+/* ── notifications panel ── */
+window.toggleNotif=(e)=>{
+  e.stopPropagation();
+  $('notifPanel').classList.toggle('open');
+};
+document.addEventListener('click',e=>{
+  if(!$('notifPanel').contains(e.target)&&!e.target.closest('.notif-wrap'))
+    $('notifPanel').classList.remove('open');
+});
+window.clearNotifs=()=>{
+  $('notifList').innerHTML='<div class="np-empty">لا توجد إشعارات جديدة</div>';
+  $('notifCountTop').classList.remove('show');
+  $('notifBadgeSb').style.display='none';
+};
+
+/* ── account status ── */
+function applyStatus(status){
+  const pill=$('statusPill');
+  const dot=$('sbDot');
+  const txt=$('sbStatusTxt');
+  const map={
+    active: {label:'✅ حساب نشط',cls:'active',dot:'active',dtxt:'نشط'},
+    pending:{label:'⏳ قيد التفعيل',cls:'pending',dot:'pending',dtxt:'قيد التفعيل'},
+    suspended:{label:'🚫 موقوف',cls:'suspended',dot:'suspended',dtxt:'موقوف'},
+  };
+  const s=map[status]||map.pending;
+  pill.textContent=s.label;
+  pill.className='status-pill '+s.cls;
+  dot.className='status-dot '+s.dot;
+  txt.textContent=s.dtxt;
+}
+
+/* ══════════════════════════════════════
+   LOAD DATA FROM INTERMEDIATE FILES
+   (الملفات الوسيطة — تُحدَّث بشكل مستقل)
+══════════════════════════════════════ */
+
+/* wallet.js → رصيد Q-Coin + قيمته بالجنيه المصري */
+async function loadWallet(){
+  try{
+    const mod=await import('./wallet.js');
+    const data=mod.default||mod;
+    $('qcoinVal').textContent=parseFloat(data.balance||0).toFixed(8);
+    $('qcoinEGP').textContent='≈ '+parseFloat(data.egpValue||0).toLocaleString('ar-EG')+' ج.م';
+  }catch{
+    $('qcoinVal').textContent='—';
+    $('qcoinEGP').textContent='≈ غير متاح';
+  }
+}
+
+/* points.js → رصيد النقاط */
+async function loadPoints(){
+  try{
+    const mod=await import('./points.js');
+    const data=mod.default||mod;
+    $('pointsVal').textContent=parseInt(data.points||0).toLocaleString('ar-EG');
+    $('pointsSub').textContent=data.subtitle||'نقطة مكتسبة';
+  }catch{
+    $('pointsVal').textContent='—';
+    $('pointsSub').textContent='غير متاح';
+  }
+}
+
+/* notifications.js → عدد الإشعارات + قائمتها */
+async function loadNotifications(){
+  try{
+    const mod=await import('./notifications.js');
+    const list=mod.default||[];
+    const unread=list.filter(n=>!n.read).length;
+    if(unread>0){
+      $('notifCountTop').textContent=unread;
+      $('notifCountTop').classList.add('show');
+      $('notifBadgeSb').style.display='inline-block';
+      $('notifBadgeSb').textContent=unread;
+    }
+    if(list.length===0){
+      $('notifList').innerHTML='<div class="np-empty">لا توجد إشعارات جديدة</div>';
+      return;
+    }
+    $('notifList').innerHTML=list.map(n=>`
+      <div class="np-item${n.read?'':' unread'}">
+        <span class="np-icon">${n.icon||'📌'}</span>
+        <div>
+          <div class="np-text">${n.text||''}</div>
+          <div class="np-time">${n.time||''}</div>
+        </div>
+      </div>
+    `).join('');
+  }catch{/* silent */ }
+}
+
+/* ══════════════════════════════════════
+   AUTH GUARD + FIRESTORE USER DATA
+══════════════════════════════════════ */
+const isInternal=document.referrer.includes(window.location.hostname)||
+                 sessionStorage.getItem('ENTRY_POINT')==='HOME';
+
+history.pushState(null,null,location.href);
+window.onpopstate=()=>location.replace('login.html');
+
+onAuthStateChanged(auth, async(user)=>{
+  if(!user){
+    location.replace('login.html');
+    return;
+  }
+
+  /* ── fetch user doc from Firestore ── */
+  let userData={};
+  try{
+    const snap=await getDoc(doc(db,'users',user.uid));
+    if(snap.exists()) userData=snap.data();
+  }catch(e){ console.warn('Firestore read failed',e); }
+
+  /* ── display name ── */
+  const displayName=userData.username||user.email?.split('@')[0]||'مستخدم';
+  const nameCap=displayName.charAt(0).toUpperCase()+displayName.slice(1);
+  $('greetName').textContent=nameCap;
+  $('sbName').textContent=displayName;
+  $('sbInitials').textContent=displayName.slice(0,2).toUpperCase();
+
+  /* ── photo (from profile.js intermediate file) ── */
+  try{
+    const pm=await import('./profile.js');
+    const pd=pm.default||pm;
+    if(pd.photoURL){
+      const img=$('sbPhoto');
+      img.src=pd.photoURL;
+      img.style.display='block';
+    }
+  }catch{}
+
+  /* ── member since ── */
+  if(userData.createdAt){
+    const d=userData.createdAt.toDate?userData.createdAt.toDate():new Date(userData.createdAt);
+    $('memberSince').textContent='عضو منذ '+d.toLocaleDateString('ar-EG',{year:'numeric',month:'long'});
+  }
+
+  /* ── account status ── */
+  applyStatus(userData.status||'pending');
+
+  /* ── LIVE wallet listener (real-time from Firestore) ── */
+  onSnapshot(doc(db,'users',user.uid),(snap)=>{
+    const d=snap.data()||{};
+    /* fallback live points from Firestore if points.js not available */
+    if($('pointsVal').textContent==='—'){
+      $('pointsVal').textContent=parseInt(d.points||0).toLocaleString('ar-EG');
+      $('pointsSub').textContent='نقطة مكتسبة';
+    }
+  });
+
+  /* ── referrals count (live) ── */
+  try{
+    const rSnap=await getDocs(query(collection(db,'referrals'),where('referrerUid','==',user.uid)));
+    $('refCount').textContent=rSnap.size;
+    if(rSnap.size>0){
+      $('refBadge').style.display='inline-block';
+      $('refBadge').textContent=rSnap.size;
+    }
+  }catch{ $('refCount').textContent='0'; }
+
+  /* ── team count (users referred by this user) ── */
+  try{
+    const tSnap=await getDocs(query(collection(db,'users'),where('referredBy','==',user.uid)));
+    $('teamCount').textContent=tSnap.size;
+    if(tSnap.size>0){
+      $('teamBadge').style.display='inline-block';
+      $('teamBadge').textContent=tSnap.size;
+    }
+  }catch{ $('teamCount').textContent='0'; }
+
+  /* ── transactions count ── */
+  try{
+    const txSnap=await getDocs(query(collection(db,'transactions'),where('userId','==',user.uid)));
+    $('txCount').textContent=txSnap.size;
+  }catch{ $('txCount').textContent='0'; }
+
+  /* ── recent activity from transactions ── */
+  try{
+    const actSnap=await getDocs(
+      query(collection(db,'transactions'),
+        where('userId','==',user.uid),
+        orderBy('createdAt','desc'),
+        limit(5))
+    );
+    if(actSnap.empty){
+      $('activityList').innerHTML=
+        '<div style="text-align:center;padding:24px;color:var(--txm);font-size:13px">لا توجد نشاطات بعد</div>';
+    } else {
+      const iconMap={send:'📤',receive:'📥',exchange:'🔄',referral:'🔗',bonus:'🎁'};
+      const clsMap={send:'red',receive:'green',exchange:'blue',referral:'gold',bonus:'gold'};
+      $('activityList').innerHTML=actSnap.docs.map(d=>{
+        const tx=d.data();
+        const type=tx.type||'receive';
+        const when=tx.createdAt?.toDate?tx.createdAt.toDate().toLocaleDateString('ar-EG'):'-';
+        const val=tx.amount>0?'+'+tx.amount:tx.amount;
+        const pos=tx.amount>0;
+        return `<div class="act-item">
+          <div class="act-icon ${clsMap[type]||'blue'}">${iconMap[type]||'💳'}</div>
+          <div class="act-info">
+            <div class="act-title">${tx.description||type}</div>
+            <div class="act-time">${when}</div>
+          </div>
+          <div class="act-val ${pos?'pos':'neg'}">${val} Q</div>
+        </div>`;
+      }).join('');
+    }
+  }catch{
+    $('activityList').innerHTML=
+      '<div style="text-align:center;padding:24px;color:var(--txm);font-size:13px">تعذّر تحميل النشاطات</div>';
+  }
+
+  /* ── load intermediate files ── */
+  await Promise.allSettled([loadWallet(),loadPoints(),loadNotifications()]);
+
+  /* ── hide loading, show body ── */
+  document.body.classList.add('ready');
+  $('loadingOverlay').style.opacity='0';
+  setTimeout(()=>$('loadingOverlay').style.display='none',400);
+});
+
+/* ── logout ── */
+window.doLogout=()=>{
+  signOut(auth).then(()=>{
+    sessionStorage.clear();
+    location.replace('login.html');
+  });
+};
+
+window.safeGo=(p)=>{
+  sessionStorage.setItem('ENTRY_POINT','HOME');
+  location.href=p;
+};
+</script>
+</body>
+</html>
