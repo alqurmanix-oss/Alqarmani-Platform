@@ -2,170 +2,151 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALQURMANI X | الغرفة المحصنة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALQURMANI X | نظام الولوج</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;500;800&display=swap" rel="stylesheet">
     <style>
-        /* =========================================================
-           💎 نظام الهوية البصرية الملكية (THE ROYAL CSS)
-        ========================================================= */
         :root {
-            --g1: #d4af37; --g2: #f9e297; --g3: #b5952f; --g4: #e6be48; 
-            --g5: #997a1d; --g6: #cfb53b; --g7: #8a6d15;
-            --black: #050505; --glass: rgba(15, 15, 15, 0.9);
-            --border: rgba(212, 175, 55, 0.4);
+            --gold: linear-gradient(90deg, #8a6d15, #d4af37, #f9e297, #d4af37, #8a6d15);
+            --bg: #080808;
+            --card-bg: rgba(20, 20, 20, 0.6);
+            --border: rgba(212, 175, 55, 0.2);
+            --text: #e0e0e0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
-        body { background: var(--black); color: #fff; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        body { 
+            background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
 
-        /* محرك الجزيئات الذهبية المتطورة */
-        #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; top: 0; left: 0; }
+        /* خلفية سينمائية هادئة */
+        .bg-overlay {
+            position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #080808 100%);
+            z-index: -1;
+        }
 
-        /* الشعار السيادي المتحرك (7 درجات ذهبية) */
-        .royal-logo {
-            font-size: clamp(30px, 8vw, 50px); font-weight: 900; letter-spacing: 12px;
-            text-align: center; margin-bottom: 20px;
-            background: linear-gradient(to right, var(--g7), var(--g3), var(--g1), var(--g2), var(--g4), var(--g6), var(--g5));
-            background-size: 200% auto;
+        /* اللوجو الذهبي النحيف */
+        .brand-line {
+            text-align: center; margin-bottom: 40px;
+        }
+        .logo-text {
+            font-size: 32px; font-weight: 800; letter-spacing: 10px;
+            background: var(--gold); background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: goldFlow 5s linear infinite;
+            animation: shine 4s linear infinite; display: inline-block;
         }
-        @keyframes goldFlow { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+        @keyframes shine { to { background-position: 200% center; } }
 
-        /* حاوية العرض قمة الفخامة */
-        .vault-container {
-            position: relative; z-index: 10; width: 92%; max-width: 500px;
-            background: var(--glass); backdrop-filter: blur(50px);
-            border: 2px solid var(--border); border-radius: 40px; padding: 60px 50px;
-            box-shadow: 0 0 120px rgba(0,0,0,1), inset 0 0 40px rgba(212, 175, 55, 0.1);
-            animation: vaultFadeIn 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        /* حاوية الدخول الأنيقة */
+        .login-frame {
+            width: 380px; padding: 40px; background: var(--card-bg);
+            backdrop-filter: blur(15px); border: 1px solid var(--border);
+            border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: fadeIn 1s ease-out;
         }
-        @keyframes vaultFadeIn { from { opacity: 0; transform: scale(0.9) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .tagline { text-align: center; color: #777; font-size: 11px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 50px; }
-
-        /* تصميم الحقول التنفيذي */
-        .field { position: relative; margin-bottom: 35px; }
-        .field input {
-            width: 100%; background: rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px; padding: 22px 25px; color: #fff; font-size: 17px; 
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); outline: none;
+        /* الحقول المتطورة */
+        .input-group { position: relative; margin-bottom: 25px; }
+        .input-group input {
+            width: 100%; padding: 15px 0; background: transparent; border: none;
+            border-bottom: 1px solid #333; color: #fff; font-size: 16px; outline: none;
+            transition: 0.3s;
         }
-        .field input:focus { border-color: var(--g1); box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); background: #000; }
-        .field label {
-            position: absolute; right: 25px; top: 50%; transform: translateY(-50%);
-            color: #444; pointer-events: none; transition: 0.3s; font-size: 15px;
+        .input-group label {
+            position: absolute; right: 0; top: 15px; color: #666;
+            pointer-events: none; transition: 0.3s;
         }
-        .field input:focus ~ label, .field input:not(:placeholder-shown) ~ label {
-            top: -14px; font-size: 12px; color: var(--g1); background: var(--black); padding: 0 12px;
+        .input-group input:focus ~ label, .input-group input:valid ~ label {
+            top: -10px; font-size: 12px; color: #d4af37;
         }
+        .input-group input:focus { border-bottom-color: #d4af37; }
 
-        /* زر التشغيل السيادي */
-        .prime-btn {
-            width: 100%; height: 75px; background: linear-gradient(45deg, var(--g7), var(--g1), var(--g3));
-            background-size: 200% auto; border: none; border-radius: 20px; color: #000;
-            font-weight: 900; font-size: 18px; cursor: pointer; transition: 0.6s;
-            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.3); position: relative;
+        /* الزر الرئيسي */
+        .action-btn {
+            width: 100%; padding: 15px; background: #d4af37; border: none;
+            border-radius: 8px; color: #000; font-weight: 800; cursor: pointer;
+            transition: 0.3s; margin-top: 10px;
         }
-        .prime-btn:hover { background-position: right center; transform: translateY(-5px); box-shadow: 0 25px 60px rgba(212, 175, 55, 0.5); }
-        .prime-btn:disabled { filter: grayscale(1); cursor: not-allowed; }
+        .action-btn:hover { background: #f9e297; transform: scale(1.02); }
 
-        .links-bar { display: flex; justify-content: space-between; margin-top: 40px; }
-        .links-bar span, .links-bar a { color: var(--g1); text-decoration: none; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .links-bar span:hover { text-shadow: 0 0 15px var(--g1); color: #fff; }
-
-        /* =========================================================
-           🛡️ نوافذ سيادية حقيقية (CUSTOM LUXURY MODALS)
-        ========================================================= */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.98); backdrop-filter: blur(30px);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
-            opacity: 0; visibility: hidden; transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        /* الروابط السفلية */
+        .sub-links {
+            display: flex; justify-content: space-between; margin-top: 25px;
+            font-size: 13px; color: #888;
         }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .sub-links span, .sub-links a { color: #d4af37; text-decoration: none; cursor: pointer; }
 
-        .royal-modal {
-            background: #0a0a0a; border: 2px solid var(--g1); border-radius: 40px;
-            padding: 60px; width: 90%; max-width: 500px; text-align: center;
-            transform: scale(0.7) translateY(100px); transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0 0 150px rgba(212, 175, 55, 0.1);
+        /* النوافذ المنبثقة الذكية (تظهر عند الحاجة فقط) */
+        .smart-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            display: none; align-items: center; justify-content: center; z-index: 100;
         }
-        .modal-overlay.active .royal-modal { transform: scale(1) translateY(0); }
-
-        .m-icon { font-size: 80px; margin-bottom: 30px; display: block; filter: drop-shadow(0 0 20px var(--g1)); }
-        .m-title { color: var(--g1); font-size: 28px; font-weight: 900; margin-bottom: 20px; letter-spacing: 2px; }
-        .m-text { color: #aaa; font-size: 17px; line-height: 1.8; margin-bottom: 40px; }
-
-        .m-btn {
-            display: inline-block; width: 100%; padding: 22px; border: 2px solid var(--g1);
-            color: var(--g1); text-decoration: none; border-radius: 18px; font-weight: 900;
-            background: transparent; cursor: pointer; transition: 0.4s;
+        .modal-content {
+            width: 320px; background: #111; border: 1px solid #d4af37;
+            border-radius: 15px; padding: 30px; text-align: center;
+            transform: scale(0.9); transition: 0.3s;
         }
-        .m-btn:hover { background: var(--g1); color: #000; box-shadow: 0 0 30px var(--g1); }
+        .smart-modal.show { display: flex; }
+        .smart-modal.show .modal-content { transform: scale(1); }
 
-        .input-recover {
-            width: 100%; background: #000; border: 1px solid #222; padding: 20px;
-            border-radius: 15px; color: #fff; margin-bottom: 25px; text-align: center; font-size: 18px;
+        .modal-title { color: #d4af37; font-weight: 800; margin-bottom: 15px; }
+        .modal-msg { font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 20px; }
+        
+        .close-btn {
+            padding: 10px 20px; background: transparent; border: 1px solid #d4af37;
+            color: #d4af37; border-radius: 5px; cursor: pointer; width: 100%;
         }
     </style>
 </head>
 <body>
 
-    <div id="particles-js"></div>
+    <div class="bg-overlay"></div>
 
-    <div class="vault-container">
-        <div class="royal-logo">ALQURMANI X</div>
-        <div class="tagline">The Sovereign Security Hub</div>
+    <div class="login-frame">
+        <div class="brand-line">
+            <div class="logo-text">ALQURMANI X</div>
+        </div>
 
-        <form id="sovereign-form">
-            <div class="field">
-                <input type="email" id="u-mail" placeholder=" " required>
-                <label>البريد السيادي المعتمد</label>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" required placeholder=" ">
+                <label>البريد الإلكتروني</label>
             </div>
-            <div class="field">
-                <input type="password" id="u-token" placeholder=" " required>
-                <label>رمز التشفير الخاص</label>
+            <div class="input-group">
+                <input type="password" id="pass" required placeholder=" ">
+                <label>كلمة السر</label>
             </div>
-            <button type="submit" class="prime-btn" id="main-trigger">بدء بروتوكول الولوج</button>
+            <button type="submit" class="action-btn" id="loginBtn">دخول</button>
         </form>
 
-        <div class="links-bar">
-            <span onclick="openM('recover-m')">نسيت كلمة السر؟</span>
-            <a href="signup.html">عضوية جديدة</a>
+        <div class="sub-links">
+            <span onclick="toggleModal('resetModal')">نسيت كلمة السر؟</span>
+            <a href="signup.html">عضو جديد</a>
         </div>
     </div>
 
-    <div class="modal-overlay" id="recover-m">
-        <div class="royal-modal">
-            <span class="m-icon">🔑</span>
-            <h2 class="m-title">استعادة التصريح</h2>
-            <p class="m-text">أدخل بريدك الإلكتروني لإعادة تهيئة رمز الدخول الخاص بك عبر رابط مشفر.</p>
-            <input type="email" id="rec-mail" class="input-recover" placeholder="example@domain.com">
-            <button class="m-btn" onclick="sendRecovery()">إرسال الرابط الآمن</button>
-            <p style="margin-top: 25px; cursor: pointer; color: #444;" onclick="closeM('recover-m')">رجوع</p>
+    <div class="smart-modal" id="resetModal">
+        <div class="modal-content">
+            <h3 class="modal-title">استعادة الوصول</h3>
+            <p class="modal-msg">أدخل بريدك وسيصلك الرابط فوراً.</p>
+            <input type="email" id="resetEmail" style="width:100%; padding:10px; margin-bottom:20px; background:#000; border:1px solid #333; color:#fff;">
+            <button class="action-btn" onclick="handleReset()">إرسال</button>
+            <button class="close-btn" style="margin-top:10px" onclick="toggleModal('resetModal')">إلغاء</button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="success-m">
-        <div class="royal-modal" style="border-color: #00ff41;">
-            <span class="m-icon">👑</span>
-            <h2 class="m-title" style="color: #00ff41;">مرحباً بك سيدي</h2>
-            <p class="m-text">تم التحقق من البصمة الرقمية بنجاح.. النظام بانتظار أوامرك.</p>
+    <div class="smart-modal" id="statusModal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="statusTitle"></h3>
+            <p class="modal-msg" id="statusMsg"></p>
+            <div id="statusActions"></div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="block-m">
-        <div class="royal-modal" style="border-color: #ff3e3e;">
-            <span class="m-icon" id="b-icon">🚫</span>
-            <h2 class="m-title" id="b-title" style="color: #ff3e3e;">خرق أمني</h2>
-            <p class="m-text" id="b-msg"></p>
-            <a href="support.html" class="m-btn" style="border-color: #ff3e3e; color: #ff3e3e;">التواصل مع الدعم الفني</a>
-            <p id="b-close" style="margin-top: 25px; cursor: pointer; color: #444; display: none;" onclick="closeM('block-m')">إغلاق</p>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -184,96 +165,62 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ضبط جزيئات الذهب (Luxury Particles)
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 100 },
-                "color": { "value": "#d4af37" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.5, "random": true },
-                "size": { "value": 2.5, "random": true },
-                "move": { "enable": true, "speed": 1.2, "direction": "top", "out_mode": "out" }
-            }
-        });
+        // وظائف الواجهة
+        window.toggleModal = (id) => document.getElementById(id).classList.toggle('show');
 
-        // إدارة النوافذ المنبثقة الفخمة
-        window.openM = (id) => document.getElementById(id).classList.add('active');
-        window.closeM = (id) => document.getElementById(id).classList.remove('active');
-
-        // استعادة كلمة السر
-        window.sendRecovery = async () => {
-            const email = document.getElementById('rec-mail').value;
-            if(!email) return alert("أدخل البريد أولاً");
+        window.handleReset = async () => {
+            const email = document.getElementById('resetEmail').value;
+            if(!email) return;
             try {
                 await sendPasswordResetEmail(auth, email);
-                document.querySelector('#recover-m .m-text').innerText = "تم إرسال الرابط بنجاح، يرجى مراجعة بريدك.";
-            } catch (e) { alert("حدث خطأ في الإرسال"); }
+                alert("تم إرسال الرابط بنجاح.");
+                toggleModal('resetModal');
+            } catch(e) { alert("خطأ في الإرسال."); }
         };
 
-        // نظام الحماية الحديدي (Iron Guard)
-        let fails = parseInt(localStorage.getItem('fail_count')) || 0;
-        let lockUntil = localStorage.getItem('lock_time') || 0;
+        // نظام الحماية
+        let fails = 0;
 
-        const handleBlock = (title, msg, canClose = false) => {
-            document.getElementById('b-title').innerText = title;
-            document.getElementById('b-msg').innerText = msg;
-            document.getElementById('b-close').style.display = canClose ? 'block' : 'none';
-            openM('block-m');
+        const showStatus = (title, msg, link = false) => {
+            document.getElementById('statusTitle').innerText = title;
+            document.getElementById('statusMsg').innerText = msg;
+            const actionArea = document.getElementById('statusActions');
+            actionArea.innerHTML = link ? `<a href="support.html" class="action-btn" style="text-decoration:none; display:block">الدعم الفني</a>` : `<button class="close-btn" onclick="toggleModal('statusModal')">حسناً</button>`;
+            toggleModal('statusModal');
         };
 
-        document.getElementById('sovereign-form').addEventListener('submit', async (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // تحقق من الحظر الزمني قبل أي شيء
-            if (Date.now() < lockUntil) {
-                const wait = Math.ceil((lockUntil - Date.now()) / 60000);
-                handleBlock("حظر مؤقت", `لقد استنفدت محاولاتك. يرجى الانتظار ${wait} دقيقة قبل المحاولة مجدداً.`);
-                return;
-            }
+            const btn = document.getElementById('loginBtn');
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
 
-            const btn = document.getElementById('main-trigger');
-            const email = document.getElementById('u-mail').value;
-            const pass = document.getElementById('u-token').value;
-
+            btn.innerText = "جاري التحقق...";
             btn.disabled = true;
-            btn.innerText = "جاري إجراء الفحص السيادي...";
 
             try {
                 const userCred = await signInWithEmailAndPassword(auth, email, pass);
                 const user = userCred.user;
-
-                // التحقق من حالة الحساب في القاعدة
                 const snap = await getDoc(doc(db, "users", user.uid));
                 const data = snap.data();
 
-                if (data.status !== 'active') {
-                    handleBlock("الحساب معطل", `الحالة الحالية لحسابك هي (${data.status}). يرجى التواصل مع الدعم الفني لإعادة التنشيط.`);
+                if(data.status !== 'active') {
+                    showStatus("تنبيه", `حسابك حالياً (${data.status}). راجع الدعم.`, true);
                     return;
                 }
 
-                // نجاح الدخول
-                localStorage.setItem('fail_count', 0);
-                openM('success-m');
-                setTimeout(() => window.location.href = 'index.html', 2500);
+                showStatus("نجاح", "أهلاً بك.. جاري الدخول.");
+                setTimeout(() => window.location.href = 'index.html', 1500);
 
             } catch (err) {
                 fails++;
-                localStorage.setItem('fail_count', fails);
                 btn.disabled = false;
-                btn.innerText = "بدء بروتوكول الولوج";
+                btn.innerText = "دخول";
 
-                if (fails >= 5 && fails < 7) {
-                    lockUntil = Date.now() + (1 * 60 * 1000); // 1 دقيقة
-                    localStorage.setItem('lock_time', lockUntil);
-                    handleBlock("تحذير أمني", "تم رصد محاولات دخول خاطئة متكررة. النظام محظور الآن لمدة دقيقة واحدة.");
-                } else if (fails >= 7 && fails < 10) {
-                    lockUntil = Date.now() + (2 * 60 * 1000); // 2 دقيقة
-                    localStorage.setItem('lock_time', lockUntil);
-                    handleBlock("تمديد الحظر", "تكرار الخطأ سيؤدي لتجميد الحساب نهائياً. تم الحظر لمدة دقيقتين.");
-                } else if (fails >= 10) {
-                    handleBlock("تجميد نهائي", "تم تجميد صلاحيات هذا الجهاز تماماً بسبب اشتباه في محاولة اختراق. تواصل مع الإدارة الفنية.");
+                if (fails >= 5) {
+                    showStatus("حظر أمني", "تم تجاوز المحاولات. راجع الدعم الفني.", true);
                 } else {
-                    handleBlock("خطأ في البيانات", `البيانات المدخلة لا تطابق سجلاتنا. المحاولات المتبقية: ${5 - fails}`, true);
+                    showStatus("خطأ", `البيانات غير صحيحة. المحاولات المتبقية: ${5 - fails}`);
                 }
             }
         });
