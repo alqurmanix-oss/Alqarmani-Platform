@@ -3,175 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALQURMANI X | THE ROYAL GATE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;500;900&display=swap" rel="stylesheet">
+    <title>ALQURMANI X | Secure Gateway</title>
     <style>
-        /* =========================================================
-           CORE LUXURY DESIGN (الفخامة الخام)
-        ========================================================= */
         :root {
-            --gold-light: #f9e297; --gold-main: #d4af37; --gold-dark: #8a6d15;
-            --bg: #030303; --glass: rgba(10, 10, 10, 0.9);
-            --border: rgba(212, 175, 55, 0.4);
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --bg: #050505;
+            --input-bg: rgba(15, 15, 15, 0.9);
+            --error: #ff4d4d;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
-        body { background: var(--bg); color: #fff; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; border: none; }
 
-        /* خلفية الجزيئات الذهبية (تأثير الغبار الذهبي المتطاير) */
-        #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
-
-        /* اللوجو السيادي: سطر واحد + 7 درجات ذهبية متحركة */
-        .royal-header { text-align: center; position: relative; z-index: 10; margin-bottom: 30px; }
-        .royal-logo {
-            font-size: 45px; font-weight: 900; letter-spacing: 15px;
-            background: linear-gradient(to right, #8a6d15, #d4af37, #f9e297, #fff, #f9e297, #d4af37, #8a6d15);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: goldenStream 4s linear infinite; white-space: nowrap;
-        }
-        @keyframes goldenStream { to { background-position: 200% center; } }
-
-        /* حاوية الدخول الفاخرة */
-        .auth-card {
-            position: relative; z-index: 10; width: 90%; max-width: 460px;
-            background: var(--glass); backdrop-filter: blur(40px);
-            border: 1px solid var(--border); border-radius: 40px; padding: 60px 45px;
-            box-shadow: 0 0 100px rgba(0,0,0,1), inset 0 0 40px rgba(212, 175, 55, 0.05);
-            animation: slideUp 1.2s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* الحقول الذكية */
-        .input-wrap { position: relative; margin-bottom: 35px; }
-        .input-wrap input {
-            width: 100%; background: rgba(0,0,0,0.8); border: 1px solid rgba(212, 175, 55, 0.1);
-            border-radius: 18px; padding: 22px 25px; color: #fff; font-size: 17px; 
-            transition: 0.5s; outline: none;
-        }
-        .input-wrap input:focus { border-color: var(--gold-main); box-shadow: 0 0 25px rgba(212, 175, 55, 0.2); }
-        .input-wrap label {
-            position: absolute; right: 25px; top: 50%; transform: translateY(-50%);
-            color: #555; pointer-events: none; transition: 0.3s;
-        }
-        .input-wrap input:focus ~ label, .input-wrap input:not(:placeholder-shown) ~ label {
-            top: -12px; font-size: 11px; color: var(--gold-main); background: var(--bg); padding: 0 10px;
+        body {
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
         }
 
-        /* زر الدخول الرئيسي */
-        .btn-royal {
-            width: 100%; height: 70px; background: linear-gradient(45deg, var(--gold-dark), var(--gold-main), var(--gold-light));
-            border: none; border-radius: 18px; color: #000; font-weight: 900; font-size: 18px;
-            cursor: pointer; transition: 0.5s; box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
+        .login-vault {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background: var(--input-bg);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            text-align: center;
+            position: relative;
         }
-        .btn-royal:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(212, 175, 55, 0.4); filter: brightness(1.1); }
 
-        /* الروابط السفلية */
-        .links-area { display: flex; justify-content: space-between; margin-top: 35px; font-size: 13px; }
-        .links-area span, .links-area a { color: var(--gold-main); text-decoration: none; cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .links-area span:hover { text-shadow: 0 0 10px var(--gold-main); }
-
-        /* =========================================================
-           ULTRA-LUXURY MODALS (نوافذ القمة الفاخرة)
-        ========================================================= */
-        .overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(25px);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
-            opacity: 0; visibility: hidden; transition: 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        .login-vault::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
-        .overlay.active { opacity: 1; visibility: visible; }
 
-        .modal-box {
-            background: #0a0a0a; border: 1.5px solid var(--gold-main); border-radius: 35px;
-            padding: 50px; width: 92%; max-width: 440px; text-align: center;
-            transform: scale(0.8) translateY(50px); transition: 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 50px 100px rgba(0,0,0,1);
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
         }
-        .overlay.active .modal-box { transform: scale(1) translateY(0); }
 
-        .m-icon { font-size: 65px; margin-bottom: 25px; display: block; filter: drop-shadow(0 0 15px var(--gold-main)); }
-        .m-title { color: var(--gold-main); font-size: 26px; font-weight: 900; margin-bottom: 15px; }
-        .m-text { color: #888; font-size: 15px; line-height: 1.8; margin-bottom: 35px; }
-
-        .m-btn {
-            display: block; width: 100%; padding: 18px; border: 1px solid var(--gold-main);
-            color: var(--gold-main); text-decoration: none; border-radius: 15px; font-weight: 900;
-            background: transparent; cursor: pointer; transition: 0.4s;
+        .gate-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .m-btn:hover { background: var(--gold-main); color: #000; box-shadow: 0 0 30px var(--gold-main); }
 
-        /* حالة النجاح (Success Accent) */
-        .modal-success { border-color: #00ff41; box-shadow: 0 0 40px rgba(0, 255, 65, 0.1); }
-        .modal-success .m-title { color: #00ff41; }
+        .input-group { margin-bottom: 20px; position: relative; }
+
+        input {
+            width: 100%;
+            padding: 18px 25px;
+            background: #0a0a0a;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 15px;
+            transition: 0.3s;
+            text-align: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        input:focus {
+            box-shadow: 0 0 15px var(--gold-glow);
+            background: #111;
+        }
+
+        .btn-access {
+            width: 100%;
+            padding: 18px;
+            background: var(--gold);
+            color: #000;
+            font-weight: 900;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: 0.4s;
+        }
+
+        .btn-access:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--gold-glow);
+        }
+
+        .status-msg {
+            margin-top: 20px;
+            font-size: 13px;
+            min-height: 20px;
+        }
+
+        #loader {
+            display: none;
+            width: 20px; height: 20px;
+            border: 3px solid #000;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .footer-links {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #444;
+        }
+
+        .footer-links a { color: var(--gold); text-decoration: none; margin: 0 10px; }
     </style>
 </head>
 <body>
 
-    <div id="particles-js"></div>
+    <div class="login-vault">
+        <div class="brand-logo">ALQURMANI X</div>
+        <div class="gate-label">بوابة التحقق الرقمي الموحدة</div>
 
-    <div class="auth-card">
-        <div class="royal-header">
-            <h1 class="royal-logo">ALQURMANI X</h1>
-        </div>
-
-        <form id="auth-form">
-            <div class="input-wrap">
-                <input type="email" id="email" placeholder=" " required>
-                <label>البريد المعتمد</label>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" required>
             </div>
-            <div class="input-wrap">
-                <input type="password" id="pass" placeholder=" " required>
-                <label>رمز الدخول</label>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="كلمة المرور" required>
             </div>
-            <button type="submit" class="btn-royal" id="auth-btn">تحقق من الهوية</button>
+            
+            <button type="submit" class="btn-access" id="submitBtn">
+                <span id="btnText">طلب الدخول</span>
+                <div id="loader"></div>
+            </button>
         </form>
 
-        <div class="links-area">
-            <span onclick="openModal('recovery-gate')">نسيت كلمة السر؟</span>
-            <a href="signup.html">عضوية جديدة</a>
+        <div id="statusMsg" class="status-msg"></div>
+
+        <div class="footer-links">
+            <a href="signup.html">إنشاء حساب جديد</a> • 
+            <a href="#">استعادة الوصول</a>
         </div>
     </div>
 
-    <div class="overlay" id="recovery-gate">
-        <div class="modal-box">
-            <span class="m-icon">🔑</span>
-            <h2 class="m-title">استعادة الوصول</h2>
-            <p class="m-text">أدخل بريدك الإلكتروني لإعادة تهيئة رمز الدخول عبر القنوات المشفرة.</p>
-            <input type="email" id="rec-mail" style="width:100%; padding:15px; background:#000; border:1px solid #333; color:#fff; border-radius:12px; margin-bottom:20px; text-align:center;">
-            <button class="m-btn" onclick="executeRecovery()">إرسال الرابط</button>
-            <p style="margin-top:20px; cursor:pointer; color:#444" onclick="closeModal('recovery-gate')">رجوع</p>
-        </div>
-    </div>
-
-    <div class="overlay" id="welcome-gate">
-        <div class="modal-box modal-success">
-            <span class="m-icon">👑</span>
-            <h2 class="m-title">أهلاً بك سيدي</h2>
-            <p class="m-text">تمت المصادقة بنجاح.. جاري تهيئة المركز التنفيذي.</p>
-        </div>
-    </div>
-
-    <div class="overlay" id="status-gate">
-        <div class="modal-box" id="status-border" style="border-color: #ff3e3e;">
-            <span class="m-icon" id="status-icon">🚫</span>
-            <h2 class="m-title" id="status-title" style="color: #ff3e3e;">خرق أمني</h2>
-            <p class="m-text" id="status-msg"></p>
-            <a href="support.html" class="m-btn" id="status-link">التواصل مع الدعم الفني</a>
-            <p id="close-status" style="margin-top:20px; cursor:pointer; color:#444; display:none" onclick="closeModal('status-gate')">إغلاق</p>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
-            authDomain: "alqurmani-auth-x.firebaseapp.com",
-            projectId: "alqurmani-auth-x",
-            storageBucket: "alqurmani-auth-x.firebasestorage.app",
-            messagingSenderId: "558487419521",
+            authDomain: "alqurmanix-auth-x.firebaseapp.com",
+            projectId: "alqurmanix-auth-x",
             appId: "1:558487419521:web:fcf791247b7eefc2a82b80"
         };
 
@@ -179,73 +165,64 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // غبار الذهب المتطاير
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 100 },
-                "color": { "value": "#d4af37" },
-                "opacity": { "value": 0.5, "random": true },
-                "size": { "value": 2.5, "random": true },
-                "move": { "enable": true, "speed": 1.5, "direction": "top", "out_mode": "out" }
-            }
-        });
+        const loginForm = document.getElementById('loginForm');
+        const statusMsg = document.getElementById('statusMsg');
+        const submitBtn = document.getElementById('submitBtn');
+        const loader = document.getElementById('loader');
+        const btnText = document.getElementById('btnText');
 
-        // إدارة النوافذ الفاخرة
-        window.openModal = (id) => document.getElementById(id).classList.add('active');
-        window.closeModal = (id) => document.getElementById(id).classList.remove('active');
-
-        window.executeRecovery = async () => {
-            const email = document.getElementById('rec-mail').value;
-            if(!email) return;
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert("تم الإرسال.. تفقد بريدك.");
-                closeModal('recovery-gate');
-            } catch(e) { alert("خطأ في العملية."); }
-        };
-
-        // نظام الحماية الذكي
-        let fails = 0;
-        const showStatus = (title, msg, canClose = false) => {
-            document.getElementById('status-title').innerText = title;
-            document.getElementById('status-msg').innerText = msg;
-            document.getElementById('close-status').style.display = canClose ? 'block' : 'none';
-            openModal('status-gate');
-        };
-
-        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('auth-btn');
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
+            
+            // تهيئة واجهة التحميل
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+            statusMsg.innerText = "جاري فحص المحركات السباعية...";
+            statusMsg.style.color = "var(--gold)";
 
-            btn.disabled = true;
-            btn.innerText = "جاري الفحص السيادي...";
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
             try {
-                const userCred = await signInWithEmailAndPassword(auth, email, pass);
-                const userDoc = await getDoc(doc(db, "users", userCred.user.uid));
-                const data = userDoc.data();
+                // 1. محاولة تسجيل الدخول الأساسي
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                if (data.status !== 'active') {
-                    showStatus("الحساب غير نشط", `نعتذر، حالة حسابك هي (${data.status}). يرجى المراجعة الفنية.`);
-                    return;
+                // 2. تطبيق قواعد الصرامة (The Iron Core)
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    const now = new Date().getTime();
+                    const lastLogin = data.lastLogin ? data.lastLogin.toDate().getTime() : 0;
+                    const idleLimit = 90 * 24 * 60 * 60 * 1000; // 90 يوم
+
+                    // فحص حالة الحساب (active) + فحص الخمول + فحص التوثيق + الثقة
+                    if (data.status !== 'active') throw new Error("الحساب معلق أو قيد المراجعة.");
+                    if (!user.emailVerified) throw new Error("يرجى توثيق البريد الإلكتروني أولاً.");
+                    if (data.trustScore < 50) throw new Error("مستوى الثقة في الحساب منخفض جداً.");
+                    if (now - lastLogin > idleLimit && lastLogin !== 0) throw new Error("تم تعليق الحساب بسبب الخمول (90 يوم).");
+                    if (data.lockUntil && now < data.lockUntil.toDate().getTime()) throw new Error("الحساب محظور مؤقتاً بسبب أخطاء متكررة.");
+
+                    // 3. النجاح: إصدار تصريح الجلسة الآمنة
+                    sessionStorage.setItem('SECURE_SESSION_ACTIVE', 'TRUE');
+                    statusMsg.innerText = "تم التحقق بنجاح.. جاري توجيهك للمركز.";
+                    statusMsg.style.color = "#00ff41";
+
+                    setTimeout(() => {
+                        window.location.replace("index.html");
+                    }, 1500);
+
+                } else {
+                    throw new Error("سجل البيانات غير موجود في النظام.");
                 }
-
-                // نجاح الدخول - ترحيب فخم لحظي
-                openModal('welcome-gate');
-                setTimeout(() => window.location.href = 'index.html', 2000);
 
             } catch (error) {
-                fails++;
-                btn.disabled = false;
-                btn.innerText = "تحقق من الهوية";
-
-                if (fails >= 5) {
-                    showStatus("حظر أمني", "تم تجاوز محاولات الدخول. تواصل مع الدعم الفني لفك الحظر.");
-                } else {
-                    showStatus("خطأ في البيانات", `المعلومات المدخلة غير صحيحة. المحاولات المتبقية: ${5 - fails}`, true);
-                }
+                loader.style.display = 'none';
+                btnText.style.display = 'block';
+                statusMsg.innerText = error.message;
+                statusMsg.style.color = "var(--error)";
+                auth.signOut(); // طرد المستخدم فوراً عند الفشل في أي قاعدة
             }
         });
     </script>
