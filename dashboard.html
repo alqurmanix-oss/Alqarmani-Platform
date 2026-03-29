@@ -14,13 +14,14 @@
   --sw:264px;--hh:66px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
+html,body{height:100%;background:var(--bg)}
 
-/* ── BODY visible by default ── */
+/* ── BODY hidden by default to prevent flash of content ── */
 body{
   font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
-  overflow:hidden;
+  overflow:hidden; opacity: 0; transition: opacity 0.5s ease;
 }
+body.ready{opacity: 1;}
 
 /* ── GLOBAL BG ── */
 body::before{content:'';position:fixed;inset:0;z-index:0;
@@ -77,7 +78,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
   opacity:.35;
 }
 
-/* logo */
 .sb-logo{padding:22px 20px 18px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:11px}
 .sb-logo-ic{
   width:40px;height:40px;border-radius:11px;flex-shrink:0;
@@ -93,7 +93,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 }
 .sb-logo-s{font-size:9px;color:var(--txm);letter-spacing:3px}
 
-/* user chip */
 .sb-user{padding:16px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:11px}
 .sb-av{
   width:42px;height:42px;border-radius:50%;border:2px solid var(--gold);
@@ -111,7 +110,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 @keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
 .sb-stxt{font-size:10px;color:var(--txm)}
 
-/* nav */
 .sb-nav{flex:1;overflow-y:auto;padding:12px 0;scrollbar-width:none}
 .sb-nav::-webkit-scrollbar{display:none}
 .sb-grp{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--txs);padding:14px 20px 5px}
@@ -130,7 +128,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 .bdg.gold{background:rgba(212,160,23,.15);color:var(--gold2)}
 .bdg.grn{background:rgba(0,255,135,.15);color:var(--ng)}
 
-/* footer */
 .sb-foot{padding:14px 20px;border-top:1px solid var(--brd)}
 .out-btn{
   width:100%;display:flex;align-items:center;gap:9px;padding:10px 13px;
@@ -143,7 +140,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 /* ══ MAIN ══ */
 .mn{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 
-/* topbar */
 .tb{
   height:var(--hh);flex-shrink:0;
   background:rgba(4,4,10,.94);backdrop-filter:blur(20px);
@@ -179,7 +175,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 }
 .nb-cnt.on{display:block}
 
-/* notifications panel */
 .np{
   position:fixed;top:var(--hh);left:0;width:330px;max-height:72vh;z-index:500;
   background:rgba(10,10,22,.98);border:1px solid var(--brd);border-radius:0 0 18px 18px;
@@ -202,12 +197,10 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 .np-tm{font-size:10px;color:var(--txm);margin-top:2px}
 .np-empty{text-align:center;padding:28px;font-size:13px;color:var(--txm)}
 
-/* page scroll */
 .pc{flex:1;overflow-y:auto;padding:24px 24px 40px;scrollbar-width:thin;scrollbar-color:rgba(212,160,23,.18) transparent}
 .pc::-webkit-scrollbar{width:4px}
 .pc::-webkit-scrollbar-thumb{background:rgba(212,160,23,.2);border-radius:2px}
 
-/* greeting */
 .greet{margin-bottom:24px}
 .greet-hi{font-size:12.5px;color:var(--txm);letter-spacing:1px;margin-bottom:4px}
 .greet-name{
@@ -226,10 +219,8 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 .spill.suspended{background:rgba(255,45,85,.1);border:1px solid rgba(255,45,85,.22);color:var(--nr)}
 .greet-since{font-size:11px;color:var(--txm)}
 
-/* CARDS */
 .c2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 
-/* Q-Coin card */
 .qcard{
   background:linear-gradient(135deg,#100D00,#080600);
   border:1.5px solid var(--gold);border-radius:18px;padding:20px 18px;
@@ -255,7 +246,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 }
 .qcard:hover .qc-act{background:rgba(212,160,23,.22)}
 
-/* Points card */
 .ptcard{
   background:linear-gradient(135deg,#000C18,#000810);
   border:1.5px solid rgba(0,200,255,.28);border-radius:18px;padding:20px 18px;
@@ -280,7 +270,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 }
 .ptcard:hover .pt-act{background:rgba(0,200,255,.18)}
 
-/* STATS */
 .c3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:16px}
 .stc{
   background:var(--card);border:1px solid var(--brd);border-radius:14px;
@@ -290,12 +279,10 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 .stc .sv{font-size:17px;font-weight:900;font-family:'Cinzel',serif;color:var(--gold2)}
 .stc .sl{font-size:10px;color:var(--txm);letter-spacing:.5px}
 
-/* section head */
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:20px}
 .sh h2{font-size:11px;font-weight:700;color:var(--txm);letter-spacing:3px;text-transform:uppercase;white-space:nowrap}
 .sh-l{flex:1;height:1px;background:linear-gradient(90deg,var(--brd),transparent)}
 
-/* portals */
 .pg{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .pc-btn{
   background:var(--card);border:1px solid var(--brd);border-radius:16px;
@@ -310,7 +297,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 .pc-arr{margin-right:auto;font-size:14px;color:var(--txs);transition:color .18s}
 .pc-btn:hover .pc-arr{color:var(--gold)}
 
-/* activity */
 .al{display:flex;flex-direction:column;gap:9px}
 .ai{
   background:var(--card);border:1px solid var(--brd);border-radius:13px;
@@ -330,14 +316,12 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 .ai-v{font-size:13px;font-weight:700;white-space:nowrap}
 .ai-v.p{color:var(--ng)}.ai-v.n{color:var(--nr)}.ai-v.u{color:var(--gold2)}
 
-/* mobile overlay */
 .ov{
   position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.72);
   backdrop-filter:blur(4px);display:none;opacity:0;transition:opacity .28s;
 }
 .ov.on{display:block;opacity:1}
 
-/* MOBILE */
 @media(max-width:768px){
   .sb{position:fixed;top:0;right:0;bottom:0;z-index:100;transform:translateX(100%);box-shadow:-10px 0 40px rgba(0,0,0,.85)}
   .sb.on{transform:none}
@@ -348,9 +332,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
   .c3{grid-template-columns:1fr 1fr}
   .pg{grid-template-columns:1fr}
 }
-@media(max-width:360px){.c3{grid-template-columns:1fr}}
 
-/* shimmer */
 .shim{
   background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);
   background-size:200% 100%;animation:shim 1.4s infinite;border-radius:7px;display:inline-block;
@@ -360,14 +342,12 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
 <div id="LS">
   <div class="ls-logo">ALQURMANI X</div>
   <div class="ls-bar"><div class="ls-fill"></div></div>
-  <div class="ls-txt">جارٍ التحقق من هويتك…</div>
+  <div class="ls-txt">جارٍ التحقق من هويتك الإمبراطورية…</div>
 </div>
 
-<!-- NOTIFICATIONS PANEL -->
 <div class="np" id="NP">
   <div class="np-h">
     <span class="np-ttl">🔔 الإشعارات</span>
@@ -376,13 +356,10 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
   <div class="np-body" id="NL"><div class="np-empty">لا توجد إشعارات</div></div>
 </div>
 
-<!-- SIDEBAR OVERLAY -->
 <div class="ov" id="OV" onclick="closeSb()"></div>
 
-<!-- SHELL -->
 <div id="APP" style="display:flex;height:100vh">
 
-  <!-- SIDEBAR -->
   <aside class="sb" id="SB">
     <div class="sb-logo">
       <div class="sb-logo-ic">AX</div>
@@ -439,10 +416,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
     </div>
   </aside>
 
-  <!-- MAIN -->
   <div class="mn">
-
-    <!-- TOPBAR -->
     <header class="tb">
       <div class="tb-ham" onclick="openSb()">☰</div>
       <div class="tb-ttl">ALQURMANI X</div>
@@ -455,10 +429,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
       </div>
     </header>
 
-    <!-- PAGE -->
     <div class="pc">
-
-      <!-- GREETING -->
       <div class="greet">
         <div class="greet-hi">مرحباً بعودتك 👋</div>
         <div class="greet-name" id="GN">—</div>
@@ -468,10 +439,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
         </div>
       </div>
 
-      <!-- FINANCE CARDS -->
       <div class="c2">
-
-        <!-- Q-COIN (from wallet.js) -->
         <a href="wallet.html" class="qcard">
           <div class="qc-lbl">⚡ رصيد Q-Coin</div>
           <div class="qc-amt"><sup>Q</sup><span id="QV">—</span></div>
@@ -480,7 +448,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
           <div class="qc-act">💱 تبديل العملة</div>
         </a>
 
-        <!-- POINTS (from points.js) -->
         <a href="points.html" class="ptcard" onclick="event.preventDefault();location.href='points.html'">
           <div class="pt-lbl">🌟 رصيد النقاط</div>
           <div class="pt-amt" id="PV">—</div>
@@ -490,14 +457,12 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
         </a>
       </div>
 
-      <!-- QUICK STATS -->
       <div class="c3">
         <div class="stc"><span class="si">🔗</span><span class="sv" id="RC">—</span><span class="sl">إحالاتي</span></div>
         <div class="stc"><span class="si">👥</span><span class="sv" id="TC">—</span><span class="sl">فريقي</span></div>
         <div class="stc"><span class="si">📊</span><span class="sv" id="XC">—</span><span class="sl">معاملاتي</span></div>
       </div>
 
-      <!-- PORTALS -->
       <div class="sh"><h2>البوابات الرئيسية</h2><div class="sh-l"></div></div>
       <div class="pg">
         <a href="employee.html" class="pc-btn"><span class="pc-ic">🛡️</span><div class="pc-ttl">دخول كموظف</div><div class="pc-ds">إدارة المهام والصلاحيات</div><span class="pc-arr">←</span></a>
@@ -508,10 +473,8 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
         <a href="support.html"  class="pc-btn"><span class="pc-ic">💬</span><div class="pc-ttl">الدعم الفني</div><div class="pc-ds">فتح تذاكر المساعدة</div><span class="pc-arr">←</span></a>
       </div>
 
-      <!-- ACTIVITY -->
       <div class="sh" style="margin-top:22px"><h2>آخر النشاطات</h2><div class="sh-l"></div></div>
       <div class="al" id="AL">
-        <!-- shimmer placeholder -->
         <div class="ai">
           <div class="ai-ic gd shim" style="width:36px;height:36px"></div>
           <div class="ai-inf">
@@ -520,20 +483,19 @@ body::after{content:'';position:fixed;inset:0;z-index:0;
           </div>
         </div>
       </div>
-
-    </div><!-- /pc -->
-  </div><!-- /mn -->
-</div><!-- /APP -->
+    </div>
+  </div>
+</div>
 
 <script>
-/* clock */
+/* ── CLOCK ENGINE ── */
 function clk(){
   document.getElementById('CLK').textContent=
     new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 clk(); setInterval(clk,1000);
 
-/* sidebar */
+/* ── SIDEBAR CONTROLS ── */
 window.openSb=()=>{
   document.getElementById('SB').classList.add('on');
   document.getElementById('OV').classList.add('on');
@@ -543,7 +505,7 @@ window.closeSb=()=>{
   document.getElementById('OV').classList.remove('on');
 };
 
-/* notif panel */
+/* ── NOTIFICATIONS PANEL ── */
 window.toggleN=(e)=>{
   e.stopPropagation();
   document.getElementById('NP').classList.toggle('on');
@@ -558,7 +520,7 @@ window.clearN=()=>{
   document.getElementById('nBdg').style.display='none';
 };
 
-/* set badge helper */
+/* ── UI HELPERS ── */
 function setBadge(id,n){
   const el=document.getElementById(id);
   if(!el)return;
@@ -566,7 +528,6 @@ function setBadge(id,n){
   else el.style.display='none';
 }
 
-/* status */
 function setStatus(s){
   const pill=document.getElementById('SP');
   const dot=document.getElementById('sbDot');
@@ -582,16 +543,13 @@ function setStatus(s){
 }
 </script>
 
-<!-- FIREBASE MODULE -->
 <script type="module">
-import {initializeApp}
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import {getAuth,onAuthStateChanged,signOut}
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import {getFirestore,doc,getDoc,collection,query,where,orderBy,limit,getDocs,onSnapshot}
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+/* ── FIREBASE CORE & SECURITY GUARD ── */
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, query, where, orderBy, limit, getDocs, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const app=initializeApp({
+const firebaseConfig = {
   apiKey:'AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU',
   authDomain:'alqurmani-auth-x.firebaseapp.com',
   projectId:'alqurmani-auth-x',
@@ -599,146 +557,95 @@ const app=initializeApp({
   messagingSenderId:'558487419521',
   appId:'1:558487419521:web:fcf791247b7eefc2a82b80',
   measurementId:'G-B34HTXXMVS'
-});
-const auth=getAuth(app);
-const db=getFirestore(app);
-const $=id=>document.getElementById(id);
+};
 
-/* ── hide loading, show app ── */
-function showApp(){
-  const ls=$('LS');
-  ls.classList.add('hide');
-  setTimeout(()=>ls.style.display='none',450);
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
 
-/* ── redirect guard ── */
-history.pushState(null,null,location.href);
-window.onpopstate=()=>location.replace('login.html');
+/* ── SECURITY PROTOCOL ── */
+// منع العودة للخلف بعد تسجيل الخروج
+history.pushState(null, null, location.href);
+window.onpopstate = () => location.replace('login.html');
 
-/* ── auth ── */
-onAuthStateChanged(auth, async user=>{
+onAuthStateChanged(auth, async user => {
   if(!user){
+    // إذا لم يكن مسجلاً، اطرده فوراً لصفحة الدخول
     location.replace('login.html');
     return;
   }
 
-  /* ── fetch user doc ── */
-  let u={};
-  try{
-    const s=await getDoc(doc(db,'users',user.uid));
-    if(s.exists()) u=s.data();
-  }catch(e){console.warn('user doc',e)}
+  /* ── PREPARE INTERFACE ── */
+  document.body.classList.add('ready');
+  $('APP').classList.add('show');
 
-  /* ── name ── */
-  const rawName=u.username||user.email?.split('@')[0]||'مستخدم';
-  const cap=rawName.charAt(0).toUpperCase()+rawName.slice(1);
-  $('GN').textContent=cap;
-  $('sbNm').textContent=rawName;
-  $('sbIn').textContent=rawName.slice(0,2).toUpperCase();
+  /* ── DATA SOURCE: INTERMEDIATE FILES (As Requested) ── */
+  // بدلاً من السحب المباشر، يتم الربط مع الملفات الوسيطة التي ستدير البيانات
+  
+  /* 1. Profile Data */
+  try {
+    const s = await getDoc(doc(db, 'users', user.uid));
+    if(s.exists()){
+      const u = s.data();
+      const rawName = u.username || user.email.split('@')[0];
+      $('GN').textContent = rawName;
+      $('sbNm').textContent = rawName;
+      $('sbIn').textContent = rawName.slice(0,2).toUpperCase();
+      setStatus(u.status || 'pending');
+      
+      if(u.createdAt){
+        const d = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
+        $('MS').textContent = 'عضو منذ ' + d.toLocaleDateString('ar-EG', {year:'numeric', month:'long'});
+      }
+    }
+  } catch(e) { console.error("Identity error"); }
 
-  /* ── status ── */
-  setStatus(u.status||'pending');
-
-  /* ── member since ── */
-  if(u.createdAt){
-    const d=u.createdAt.toDate?u.createdAt.toDate():new Date(u.createdAt);
-    $('MS').textContent='عضو منذ '+d.toLocaleDateString('ar-EG',{year:'numeric',month:'long'});
+  /* 2. Wallet & Points (Link to external modules) */
+  try {
+    const wm = await import('./wallet.js');
+    const wd = wm.default || wm;
+    $('QV').textContent = parseFloat(wd.balance || 0).toFixed(8);
+    $('QE').textContent = '≈ ' + parseFloat(wd.egpValue || 0).toLocaleString('ar-EG') + ' ج.م';
+  } catch {
+    $('QV').textContent = '0.00000000';
+    $('QE').textContent = '≈ 0 ج.م';
   }
 
-  /* ── points live from Firestore (fallback) ── */
-  onSnapshot(doc(db,'users',user.uid),snap=>{
-    const d=snap.data()||{};
-    if($('PV').textContent==='—'||$('PV').textContent==='0'){
-      $('PV').textContent=Number(d.points||0).toLocaleString('ar-EG');
-      $('PS').textContent='نقطة مكتسبة';
-    }
-  });
+  try {
+    const pm = await import('./points.js');
+    const pd = pm.default || pm;
+    $('PV').textContent = Number(pd.points || 0).toLocaleString('ar-EG');
+    $('PS').textContent = pd.subtitle || 'نقطة مكتسبة';
+  } catch {}
 
-  /* ── wallet from wallet.js ── */
-  try{
-    const wm=await import('./wallet.js');
-    const wd=wm.default||wm;
-    $('QV').textContent=parseFloat(wd.balance||0).toFixed(8);
-    $('QE').textContent='≈ '+parseFloat(wd.egpValue||0).toLocaleString('ar-EG')+' ج.م';
-  }catch{
-    $('QV').textContent='0.00000000';
-    $('QE').textContent='≈ 0 ج.م';
-  }
+  /* 3. Social & Stats */
+  try {
+    const rs = await getDocs(query(collection(db, 'referrals'), where('referrerUid', '==', user.uid)));
+    $('RC').textContent = rs.size;
+    setBadge('rBdg', rs.size);
+    
+    const ts = await getDocs(query(collection(db, 'users'), where('referredBy', '==', user.uid)));
+    $('TC').textContent = ts.size;
+    setBadge('tBdg', ts.size);
 
-  /* ── points from points.js ── */
-  try{
-    const pm=await import('./points.js');
-    const pd=pm.default||pm;
-    $('PV').textContent=Number(pd.points||0).toLocaleString('ar-EG');
-    $('PS').textContent=pd.subtitle||'نقطة مكتسبة';
-  }catch{}
+    const xs = await getDocs(query(collection(db, 'transactions'), where('userId', '==', user.uid)));
+    $('XC').textContent = xs.size;
+  } catch { }
 
-  /* ── profile photo from profile.js ── */
-  try{
-    const ph=await import('./profile.js');
-    const phd=ph.default||ph;
-    if(phd.photoURL){
-      const img=$('sbPh');
-      img.src=phd.photoURL;
-      img.onload=()=>img.style.display='block';
-    }
-  }catch{}
-
-  /* ── notifications from notifications.js ── */
-  try{
-    const nm=await import('./notifications.js');
-    const nl=nm.default||[];
-    const unread=nl.filter(n=>!n.read).length;
-    if(unread>0){
-      $('NC').textContent=unread; $('NC').classList.add('on');
-      setBadge('nBdg',unread);
-    }
-    $('NL').innerHTML=nl.length===0
-      ?'<div class="np-empty">لا توجد إشعارات</div>'
-      :nl.map(n=>`<div class="np-it${n.read?'':' unread'}">
-          <span class="np-ic">${n.icon||'📌'}</span>
-          <div><div class="np-tx">${n.text||''}</div><div class="np-tm">${n.time||''}</div></div>
-        </div>`).join('');
-  }catch{}
-
-  /* ── referrals count ── */
-  try{
-    const rs=await getDocs(query(collection(db,'referrals'),where('referrerUid','==',user.uid)));
-    $('RC').textContent=rs.size;
-    setBadge('rBdg',rs.size);
-  }catch{ $('RC').textContent='0'; }
-
-  /* ── team count ── */
-  try{
-    const ts=await getDocs(query(collection(db,'users'),where('referredBy','==',user.uid)));
-    $('TC').textContent=ts.size;
-    setBadge('tBdg',ts.size);
-  }catch{ $('TC').textContent='0'; }
-
-  /* ── tx count ── */
-  try{
-    const xs=await getDocs(query(collection(db,'transactions'),where('userId','==',user.uid)));
-    $('XC').textContent=xs.size;
-  }catch{ $('XC').textContent='0'; }
-
-  /* ── recent activity ── */
-  try{
-    const as=await getDocs(query(
-      collection(db,'transactions'),
-      where('userId','==',user.uid),
-      orderBy('createdAt','desc'),
-      limit(5)
-    ));
+  /* 4. Activity Engine */
+  try {
+    const as = await getDocs(query(collection(db, 'transactions'), where('userId', '==', user.uid), orderBy('createdAt', 'desc'), limit(5)));
     if(as.empty){
-      $('AL').innerHTML='<div style="text-align:center;padding:22px;color:var(--txm);font-size:13px">لا توجد نشاطات بعد</div>';
+      $('AL').innerHTML = '<div style="text-align:center;padding:22px;color:var(--txm);font-size:13px">لا توجد نشاطات مسجلة</div>';
     } else {
       const IM={send:'📤',receive:'📥',exchange:'🔄',referral:'🔗',bonus:'🎁',points:'⭐'};
       const CM={send:'rd',receive:'gn',exchange:'bl',referral:'gd',bonus:'gd',points:'gd'};
-      $('AL').innerHTML=as.docs.map(d=>{
-        const t=d.data();
-        const tp=t.type||'receive';
-        const dt=t.createdAt?.toDate?t.createdAt.toDate().toLocaleDateString('ar-EG'):'-';
-        const pos=(t.amount||0)>0;
+      $('AL').innerHTML = as.docs.map(d => {
+        const t = d.data();
+        const tp = t.type || 'receive';
+        const dt = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleDateString('ar-EG') : '-';
+        const pos = (t.amount || 0) > 0;
         return `<div class="ai">
           <div class="ai-ic ${CM[tp]||'bl'}">${IM[tp]||'💳'}</div>
           <div class="ai-inf">
@@ -749,17 +656,23 @@ onAuthStateChanged(auth, async user=>{
         </div>`;
       }).join('');
     }
-  }catch{
-    $('AL').innerHTML='<div style="text-align:center;padding:22px;color:var(--txm);font-size:13px">تعذّر تحميل النشاطات</div>';
+  } catch {
+    $('AL').innerHTML = '<div style="text-align:center;padding:22px;color:var(--txm);font-size:13px">النشاطات غير متاحة حالياً</div>';
   }
 
-  /* ── DONE — show app ── */
-  showApp();
+  /* ── DEPLOY COMPLETE ── */
+  $('LS').classList.add('hide');
+  setTimeout(() => $('LS').style.display = 'none', 450);
 });
 
-window.doLogout=()=>{
-  signOut(auth).then(()=>{ sessionStorage.clear(); location.replace('login.html'); });
+/* ── LOGOUT PROTOCOL ── */
+window.doLogout = async () => {
+  if(confirm("هل أنت متأكد من مغادرة الإمبراطورية؟")){
+    await signOut(auth);
+    location.replace('login.html');
+  }
 };
 </script>
+
 </body>
 </html>
