@@ -7,138 +7,138 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════
-   ROOT VARIABLES & BASE
+   إعدادات الألوان والتصميم (الملكي)
 ══════════════════════════════════════ */
 :root {
-  --g1:#FFD700; --g2:#F5C842; --g3:#D4A017; --g4:#B8860B; --g5:#8B6914;
+  --g1:#FFD700; --g2:#F5C842; --g3:#D4A017; --g4:#B8860B;
   --ng:#00FF87; --nr:#FF2D55; --nb:#00C8FF;
-  --bg:#04040A; --bg2:#070710; --bg3:#0A0A18;
-  --card:rgba(12,12,22,.96); --card2:rgba(15,15,28,.98);
-  --brd:rgba(212,160,23,.2); --brdA:rgba(212,160,23,.6);
+  --bg:#04040A; --bg2:#070710;
+  --card:rgba(12,12,22,.96);
+  --brd:rgba(212,160,23,.2);
   --tx:#F0E8D5; --txm:rgba(240,232,213,.45);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body {
   background: var(--bg); color: var(--tx); font-family: 'Cairo', sans-serif;
-  overflow-x: hidden; line-height: 1.6; opacity: 0; transition: opacity 0.5s ease;
+  overflow-x: hidden; line-height: 1.6; opacity: 0; transition: opacity 0.3s ease;
 }
 body.ready { opacity: 1; }
 
-/* ══════════════════════════════════════
-   LOADING OVERLAY
-══════════════════════════════════════ */
+/* شاشة التحميل اللحظية */
 #loadingOverlay {
   position: fixed; top:0; left:0; width:100%; height:100%;
   background: #000; display: flex; flex-direction: column;
   align-items: center; justify-content: center; z-index: 9999;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 .loader-crown {
-  width: 70px; height: 70px; border: 3px solid transparent;
+  width: 60px; height: 60px; border: 3px solid transparent;
   border-top-color: var(--g1); border-radius: 50%;
-  animation: spin 0.8s linear infinite; position: relative;
-}
-.loader-crown::after {
-  content: "Q"; position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
-  font-family: 'Cinzel'; font-weight: 900; color: var(--g1); font-size: 22px;
+  animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ══════════════════════════════════════
-   DASHBOARD LAYOUT
-══════════════════════════════════════ */
-.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+/* الهيكل الرئيسي */
+.container { max-width: 1200px; margin: 0 auto; padding: 15px; }
 
-.top-bar {
+.header-pro {
   display: flex; justify-content: space-between; align-items: center;
   background: var(--card); border: 1px solid var(--brd);
-  padding: 12px 20px; border-radius: 18px; margin-bottom: 25px;
+  padding: 15px 20px; border-radius: 15px; margin-bottom: 20px;
 }
 .user-info { display: flex; align-items: center; gap: 12px; }
 .avatar { 
   width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--g1);
-  background: var(--bg3); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel';
+  background: #111; overflow: hidden;
 }
-.avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-.stats-container {
+.stats-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 15px; margin-bottom: 25px;
 }
-.stat-box {
-  background: var(--card2); border: 1px solid var(--brd);
-  padding: 20px; border-radius: 20px; text-align: center;
+.stat-card {
+  background: var(--card); border: 1px solid var(--brd);
+  padding: 20px; border-radius: 18px; text-align: center;
 }
-.stat-box .val {
-  display: block; font-family: 'Cinzel'; font-size: 26px;
-  font-weight: 900; color: var(--g1);
+.stat-val {
+  display: block; font-family: 'Cinzel'; font-size: 24px;
+  font-weight: 900; color: var(--g1); margin-top: 5px;
 }
-.stat-box .lbl { font-size: 11px; color: var(--txm); font-weight: 700; text-transform: uppercase; }
+.stat-lbl { font-size: 11px; color: var(--txm); font-weight: 700; }
 
 .section-box {
   background: var(--card); border: 1px solid var(--brd);
-  border-radius: 20px; padding: 20px;
+  border-radius: 18px; padding: 20px;
 }
 .section-box h3 {
   font-family: 'Cinzel'; font-size: 16px; color: var(--g1);
-  margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
+  margin-bottom: 15px; border-bottom: 1px solid var(--brd); padding-bottom: 8px;
 }
 
-.act-list { display: flex; flex-direction: column; gap: 10px; }
+.activity-list { display: flex; flex-direction: column; gap: 10px; }
 .act-item {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px; background: rgba(255,255,255,0.02); border-radius: 12px;
+  padding: 12px; background: rgba(255,255,255,0.02); border-radius: 10px;
 }
-.act-meta { display: flex; align-items: center; gap: 12px; }
-.act-icon { width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-.act-icon.plus { background: rgba(0,255,135,0.1); color: var(--ng); }
-.act-icon.minus { background: rgba(255,45,85,0.1); color: var(--nr); }
+.act-main { display: flex; align-items: center; gap: 10px; }
+.act-ic { width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.act-ic.in { background: rgba(0,255,135,0.1); color: var(--ng); }
+.act-ic.out { background: rgba(255,45,85,0.1); color: var(--nr); }
+.act-v { font-family: 'Cinzel'; font-weight: 900; }
+.act-v.plus { color: var(--ng); }
+.act-v.minus { color: var(--nr); }
 </style>
 </head>
 <body>
 
 <div id="loadingOverlay">
   <div class="loader-crown"></div>
-  <p style="color:var(--g1); font-family:'Cinzel'; margin-top:15px; font-weight:900; letter-spacing:2px">ALQURMANI</p>
+  <p style="color:var(--g1); font-family:'Cinzel'; margin-top:15px; font-weight:900;">ALQURMANI SYSTEM</p>
 </div>
 
 <div class="container">
-  <div class="top-bar">
+  <div class="header-pro">
     <div class="user-info">
-      <div class="avatar" id="uAvatar"><img src="https://ui-avatars.com/api/?name=User&background=0D0D0D&color=FFD700" alt="Q"></div>
+      <div class="avatar" id="uAv"><img src="https://ui-avatars.com/api/?name=Q&background=000&color=FFD700" id="uImg"></div>
       <div>
-        <div id="uName" style="font-weight:900; font-size:15px">جاري التعرف...</div>
-        <div id="uStatus" style="font-size:10px; color:var(--g1)">حساب ملكي نشط</div>
+        <div id="uName" style="font-weight:900; font-size:15px">جاري المزامنة...</div>
+        <div id="uRole" style="font-size:10px; color:var(--g1); font-weight:700">عضوية ملكية نشطة</div>
       </div>
     </div>
-    <button onclick="logout()" style="background:none; border:1px solid var(--nr); color:var(--nr); padding:6px 14px; border-radius:10px; font-weight:700; cursor:pointer">خروج</button>
+    <button onclick="userLogout()" style="background:none; border:1px solid var(--nr); color:var(--nr); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer">خروج</button>
   </div>
 
-  <div class="stats-container">
-    <div class="stat-box">
-      <span class="lbl">رصيد المحفظة</span>
-      <span class="val" id="bal">0.00</span>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-lbl">رصيد المحفظة (Q)</span>
+      <span class="stat-val" id="uBal">0.00</span>
     </div>
-    <div class="stat-box">
-      <span class="lbl">نقاط المكافأة</span>
-      <span class="val" id="pts">0</span>
+    <div class="stat-card">
+      <span class="stat-lbl">نقاط المكافأة</span>
+      <span class="stat-val" id="uPts">0</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-lbl">مستوى الثقة</span>
+      <span class="stat-val" id="uTrust">0%</span>
     </div>
   </div>
 
   <div class="section-box">
-    <h3><span style="font-size:20px">✦</span> السجل المالي الأخير</h3>
-    <div class="act-list" id="actList">
+    <h3>النشاطات المالية اللحظية</h3>
+    <div class="activity-list" id="uActs">
       </div>
   </div>
 </div>
 
 <script type="module">
-// استيراد Firebase المباشر
+// استيراد المكتبات من CDN لضمان السرعة
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, collection, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// الإعدادات الخاصة بك التي أرسلتها (أبو عبد الله)
+// الإعدادات الخاصة بك يا أبو عبد الله (بدون تعديل)
 const firebaseConfig = {
   apiKey: "AIzaSyCCHBps4vsNXWHnLpxmsJJxUsB-wAYAmBU",
   authDomain: "alqurmani-auth-x.firebaseapp.com",
@@ -155,95 +155,95 @@ const db = getFirestore(app);
 
 const $ = (id) => document.getElementById(id);
 
-// ── التحقق من الجلسة والدخول الفوري ──
-onAuthStateChanged(auth, async (user) => {
+/* ─── منطق الدخول اللحظي ─── */
+onAuthStateChanged(auth, (user) => {
   if (user) {
-    // إخفاء التحميل فوراً للسرعة القصوى
-    hideLoader();
+    // 1. الدخول فوري: إظهار الواجهة فوراً بمجرد معرفة المستخدم
+    document.body.classList.add('ready');
+    $('loadingOverlay').style.opacity = '0';
+    setTimeout(() => $('loadingOverlay').style.display = 'none', 200);
 
-    // تشغيل جلب البيانات في الخلفية
-    loadProfile(user.uid);
-    loadBalances(user.uid);
-    loadHistory(user.uid);
+    // 2. سحب البيانات في الخلفية (Async Background) لضمان عدم توقف الواجهة
+    syncProfile(user.uid);
+    syncFinancials(user.uid);
+    syncHistory(user.uid);
   } else {
     window.location.href = 'login.html';
   }
 });
 
-function hideLoader() {
-  document.body.classList.add('ready');
-  const loader = $('loadingOverlay');
-  loader.style.opacity = '0';
-  setTimeout(() => loader.style.display = 'none', 300);
-}
-
-// ── دوال جلب البيانات (كاملة وبدون اختصار) ──
-
-async function loadProfile(uid) {
+async function syncProfile(uid) {
   try {
     const snap = await getDoc(doc(db, "users", uid));
     if (snap.exists()) {
       const d = snap.data();
       $('uName').textContent = d.name || "عضو القرمني";
-      if(d.photoURL) $('uAvatar').innerHTML = `<img src="${d.photoURL}">`;
+      if (d.photoURL) $('uImg').src = d.photoURL;
+      if (d.trustScore) $('uTrust').textContent = d.trustScore + '%';
     }
-  } catch (e) { console.error(e); }
+  } catch (e) { console.error("Profile Error", e); }
 }
 
-async function loadBalances(uid) {
-  // جلب المحفظة والنقاط بالتوازي
+async function syncFinancials(uid) {
+  // سحب المحفظة
   getDoc(doc(db, "wallets", uid)).then(s => {
-    if(s.exists()) animateValue($('bal'), 0, s.data().balance || 0, 800);
+    if (s.exists()) numAnim($('uBal'), 0, s.data().balance || 0);
   });
+  // سحب النقاط
   getDoc(doc(db, "points", uid)).then(s => {
-    if(s.exists()) $('pts').textContent = (s.data().current || 0).toLocaleString();
+    if (s.exists()) $('uPts').textContent = (s.data().current || 0).toLocaleString();
   });
 }
 
-async function loadHistory(uid) {
+async function syncHistory(uid) {
   try {
-    const q = query(collection(db, "transactions"), where("uid", "==", uid), orderBy("createdAt", "desc"), limit(4));
+    const q = query(collection(db, "transactions"), where("uid", "==", uid), orderBy("createdAt", "desc"), limit(5));
     const snap = await getDocs(q);
-    const list = $('actList');
+    const box = $('uActs');
     
     if (snap.empty) {
-      list.innerHTML = '<p style="text-align:center; color:var(--txm); font-size:12px; padding:10px;">لا يوجد سجل عمليات</p>';
+      box.innerHTML = '<p style="text-align:center; padding:20px; color:var(--txm); font-size:12px;">لا توجد عمليات مسجلة</p>';
       return;
     }
 
-    list.innerHTML = snap.docs.map(doc => {
+    box.innerHTML = snap.docs.map(doc => {
       const tx = doc.data();
-      const isPos = tx.amount > 0;
+      const isIn = tx.amount > 0;
       return `
         <div class="act-item">
-          <div class="act-meta">
-            <div class="act-icon ${isPos ? 'plus' : 'minus'}">${isPos ? '↙' : '↗'}</div>
+          <div class="act-main">
+            <div class="act-ic ${isIn ? 'in' : 'out'}">${isIn ? '📥' : '📤'}</div>
             <div>
               <div style="font-size:13px; font-weight:700">${tx.title || 'عملية نظام'}</div>
               <div style="font-size:10px; color:var(--txm)">${new Date().toLocaleDateString('ar-EG')}</div>
             </div>
           </div>
-          <div style="font-family:'Cinzel'; font-weight:900; color:${isPos?'var(--ng)':'var(--nr)'}">
-            ${isPos ? '+' : ''}${tx.amount}
-          </div>
+          <div class="act-v ${isIn ? 'plus' : 'minus'}">${isIn ? '+' : ''}${tx.amount} Q</div>
         </div>
       `;
     }).join('');
-  } catch (e) { console.error(e); }
+  } catch (e) { console.error("History Error", e); }
 }
 
-function animateValue(obj, start, end, duration) {
-  let startTimestamp = null;
-  const step = (timestamp) => {
-    if (!startTimestamp) startTimestamp = timestamp;
-    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    obj.innerHTML = (progress * (end - start) + start).toFixed(2);
-    if (progress < 1) window.requestAnimationFrame(step);
-  };
-  window.requestAnimationFrame(step);
+// دالة الأنيميشن لزيادة سرعة شعور المستخدم بالاستجابة
+function numAnim(obj, start, end) {
+  let current = start;
+  let range = end - start;
+  let increment = end > start ? 1 : -1;
+  let stepTime = Math.abs(Math.floor(800 / range)) || 10;
+  let timer = setInterval(() => {
+    current += (range / 20);
+    if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+      obj.innerHTML = end.toFixed(2);
+      clearInterval(timer);
+    } else {
+      obj.innerHTML = current.toFixed(2);
+    }
+  }, 20);
 }
 
-window.logout = () => signOut(auth);
+window.userLogout = () => signOut(auth);
+
 </script>
 </body>
 </html>
